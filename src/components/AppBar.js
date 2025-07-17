@@ -18,7 +18,7 @@ const AppBar = ({ onMenuClick, darkMode, onThemeToggle }) => {
           {/* Modern Theme Switch */}
           <button
             onClick={onThemeToggle}
-            className="flex items-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 rounded-lg p-1"
+            className="flex items-center rounded-lg p-1"
             aria-label="Toggle dark mode"
             role="switch"
             aria-checked={darkMode}
