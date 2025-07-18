@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import assistBlack from '../Assets/Images/assist-black.svg';
+import assistWhite from '../Assets/Images/assist-white.svg';
+import { useAuth } from '../Hooks/useAuth';
 
 const EyeIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -16,32 +19,56 @@ const EyeOffIcon = () => (
   </svg>
 );
 
-const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState("");
+const Login = () => {
+  const { login, loading } = useAuth();
+  const [email, setEmail] = useState(localStorage.getItem('rememberedEmail') || "");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [remember, setRemember] = useState(false);
+  const [remember, setRemember] = useState(!!localStorage.getItem('rememberedEmail'));
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const [darkMode, setDarkMode] = useState(() => {
+    const stored = localStorage.getItem('theme');
+    if (stored) return stored === 'dark';
+    // Default to light mode initially
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
       return;
     }
     setError("");
-    if (onLogin) {
-      onLogin();
-    } else {
-      alert("Logged in!");
+    try {
+      await login({ email, password });
+      // Remember Me: Store or remove email in localStorage
+      if (remember) {
+        localStorage.setItem('rememberedEmail', email);
+      } else {
+        localStorage.removeItem('rememberedEmail');
+      }
+    } catch (err) {
+      setError("Login failed. Please try again.");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
-      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 sm:p-10">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">Sign in to your account</h2>
-        <form className="space-y-5" onSubmit={handleSubmit}>
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 sm:p-10 flex flex-col items-center">
+        {/* Logo */}
+        <div className=" flex flex-col items-center">
+          <div className="w-56 h-22 bg-white dark:bg-gray-900 flex items-center justify-center">
+            <img src={darkMode ? assistWhite : assistBlack} alt="Assist Logo" className="w-48 h-20 object-contain" draggable={false} />
+          </div>
+        </div>
+        <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center">Sign in to your account</h2>
+        <form className="space-y-3 w-full" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
               Email address
@@ -50,7 +77,7 @@ const Login = ({ onLogin }) => {
               id="email"
               type="email"
               autoComplete="email"
-              className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full max-w-[420px] px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -65,7 +92,7 @@ const Login = ({ onLogin }) => {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none pr-10"
+                className="w-full max-w-[420px] px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none pr-10"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -98,10 +125,10 @@ const Login = ({ onLogin }) => {
           {error && <div className="text-red-500 text-sm text-center">{error}</div>}
           <button
             type="submit"
-            className={`w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 hover:scale-105 active:scale-100 disabled:opacity-60 disabled:cursor-not-allowed ${(!email || !password) ? '' : 'opacity-100'}`}
-            disabled={!email || !password}
+            className={`w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 hover:scale-105 active:scale-100 disabled:opacity-60 disabled:cursor-not-allowed ${(!email || !password || loading) ? 'opacity-60 cursor-not-allowed' : 'opacity-100'}`}
+            disabled={!email || !password || loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>

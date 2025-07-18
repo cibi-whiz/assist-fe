@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AuthProvider, useAuth } from './Hooks/useAuth';
+import 'react-toastify/dist/ReactToastify.css';
 import AppBar from './components/AppBar';
 import Sidebar from './components/Sidebar';
 import Dashboard from './pages/Dashboard';
@@ -7,15 +9,18 @@ import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
+import { ToastProvider } from './components/ToastContext';
+import Toast from './components/Toast';
 
-function AppRoutes({ isAuthenticated, onLogin, sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }) {
+function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }) {
   const location = useLocation();
+  const { user, loading } = useAuth();
 
-  if (!isAuthenticated) {
+  if (!user) {
     // Not authenticated: Only allow /login, redirect all else to /login
     return (
       <Routes>
-        <Route path="/login" element={<Login onLogin={onLogin} />} />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
@@ -39,13 +44,19 @@ function AppRoutes({ isAuthenticated, onLogin, sidebarOpen, toggleSidebar, darkM
           sidebarOpen ? 'lg:ml-64 md:ml-16' : 'lg:ml-16'
         } ml-0`}>
           <div className="p-4 sm:p-6 w-full max-w-full">
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/settings" element={<Settings />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            {loading ? (
+              <div className="flex justify-center items-center h-96">
+                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+              </div>
+            ) : (
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            )}
           </div>
         </main>
       </div>
@@ -61,7 +72,6 @@ function App() {
     // Default to light mode initially
     return false;
   });
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     // Apply theme immediately on mount and when darkMode changes
@@ -89,22 +99,21 @@ function App() {
     setDarkMode((prev) => !prev);
   };
 
-  // Handler for login success
-  const handleLoginSuccess = () => {
-    setIsAuthenticated(true);
-  };
-
   return (
-    <Router>
-      <AppRoutes
-        isAuthenticated={isAuthenticated}
-        onLogin={handleLoginSuccess}
-        sidebarOpen={sidebarOpen}
-        toggleSidebar={toggleSidebar}
-        darkMode={darkMode}
-        handleThemeToggle={handleThemeToggle}
-      />
-    </Router>
+    <ToastProvider>
+      <Router>
+        <AuthProvider>
+          <AppRoutes
+            sidebarOpen={sidebarOpen}
+            toggleSidebar={toggleSidebar}
+            darkMode={darkMode}
+            handleThemeToggle={handleThemeToggle}
+          />
+          <Toast />
+
+        </AuthProvider>
+      </Router>
+    </ToastProvider>
   );
 }
 

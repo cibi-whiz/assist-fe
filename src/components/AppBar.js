@@ -1,44 +1,123 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import assistBlack from '../Assets/Images/assist-black.svg';
+import assistWhite from '../Assets/Images/assist-white.svg';
+import { FaBars } from 'react-icons/fa';
+import { useAuth } from '../Hooks/useAuth';
 
 const AppBar = ({ onMenuClick, darkMode, onThemeToggle }) => {
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const avatarRef = useRef(null);
+  const popoverRef = useRef(null);
+  const { logout } = useAuth();
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target) &&
+        avatarRef.current &&
+        !avatarRef.current.contains(event.target)
+      ) {
+        setPopoverOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    setPopoverOpen(false);
+    logout();
+  };
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-800 transition-colors duration-300 w-full">
-      <div className="flex items-center justify-between px-3 sm:px-4 md:px-6 py-3 sm:py-4 w-full">
-        {/* Logo and Title */}
-        <div className="flex items-center space-x-2 sm:space-x-3">
-          <div className="flex items-center space-x-2 sm:space-x-3 cursor-pointer" onClick={onMenuClick} >
-            <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xs sm:text-sm">A</span>
-            </div>
-            <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white hidden sm:block">Assist</h1>
-          </div>
-        </div>
-        {/* Right side actions */}
-        <div className="flex items-center space-x-2 sm:space-x-4">
-          {/* Modern Theme Switch */}
-          <button
-            onClick={onThemeToggle}
-            className="flex items-center rounded-lg p-1"
-            aria-label="Toggle dark mode"
-            role="switch"
-            aria-checked={darkMode}
+    <header className="fixed top-0 left-0 w-full h-16 bg-white dark:bg-gray-900 shadow z-50 flex items-center justify-between px-4 sm:px-8 transition-colors duration-300">
+      {/* Left Section */}
+      <div className="flex items-center space-x-4">
+        <button
+          onClick={onMenuClick}
+          className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900"
+          aria-label="Toggle Sidebar"
+        >
+          <FaBars className="text-gray-700 dark:text-gray-200 text-lg" />
+        </button>
+        <img
+          src={darkMode ? assistWhite : assistBlack}
+          alt="Assist"
+          className="w-auto h-8 object-contain transition-all duration-300"
+        />
+      </div>
+
+      {/* Right Section */}
+      <div className="flex items-center space-x-4">
+        {/* Theme Toggle */}
+        <button
+          onClick={onThemeToggle}
+          className="relative flex items-center px-1.5 py-1 bg-gray-200 dark:bg-gray-800 rounded-full transition duration-300 shadow-inner"
+          style={{ width: '52px', height: '32px' }}
+          role="switch"
+          aria-checked={darkMode}
+        >
+          <span
+            className={`absolute left-1 text-yellow-400 text-sm transition-opacity duration-300 ${
+              darkMode ? 'opacity-100' : 'opacity-0'
+            }`}
           >
-            <span className="mr-1 sm:mr-2 text-xs font-medium text-gray-700 dark:text-gray-200 select-none">
-              {darkMode ? '🌙' : '☀️'}
-            </span>
-            <span className={`relative inline-block w-8 h-5 sm:w-10 sm:h-6 transition-colors duration-200 ${darkMode ? 'bg-blue-600' : 'bg-gray-300'} rounded-full`}>
-              <span
-                className={`absolute left-0.5 top-0.5 sm:left-1 sm:top-1 w-4 h-4 bg-white rounded-full shadow-md transform transition-transform duration-200 ${darkMode ? 'translate-x-3 sm:translate-x-4' : ''}`}
-              />
-            </span>
+            🌙
+          </span>
+          <span
+            className={`absolute right-1 text-blue-500 text-sm transition-opacity duration-300 ${
+              darkMode ? 'opacity-0' : 'opacity-100'
+            }`}
+          >
+            ☀️
+          </span>
+          <span
+            className={`inline-block w-6 h-6 bg-white rounded-full shadow-md transform transition-transform duration-300 ${
+              darkMode ? 'translate-x-[20px]' : 'translate-x-0'
+            }`}
+          />
+        </button>
+
+        {/* Avatar */}
+        <div className="relative">
+          <button
+            ref={avatarRef}
+            onClick={() => setPopoverOpen((prev) => !prev)}
+            className="w-9 h-9 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center border-2 border-white dark:border-gray-800 shadow-md hover:shadow-lg"
+          >
+            U
           </button>
-          <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gray-300 dark:bg-gray-700 rounded-full flex items-center justify-center">
-            <span className="text-gray-600 dark:text-gray-200 font-medium text-xs sm:text-sm">U</span>
-          </div>
+          {popoverOpen && (
+            <div
+              ref={popoverRef}
+              className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-xl ring-1 ring-black/5 dark:ring-white/10 py-2 z-50"
+            >
+              <button
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                onClick={() => setPopoverOpen(false)}
+              >
+                Profile
+              </button>
+              <button
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                onClick={() => setPopoverOpen(false)}
+              >
+                Account Settings
+              </button>
+              <button
+                className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 transition border-t border-gray-200 dark:border-gray-800"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
   );
 };
 
-export default AppBar; 
+export default AppBar;
