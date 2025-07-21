@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   FaBullhorn, FaUsers, FaChartBar, FaRocket, FaChevronDown, FaChevronRight,
-  FaRegFileAlt, FaRegChartBar, FaRegStar, FaRegListAlt, FaRegBell, FaRegHeart, FaRegUser, FaRegClock, FaRegCheckCircle, FaRegEdit, FaRegFolderOpen, FaRegFlag, FaRegEnvelope, FaRegThumbsUp, FaRegCalendarAlt, FaRegMoneyBillAlt, FaRegLightbulb, FaRegEye, FaRegBookmark, FaRegCopy, FaRegQuestionCircle
+  FaRegFileAlt, FaRegChartBar, FaRegStar, FaRegListAlt, FaRegBell, FaRegHeart, FaRegUser, FaRegClock, FaRegCheckCircle, FaRegEdit, FaRegFolderOpen, FaRegFlag, FaRegEnvelope, FaRegThumbsUp, FaRegCalendarAlt, FaRegMoneyBillAlt, FaRegLightbulb, FaRegBookmark, FaRegCopy, FaRegQuestionCircle
 } from "react-icons/fa";
+import { useAuth } from "../Hooks/useAuth";
 
 const navItems = [
   {
@@ -88,8 +89,22 @@ const navItems = [
 
 const Sidebar = ({ isOpen }) => {
   const [openPath, setOpenPath] = useState([]);
+  const { user } = useAuth();
+  console.log("user", user);
   // Tooltip state: { title, depth, position: {top, left, width} }
   const [tooltip, setTooltip] = useState(null);
+
+  // Clear tooltip on scroll to prevent positioning issues
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (tooltip) {
+        setTooltip(null);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [tooltip]);
 
   const handleToggle = (title, depth) => {
     setOpenPath((prev) => {
@@ -110,12 +125,33 @@ const Sidebar = ({ isOpen }) => {
   const handleMouseEnter = (e, title, depth) => {
     if (!shouldShowTooltip(title)) return;
     const rect = e.currentTarget.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    
+    // Calculate tooltip position
+    let left = rect.right + 8;
+    let top = rect.top + rect.height / 2;
+    
+    // Adjust horizontal position if tooltip would go off-screen
+    const tooltipWidth = Math.min(title.length * 8 + 24, 200); // Estimate tooltip width
+    if (left + tooltipWidth > viewportWidth - 16) {
+      left = rect.left - tooltipWidth - 8;
+    }
+    
+    // Adjust vertical position if tooltip would go off-screen
+    const tooltipHeight = 32; // Estimate tooltip height
+    if (top + tooltipHeight > viewportHeight - 16) {
+      top = viewportHeight - tooltipHeight - 16;
+    } else if (top - tooltipHeight < 16) {
+      top = 16;
+    }
+    
     setTooltip({
       title,
       depth,
       position: {
-        top: rect.top + window.scrollY + rect.height / 2,
-        left: rect.right + 8,
+        top: top + window.scrollY,
+        left: left,
         width: rect.width,
       },
     });
@@ -149,9 +185,10 @@ const Sidebar = ({ isOpen }) => {
                   {item.icon || <FaChevronRight className="opacity-60" />}
                 </span>
                 <span
-                  className={`ml-3 text-sm font-medium whitespace-nowrap transition-opacity duration-300 ${
+                  className={`ml-3 text-sm font-medium transition-opacity duration-300 ${
                     isOpen ? "opacity-100" : "opacity-0 hidden"
-                  }`}
+                  } ${item.title.length > 20 ? "truncate max-w-[140px]" : "whitespace-nowrap"}`}
+                  title={item.title.length > 20 ? item.title : ""}
                 >
                   {item.title}
                 </span>
@@ -177,9 +214,10 @@ const Sidebar = ({ isOpen }) => {
                   {item.icon || <FaChevronRight className="opacity-60" />}
                 </span>
                 <span
-                  className={`ml-3 text-sm font-medium whitespace-nowrap transition-opacity duration-300 ${
+                  className={`ml-3 text-sm font-medium transition-opacity duration-300 ${
                     isOpen ? "opacity-100" : "opacity-0 hidden"
-                  }`}
+                  } ${item.title.length > 20 ? "truncate max-w-[140px]" : "whitespace-nowrap"}`}
+                  title={item.title.length > 20 ? item.title : ""}
                 >
                   {item.title}
                 </span>
@@ -215,14 +253,15 @@ const Sidebar = ({ isOpen }) => {
         `}
             >
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center">
-                A
+                {(user?.user_name && user.user_name.charAt(0)) || "U"}
+                
               </div>
               <div className="transition-all duration-300 ease-in-out">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                  Admin User
+                  {user?.user_name || "User"}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-300">
-                  admin@example.com
+                  {user?.user_email || "No email"}
                 </p>
               </div>
             </div>
@@ -230,20 +269,24 @@ const Sidebar = ({ isOpen }) => {
         ) : (
           <div className="w-full px-4 pb-4 flex items-center justify-center transition-all duration-500 ease-in-out">
             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center">
-              A
+              {(user?.user_name && user.user_name.charAt(0)) || "U"}
             </div>
           </div>
         )}
+
       </aside>
       {/* Custom Tooltip */}
       {tooltip && (
         <div
           className="pointer-events-none fixed z-[9999] px-3 py-1.5 text-xs font-medium rounded shadow-lg bg-gray-900 text-white dark:bg-gray-800 dark:text-gray-100 opacity-90 animate-fade-in"
           style={{
-            top: tooltip.position.top,
-            left: tooltip.position.left,
+            top: Math.max(0, tooltip.position.top),
+            left: Math.max(0, tooltip.position.left),
             transform: "translateY(-50%)",
             whiteSpace: "nowrap",
+            maxWidth: "200px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           {tooltip.title}

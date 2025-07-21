@@ -32,7 +32,7 @@ const AppBar = ({ onMenuClick, darkMode, onThemeToggle }) => {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full h-16 bg-white dark:bg-gray-900 shadow z-50 flex items-center justify-between px-4 sm:px-8 transition-colors duration-300">
+    <header className="fixed top-0 left-0 w-full h-16 bg-white dark:bg-gray-900 shadow z-50 flex items-center justify-between px-4  transition-colors duration-300">
       {/* Left Section */}
       <div className="flex items-center space-x-4">
         <button
