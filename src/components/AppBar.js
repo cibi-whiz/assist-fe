@@ -8,7 +8,7 @@ const AppBar = ({ onMenuClick, darkMode, onThemeToggle }) => {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const avatarRef = useRef(null);
   const popoverRef = useRef(null);
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -48,6 +48,7 @@ const AppBar = ({ onMenuClick, darkMode, onThemeToggle }) => {
           className="w-auto h-8 object-contain transition-all duration-300"
         />
       </div>
+      {console.log('user', user)}
 
       {/* Right Section */}
       <div className="flex items-center space-x-4">
@@ -85,9 +86,9 @@ const AppBar = ({ onMenuClick, darkMode, onThemeToggle }) => {
           <button
             ref={avatarRef}
             onClick={() => setPopoverOpen((prev) => !prev)}
-            className="w-9 h-9 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center border-2 border-white dark:border-gray-800 shadow-md hover:shadow-lg"
+            className="w-9 h-9 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center border-2 border-white dark:border-gray-800"
           >
-            U
+            {user?.user_name?.charAt(0)}
           </button>
           {popoverOpen && (
             <div

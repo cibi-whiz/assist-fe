@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   FaBullhorn, FaUsers, FaChartBar, FaRocket, FaChevronDown, FaChevronRight,
-  FaRegFileAlt, FaRegChartBar, FaRegStar, FaRegListAlt, FaRegBell, FaRegHeart, FaRegUser, FaRegClock, FaRegCheckCircle, FaRegEdit, FaRegFolderOpen, FaRegFlag, FaRegEnvelope, FaRegThumbsUp, FaRegCalendarAlt, FaRegMoneyBillAlt, FaRegLightbulb, FaRegBookmark, FaRegCopy, FaRegQuestionCircle
+  FaRegFileAlt, FaRegChartBar, FaRegStar, FaRegListAlt, FaRegBell, FaRegHeart, FaRegUser, FaRegClock, FaRegCheckCircle, FaRegEdit, FaRegFolderOpen, FaRegFlag, FaRegEnvelope, FaRegThumbsUp, FaRegCalendarAlt, FaRegMoneyBillAlt, FaRegLightbulb, FaRegBookmark, FaRegCopy, FaRegQuestionCircle, FaBox, FaSearch
 } from "react-icons/fa";
 import { useAuth } from "../Hooks/useAuth";
 
@@ -11,31 +11,38 @@ const navItems = [
     title: "Digital Marketing",
     icon: <FaChartBar />,
     subNav: [
-      { title: "Abandoned Cart", url: "/dashboard/abandonedcart", icon: <FaRegFileAlt /> },
-      { title: "FT Conversion", url: "/dashboard/ft-conversion-report", icon: <FaRegChartBar /> },
-      { title: "Product Sale Report", url: "/dashboard/product-sale-report", icon: <FaRegListAlt /> },
-      { title: "Tracking Stats", url: "/dashboard/tracking-stats", icon: <FaRegChartBar /> },
-      { title: "User Course Preview", url: "/dashboard/user-course-preview", icon: <FaRegUser /> },
-      { title: "New Product Notification", url: "/dashboard/new_product_notification", icon: <FaRegBell /> },
-      { title: "Website Redirections", url: "/dashboard/website_redirections", icon: <FaRegFlag /> },
-      { title: "Wishlist", url: "/dashboard/wishlists", icon: <FaRegHeart /> },
-      { title: "Whizcards Download", url: "/dashboard/whizcard_download", icon: <FaRegCopy /> },
-      { title: "Website 404", url: "/dashboard/web_404_errors", icon: <FaRegQuestionCircle /> },
-      { title: "Campaign", url: "/dashboard/campaign_report", icon: <FaBullhorn /> },
-      { title: "Subscription Campaigns", url: "/dashboard/subscription_campaign", icon: <FaRegBookmark /> },
-      { title: "User Favourite Courses", url: "/dashboard/user_favourite_courses", icon: <FaRegStar /> },
-      { title: "Landing Page", url: "/dashboard/landing-page", icon: <FaRegFolderOpen /> },
-      { title: "Referrals", url: "/dashboard/referrals", icon: <FaRegEnvelope /> },
+      { title: "Abandoned Cart", url: "/abandonedcart", icon: <FaRegFileAlt /> },
+      { title: "FT Conversion", url: "/ft-conversion-report", icon: <FaRegChartBar /> },
+      { title: "Product Sale Report", url: "/product-sale-report", icon: <FaRegListAlt /> },
+      { title: "Tracking Stats", url: "/tracking-stats", icon: <FaRegChartBar /> },
+      { title: "User Course Preview", url: "/user-course-preview", icon: <FaRegUser /> },
+      { title: "New Product Notification", url: "/new-product-notification", icon: <FaRegBell /> },
+      { title: "Website Redirections", url: "/website-redirections", icon: <FaRegFlag /> },
+      { title: "Wishlist", url: "/wishlists", icon: <FaRegHeart /> },
+      { title: "Whizcards Download", url: "/whizcard-download", icon: <FaRegCopy /> },
+      { title: "Website 404", url: "/web-404-errors", icon: <FaRegQuestionCircle /> },
+      { title: "Campaign", url: "/campaign-report", icon: <FaBullhorn /> },
+      { title: "Subscription Campaigns", url: "/subscription-campaign", icon: <FaRegBookmark /> },
+      { title: "User Favourite Courses", url: "/user-favourite-courses", icon: <FaRegStar /> },
+      { title: "Landing Page", url: "/landing-page", icon: <FaRegFolderOpen /> },
+      { title: "Referrals", url: "/referrals", icon: <FaRegEnvelope /> },
       {
         title: "Reviews",
         url: "",
         icon: <FaRegThumbsUp />,
         subNav: [
-          { title: "Website", url: "/dashboard/reviews/website", icon: <FaRegEdit /> },
-          { title: "Social", url: "/dashboard/reviews/social", icon: <FaRegUser /> },
-          { title: "Improvements", url: "/dashboard/reviews/improvements", icon: <FaRegLightbulb /> },
+          { title: "Website", url: "/reviews/website", icon: <FaRegEdit /> },
+          { title: "Improvements", url: "/reviews/improvements", icon: <FaRegLightbulb /> },
         ],
       },
+    ],
+  },
+  {
+    title: "One Box",
+    icon: <FaBox />,
+    subNav: [
+      { title: "User Details", url: "/user-details", icon: <FaRegUser /> },
+      { title: "User Search", url: "/user-search", icon: <FaSearch /> }
     ],
   },
   {
@@ -89,8 +96,7 @@ const navItems = [
 
 const Sidebar = ({ isOpen }) => {
   const [openPath, setOpenPath] = useState([]);
-  const { user } = useAuth();
-  console.log("user", user);
+  const { user , access} = useAuth();
   // Tooltip state: { title, depth, position: {top, left, width} }
   const [tooltip, setTooltip] = useState(null);
 
@@ -170,61 +176,66 @@ const Sidebar = ({ isOpen }) => {
             }
           : {};
         return (
+          <>
+          {access?.privileges?.web?.includes(item?.title) && (
           <li key={item.title} className="w-full">
-            {hasChildren ? (
-              <button
-                type="button"
-                onClick={() => handleToggle(item.title, depth)}
-                className={`group flex items-center w-full rounded-xl transition-all hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
+          {hasChildren ? (
+            <button
+              type="button"
+              onClick={() => handleToggle(item.title, depth)}
+              className={`group flex items-center w-full rounded-xl transition-all hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
+                isOpen ? "justify-start px-4" : "justify-center px-2"
+              } text-gray-600 dark:text-gray-300 focus:outline-none`}
+              aria-expanded={isOpenMenu}
+              {...tooltipProps}
+            >
+              <span className="w-6 h-6 flex items-center justify-center">
+                {item.icon || <FaChevronRight className="opacity-60" />}
+              </span>
+              <span
+                className={`ml-3 text-sm font-medium transition-opacity duration-300 ${
+                  isOpen ? "opacity-100" : "opacity-0 hidden"
+                } ${item.title.length > 20 ? "truncate max-w-[140px]" : "whitespace-nowrap"}`}
+                title={item.title.length > 20 ? item.title : ""}
+              >
+                {item.title}
+              </span>
+              <span className={`ml-auto transition-transform duration-200 ${isOpenMenu ? "rotate-90" : ""} ${!isOpen ? "hidden" : ""}`}>
+                <FaChevronDown />
+              </span>
+            </button>
+          ) : (
+            <NavLink
+              to={item.url}
+              className={({ isActive }) =>
+                `group flex items-center w-full rounded-xl transition-all hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
                   isOpen ? "justify-start px-4" : "justify-center px-2"
-                } text-gray-600 dark:text-gray-300 focus:outline-none`}
-                aria-expanded={isOpenMenu}
-                {...tooltipProps}
+                } ${
+                  isActive
+                    ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300"
+                    : "text-gray-600 dark:text-gray-300"
+                }`
+              }
+              {...tooltipProps}
+            >
+              <span className="w-6 h-6 flex items-center justify-center">
+                {item.icon || <FaChevronRight className="opacity-60" />}
+              </span>
+              <span
+                className={`ml-3 text-sm font-medium transition-opacity duration-300 ${
+                  isOpen ? "opacity-100" : "opacity-0 hidden"
+                } ${item.title.length > 20 ? "truncate max-w-[140px]" : "whitespace-nowrap"}`}
+                title={item.title.length > 20 ? item.title : ""}
               >
-                <span className="w-6 h-6 flex items-center justify-center">
-                  {item.icon || <FaChevronRight className="opacity-60" />}
-                </span>
-                <span
-                  className={`ml-3 text-sm font-medium transition-opacity duration-300 ${
-                    isOpen ? "opacity-100" : "opacity-0 hidden"
-                  } ${item.title.length > 20 ? "truncate max-w-[140px]" : "whitespace-nowrap"}`}
-                  title={item.title.length > 20 ? item.title : ""}
-                >
-                  {item.title}
-                </span>
-                <span className={`ml-auto transition-transform duration-200 ${isOpenMenu ? "rotate-90" : ""} ${!isOpen ? "hidden" : ""}`}>
-                  <FaChevronDown />
-                </span>
-              </button>
-            ) : (
-              <NavLink
-                to={item.url}
-                className={({ isActive }) =>
-                  `group flex items-center w-full rounded-xl transition-all hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
-                    isOpen ? "justify-start px-4" : "justify-center px-2"
-                  } ${
-                    isActive
-                      ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300"
-                      : "text-gray-600 dark:text-gray-300"
-                  }`
-                }
-                {...tooltipProps}
-              >
-                <span className="w-6 h-6 flex items-center justify-center">
-                  {item.icon || <FaChevronRight className="opacity-60" />}
-                </span>
-                <span
-                  className={`ml-3 text-sm font-medium transition-opacity duration-300 ${
-                    isOpen ? "opacity-100" : "opacity-0 hidden"
-                  } ${item.title.length > 20 ? "truncate max-w-[140px]" : "whitespace-nowrap"}`}
-                  title={item.title.length > 20 ? item.title : ""}
-                >
-                  {item.title}
-                </span>
-              </NavLink>
-            )}
-            {hasChildren && isOpenMenu && renderNav(item.subNav, depth + 1)}
-          </li>
+                {item.title}
+              </span>
+            </NavLink>
+          )}
+          {hasChildren && isOpenMenu && renderNav(item.subNav, depth + 1)}
+        </li>
+        )}
+          </>
+
         );
       })}
     </ul>
@@ -253,15 +264,15 @@ const Sidebar = ({ isOpen }) => {
         `}
             >
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center">
-                {(user?.user_name && user.user_name.charAt(0)) || "U"}
+                {(user?.user_name && user.user_name.charAt(0))}
                 
               </div>
-              <div className="transition-all duration-300 ease-in-out">
+              <div className="transition-all whitespace-nowrap duration-300 ease-in-out">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {user?.user_name || "User"}
+                  {user?.user_name}
                 </p>
-                <p className="text-xs text-gray-500 dark:text-gray-300">
-                  {user?.user_email || "No email"}
+                <p className="text-xs truncate max-w-[140px] text-gray-500 dark:text-gray-300" title={user?.user_email}>
+                  {user?.user_email}
                 </p>
               </div>
             </div>
