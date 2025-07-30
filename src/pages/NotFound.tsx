@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const NotFound = () => (
+const NotFound: React.FC = () => (
   <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
     <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 sm:p-10 flex flex-col items-center">
       <h1 className="text-5xl font-extrabold text-blue-600 dark:text-blue-400 mb-4">404</h1>

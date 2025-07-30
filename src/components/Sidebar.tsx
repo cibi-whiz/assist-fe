@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import {
   FaBullhorn, FaUsers, FaChartBar, FaRocket, FaChevronDown, FaChevronRight,
@@ -6,7 +6,28 @@ import {
 } from "react-icons/fa";
 import { useAuth } from "../Hooks/useAuth";
 
-const navItems = [
+interface NavItem {
+  title: string;
+  icon: React.ReactNode;
+  url?: string;
+  subNav?: NavItem[];
+}
+
+interface TooltipState {
+  title: string;
+  depth: number;
+  position: {
+    top: number;
+    left: number;
+    width: number;
+  };
+}
+
+interface SidebarProps {
+  isOpen: boolean;
+}
+
+const navItems: NavItem[] = [
   {
     title: "Digital Marketing",
     icon: <FaChartBar />,
@@ -94,14 +115,18 @@ const navItems = [
   },
 ];
 
-const Sidebar = ({ isOpen }) => {
-  const [openPath, setOpenPath] = useState([]);
-  const { user , access} = useAuth();
+const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
+  const [openPath, setOpenPath] = useState<string[]>([]);
+  const { user, access } = useAuth();
+  
+  // Debug logging
+  console.log('Sidebar access:', access);
+  console.log('Sidebar user:', user);
   // Tooltip state: { title, depth, position: {top, left, width} }
-  const [tooltip, setTooltip] = useState(null);
+  const [tooltip, setTooltip] = useState<TooltipState | null>(null);
 
   // Clear tooltip on scroll to prevent positioning issues
-  React.useEffect(() => {
+  useEffect(() => {
     const handleScroll = () => {
       if (tooltip) {
         setTooltip(null);
@@ -112,7 +137,7 @@ const Sidebar = ({ isOpen }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [tooltip]);
 
-  const handleToggle = (title, depth) => {
+  const handleToggle = (title: string, depth: number): void => {
     setOpenPath((prev) => {
       if (prev[depth] === title) {
         return prev.slice(0, depth);
@@ -125,10 +150,10 @@ const Sidebar = ({ isOpen }) => {
   };
 
   // Show tooltip if sidebar is collapsed or title is long
-  const shouldShowTooltip = (title) => !isOpen || title.length > 20;
+  const shouldShowTooltip = (title: string): boolean => !isOpen || title.length > 20;
 
   // Mouse events for tooltip
-  const handleMouseEnter = (e, title, depth) => {
+  const handleMouseEnter = (e: React.MouseEvent, title: string, depth: number): void => {
     if (!shouldShowTooltip(title)) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
@@ -162,23 +187,23 @@ const Sidebar = ({ isOpen }) => {
       },
     });
   };
-  const handleMouseLeave = () => setTooltip(null);
+  
+  const handleMouseLeave = (): void => setTooltip(null);
 
-  const renderNav = (items, depth = 0) => (
+  const renderNav = (items: NavItem[], depth: number = 0): React.ReactNode => (
     <ul className={depth === 0 ? "w-full" : "pl-4 border-l border-gray-200 dark:border-gray-700 ml-2"}>
       {items.map((item) => {
         const hasChildren = item.subNav && item.subNav.length > 0;
         const isOpenMenu = openPath[depth] === item.title;
         const tooltipProps = shouldShowTooltip(item.title)
           ? {
-              onMouseEnter: (e) => handleMouseEnter(e, item.title, depth),
+              onMouseEnter: (e: React.MouseEvent) => handleMouseEnter(e, item.title, depth),
               onMouseLeave: handleMouseLeave,
             }
           : {};
         return (
-          <>
-          {access?.privileges?.web?.includes(item?.title) && (
-          <li key={item.title} className="w-full">
+          <React.Fragment key={item.title}>
+          <li className="w-full">
           {hasChildren ? (
             <button
               type="button"
@@ -206,7 +231,7 @@ const Sidebar = ({ isOpen }) => {
             </button>
           ) : (
             <NavLink
-              to={item.url}
+              to={item.url || ""}
               className={({ isActive }) =>
                 `group flex items-center w-full rounded-xl transition-all hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
                   isOpen ? "justify-start px-4" : "justify-center px-2"
@@ -231,11 +256,9 @@ const Sidebar = ({ isOpen }) => {
               </span>
             </NavLink>
           )}
-          {hasChildren && isOpenMenu && renderNav(item.subNav, depth + 1)}
+          {hasChildren && isOpenMenu && renderNav(item.subNav!, depth + 1)}
         </li>
-        )}
-          </>
-
+          </React.Fragment>
         );
       })}
     </ul>
@@ -311,4 +334,4 @@ export default Sidebar;
 
 // Add this to your global CSS for fade-in animation:
 // .animate-fade-in { animation: fadeIn 0.15s ease; }
-// @keyframes fadeIn { from { opacity: 0; } to { opacity: 0.9; } }
+// @keyframes fadeIn { from { opacity: 0; } to { opacity: 0.9; } } 

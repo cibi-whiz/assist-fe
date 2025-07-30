@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
 
-const Settings = () => {
-  const [notifications, setNotifications] = useState({
+interface NotificationSettings {
+  email: boolean;
+  push: boolean;
+  sms: boolean;
+}
+
+const Settings: React.FC = () => {
+  const [notifications, setNotifications] = useState<NotificationSettings>({
     email: true,
     push: false,
     sms: true
   });
+
+  const handleNotificationChange = (type: keyof NotificationSettings): void => {
+    setNotifications(prev => ({
+      ...prev,
+      [type]: !prev[type]
+    }));
+  };
 
   return (
     <div className="space-y-6">
@@ -102,72 +115,85 @@ const Settings = () => {
                   placeholder="Confirm new password"
                 />
               </div>
-              <button className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
-                Update Password
-              </button>
             </div>
           </div>
         </div>
+
         {/* Sidebar Settings */}
         <div className="space-y-6">
-          {/* Notifications */}
+          {/* Notification Settings */}
           <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Notifications</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Email Notifications</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-300">Receive updates via email</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Email Notifications</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Receive email updates</p>
                 </div>
                 <button
-                  onClick={() => setNotifications({...notifications, email: !notifications.email})}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
+                  onClick={() => handleNotificationChange('email')}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     notifications.email ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                   }`}
                 >
-                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
-                    notifications.email ? 'translate-x-6' : 'translate-x-1'
-                  }`} />
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      notifications.email ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
                 </button>
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Push Notifications</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-300">Receive push notifications</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Push Notifications</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Receive push notifications</p>
                 </div>
                 <button
-                  onClick={() => setNotifications({...notifications, push: !notifications.push})}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
+                  onClick={() => handleNotificationChange('push')}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     notifications.push ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                   }`}
                 >
-                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
-                    notifications.push ? 'translate-x-6' : 'translate-x-1'
-                  }`} />
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      notifications.push ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
                 </button>
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">SMS Notifications</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-300">Receive SMS alerts</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200">SMS Notifications</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Receive SMS updates</p>
                 </div>
                 <button
-                  onClick={() => setNotifications({...notifications, sms: !notifications.sms})}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
+                  onClick={() => handleNotificationChange('sms')}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     notifications.sms ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                   }`}
                 >
-                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-200 ${
-                    notifications.sms ? 'translate-x-6' : 'translate-x-1'
-                  }`} />
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      notifications.sms ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                  />
                 </button>
               </div>
             </div>
           </div>
+
           {/* Theme Settings */}
           <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Appearance</h3>
             <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Theme</label>
+                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100">
+                  <option>Light</option>
+                  <option>Dark</option>
+                  <option>System</option>
+                </select>
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Language</label>
                 <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100">
@@ -177,30 +203,6 @@ const Settings = () => {
                   <option>German</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Time Zone</label>
-                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100">
-                  <option>UTC (GMT+0)</option>
-                  <option>EST (GMT-5)</option>
-                  <option>PST (GMT-8)</option>
-                  <option>CET (GMT+1)</option>
-                </select>
-              </div>
-            </div>
-          </div>
-          {/* Account Actions */}
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Account Actions</h3>
-            <div className="space-y-3">
-              <button className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 text-left text-gray-700 dark:text-gray-200">
-                Download Data
-              </button>
-              <button className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 text-left text-gray-700 dark:text-gray-200">
-                Export Settings
-              </button>
-              <button className="w-full px-4 py-2 border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-50 dark:hover:bg-red-900 transition-colors duration-200 text-left">
-                Delete Account
-              </button>
             </div>
           </div>
         </div>

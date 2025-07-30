@@ -1,14 +1,27 @@
 import React from 'react';
 
-const Analytics = () => {
-  const metrics = [
+interface Metric {
+  name: string;
+  value: string;
+  change: string;
+  trend: 'up' | 'down';
+}
+
+interface TopPage {
+  page: string;
+  views: string;
+  change: string;
+}
+
+const Analytics: React.FC = () => {
+  const metrics: Metric[] = [
     { name: 'Page Views', value: '2.4M', change: '+12%', trend: 'up' },
     { name: 'Unique Visitors', value: '890K', change: '+8%', trend: 'up' },
     { name: 'Bounce Rate', value: '32%', change: '-5%', trend: 'down' },
     { name: 'Avg. Session', value: '4m 32s', change: '+15%', trend: 'up' }
   ];
 
-  const topPages = [
+  const topPages: TopPage[] = [
     { page: '/dashboard', views: '125K', change: '+12%' },
     { page: '/products', views: '98K', change: '+8%' },
     { page: '/about', views: '76K', change: '+15%' },
@@ -98,47 +111,34 @@ const Analytics = () => {
                   Change
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Actions
+                  Performance
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
               {topPages.map((page, index) => (
                 <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-800">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{page.page}</div>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">
+                    {page.page}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                    {page.views}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600 dark:text-green-300">
+                    {page.change}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900 dark:text-gray-100">{page.views}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-medium text-green-600 dark:text-green-300">{page.change}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-blue-600 dark:text-blue-300 hover:text-blue-900 dark:hover:text-blue-400">View Details</button>
+                    <div className="flex items-center">
+                      <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2 mr-2">
+                        <div className="bg-green-600 h-2 rounded-full" style={{ width: '75%' }}></div>
+                      </div>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">75%</span>
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
-      </div>
-      {/* Real-time Stats */}
-      <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Real-time Activity</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <div className="text-3xl font-bold text-blue-600 dark:text-blue-300">24</div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">Active Users</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-green-600 dark:text-green-300">156</div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">Sessions Today</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-purple-600 dark:text-purple-300">89%</div>
-            <div className="text-sm text-gray-600 dark:text-gray-300">Uptime</div>
-          </div>
         </div>
       </div>
     </div>

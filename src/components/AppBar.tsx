@@ -4,19 +4,25 @@ import assistWhite from '../Assets/Images/assist-white.svg';
 import { FaBars } from 'react-icons/fa';
 import { useAuth } from '../Hooks/useAuth';
 
-const AppBar = ({ onMenuClick, darkMode, onThemeToggle }) => {
-  const [popoverOpen, setPopoverOpen] = useState(false);
-  const avatarRef = useRef(null);
-  const popoverRef = useRef(null);
+interface AppBarProps {
+  onMenuClick: () => void;
+  darkMode: boolean;
+  onThemeToggle: () => void;
+}
+
+const AppBar: React.FC<AppBarProps> = ({ onMenuClick, darkMode, onThemeToggle }) => {
+  const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
+  const avatarRef = useRef<HTMLButtonElement>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
   const { logout, user } = useAuth();
 
   useEffect(() => {
-    function handleClickOutside(event) {
+    function handleClickOutside(event: MouseEvent) {
       if (
         popoverRef.current &&
-        !popoverRef.current.contains(event.target) &&
+        !popoverRef.current.contains(event.target as Node) &&
         avatarRef.current &&
-        !avatarRef.current.contains(event.target)
+        !avatarRef.current.contains(event.target as Node)
       ) {
         setPopoverOpen(false);
       }
@@ -26,7 +32,7 @@ const AppBar = ({ onMenuClick, darkMode, onThemeToggle }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     setPopoverOpen(false);
     logout();
   };
@@ -48,7 +54,6 @@ const AppBar = ({ onMenuClick, darkMode, onThemeToggle }) => {
           className="w-auto h-8 object-contain transition-all duration-300"
         />
       </div>
-      {console.log('user', user)}
 
       {/* Right Section */}
       <div className="flex items-center space-x-4">
@@ -121,4 +126,4 @@ const AppBar = ({ onMenuClick, darkMode, onThemeToggle }) => {
   );
 };
 
-export default AppBar;
+export default AppBar; 

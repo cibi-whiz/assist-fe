@@ -1,29 +1,45 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import { userLogin, privileges } from "../Services/Auth";
 import { useToast } from "../components/ToastContext";
-
 import axios from "axios";
 
-/**
- * AuthContext provides authentication and authorization state and actions.
- * @typedef {Object} AuthContextValue
- * @property {Object} access - User access privileges (web, lms, role).
- * @property {Object|null} user - Current user object or null.
- * @property {string} role - User's role as a string (e.g., 'Super Admin', 'Admin', 'User', 'Guest').
- * @property {Function} login - Function to log in a user.
- * @property {Function} logout - Function to log out the user.
- * @property {boolean} loading - Loading state for async actions.
- */
+// Type definitions
+interface User {
+  token: string;
+  user_name: string;
+  user_email: string;
+  [key: string]: any;
+}
 
-const DEFAULT_ACCESS = { web: [], lms: [], role: "" };
+interface Access {
+  web: string[];
+  lms: string[];
+  role: string;
+}
+
+interface AuthContextValue {
+  access: Access;
+  user: User | null;
+  role: string;
+  login: (data: any) => Promise<void>;
+  logout: () => void;
+  loading: boolean;
+}
+
+interface AuthProviderProps {
+  children: ReactNode;
+  userData?: User | null;
+}
+
+const DEFAULT_ACCESS: Access = { web: [], lms: [], role: "" };
 
 /**
  * Sets or removes the default axios authorization header.
- * @param {string|null} token - JWT token or null to remove.
+ * @param token - JWT token or null to remove.
  */
-const setAxiosAuthToken = (token) => {
+const setAxiosAuthToken = (token: string | null): void => {
   if (token) {
     axios.defaults.headers.common["authorization"] = token;
   } else {
@@ -31,24 +47,21 @@ const setAxiosAuthToken = (token) => {
   }
 };
 
-const AuthContext = createContext();
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 /**
  * AuthProvider wraps the app and provides authentication context.
- * @param {Object} props
- * @param {React.ReactNode} props.children
- * @param {Object} [props.userData] - Initial user data (optional)
  */
-export const AuthProvider = ({ children, userData }) => {
+export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
   const navigate = useNavigate();
-  const [user, setUser] = useLocalStorage("assistuser", userData);
-  const [access, setAccess] = useState(DEFAULT_ACCESS);
-  const [role, setRole] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useLocalStorage<User | null>("assistuser", userData || null);
+  const [access, setAccess] = useState<Access>(DEFAULT_ACCESS);
+  const [role, setRole] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const { showToast } = useToast();
 
   // Helper to reset access state
-  const resetAccess = () => {
+  const resetAccess = (): void => {
     setAccess(DEFAULT_ACCESS);
     setRole("");
   };
@@ -64,7 +77,7 @@ export const AuthProvider = ({ children, userData }) => {
     if (user) {
       setLoading(true);
       privileges(user)
-        .then((response) => {
+        .then((response: any) => {
           if (!isMounted) return;
           if (response?.status === "success") {
             let roleValue = response?.data?.role;
@@ -83,7 +96,7 @@ export const AuthProvider = ({ children, userData }) => {
             showToast(response?.message || "Failed to fetch privileges", "error");
           }
         })
-        .catch((err) => {
+        .catch((err: any) => {
           resetAccess();
           if (err?.response?.status === 401) {
             showToast("Session Expired. Please log in again.", "error");
@@ -113,9 +126,9 @@ export const AuthProvider = ({ children, userData }) => {
 
   /**
    * Logs in the user and sets auth state.
-   * @param {Object} data - Login credentials
+   * @param data - Login credentials
    */
-  const login = async (data) => {
+  const login = async (data: any): Promise<void> => {
     setLoading(true);
     try {
       const response = await userLogin(data);
@@ -127,7 +140,7 @@ export const AuthProvider = ({ children, userData }) => {
       } else {
         showToast(response?.message || "Login failed", "error");
       }
-    } catch (err) {
+    } catch (err: any) {
       showToast(err?.response?.data?.message || "Login error", "error");
       if (process.env.NODE_ENV === "development") {
         // eslint-disable-next-line no-console
@@ -141,7 +154,7 @@ export const AuthProvider = ({ children, userData }) => {
   /**
    * Logs out the user and resets auth state.
    */
-  const logout = () => {
+  const logout = (): void => {
     setUser(null);
     resetAccess();
     setAxiosAuthToken(null);
@@ -149,7 +162,7 @@ export const AuthProvider = ({ children, userData }) => {
   };
 
   // Memoize context value for performance
-  const value = useMemo(
+  const value = useMemo<AuthContextValue>(
     () => ({
       access,
       user,
@@ -161,11 +174,17 @@ export const AuthProvider = ({ children, userData }) => {
     [user, access, role, loading]
   );
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return React.createElement(AuthContext.Provider, { value }, children);
 };
 
 /**
  * useAuth hook to access authentication context.
- * @returns {AuthContextValue}
+ * @returns AuthContextValue
  */
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextValue => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+}; 

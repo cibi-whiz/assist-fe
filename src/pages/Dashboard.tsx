@@ -1,14 +1,28 @@
 import React from 'react';
 
-const Dashboard = () => {
-  const stats = [
+interface Stat {
+  title: string;
+  value: string;
+  change: string;
+  bgColor: string;
+  iconColor: string;
+}
+
+interface Activity {
+  user: string;
+  action: string;
+  time: string;
+}
+
+const Dashboard: React.FC = () => {
+  const stats: Stat[] = [
     { title: 'Total Users', value: '12,345', change: '+12%', bgColor: 'bg-blue-100 dark:bg-blue-900', iconColor: 'text-blue-600 dark:text-blue-300' },
     { title: 'Revenue', value: '$45,678', change: '+8%', bgColor: 'bg-green-100 dark:bg-green-900', iconColor: 'text-green-600 dark:text-green-300' },
     { title: 'Orders', value: '1,234', change: '+15%', bgColor: 'bg-purple-100 dark:bg-purple-900', iconColor: 'text-purple-600 dark:text-purple-300' },
     { title: 'Growth', value: '23.5%', change: '+2%', bgColor: 'bg-orange-100 dark:bg-orange-900', iconColor: 'text-orange-600 dark:text-orange-300' }
   ];
 
-  const recentActivity = [
+  const recentActivity: Activity[] = [
     { user: 'John Doe', action: 'placed an order', time: '2 minutes ago' },
     { user: 'Jane Smith', action: 'updated profile', time: '5 minutes ago' },
     { user: 'Mike Johnson', action: 'completed payment', time: '10 minutes ago' },

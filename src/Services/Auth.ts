@@ -6,18 +6,34 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api
 // Configure axios defaults
 axios.defaults.baseURL = API_BASE_URL;
 
+interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+interface User {
+  token: string;
+  user_name: string;
+  user_email: string;
+  [key: string]: any;
+}
+
+interface ApiResponse {
+  status: 'success' | 'error';
+  message?: string;
+  data?: any;
+}
+
 /**
  * User login function
- * @param {Object} credentials - Login credentials
- * @param {string} credentials.email - User email
- * @param {string} credentials.password - User password
- * @returns {Promise<Object>} Login response
+ * @param credentials - Login credentials
+ * @returns Login response
  */
-export const userLogin = async (credentials) => {
+export const userLogin = async (credentials: LoginCredentials): Promise<ApiResponse> => {
   try {
     const response = await axios.post('/auth/assistLogin', credentials);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     // Handle different error scenarios
     if (error.response) {
       // Server responded with error status
@@ -46,10 +62,10 @@ export const userLogin = async (credentials) => {
 
 /**
  * Get user privileges
- * @param {Object} user - User object with token
- * @returns {Promise<Object>} Privileges response
+ * @param user - User object with token
+ * @returns Privileges response
  */
-export const privileges = async (user) => {
+export const privileges = async (user: User): Promise<ApiResponse> => {
   try {
     const response = await axios.get('/auth/access', {
       headers: {
@@ -57,8 +73,8 @@ export const privileges = async (user) => {
       }
     });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     // Re-throw the error to be handled by the calling function
     throw error;
   }
-};
+}; 

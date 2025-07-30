@@ -4,14 +4,14 @@ import assistBlack from '../Assets/Images/assist-black.svg';
 import assistWhite from '../Assets/Images/assist-white.svg';
 import { useAuth } from '../Hooks/useAuth';
 
-const EyeIcon = () => (
+const EyeIcon: React.FC = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12s-3.75 6.75-9.75 6.75S2.25 12 2.25 12z" />
     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
   </svg>
 );
 
-const EyeOffIcon = () => (
+const EyeOffIcon: React.FC = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
     <path strokeLinecap="round" strokeLinejoin="round" d="M2 2L22 22" />
     <path strokeLinecap="round" strokeLinejoin="round" d="M6.71277 6.7226C3.66479 8.79527 2 12 2 12C2 12 5.63636 19 12 19C14.0503 19 15.8174 18.2734 17.2711 17.2884M11 5.05822C11.3254 5.02013 11.6588 5 12 5C18.3636 5 22 12 22 12C22 12 21.3082 13.3317 20 14.8335" />
@@ -19,15 +19,15 @@ const EyeOffIcon = () => (
   </svg>
 );
 
-const Login = () => {
+const Login: React.FC = () => {
   const { login, loading } = useAuth();
-  const [email, setEmail] = useState(localStorage.getItem('rememberedEmail') || "");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [remember, setRemember] = useState(!!localStorage.getItem('rememberedEmail'));
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState<string>(localStorage.getItem('rememberedEmail') || "");
+  const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [remember, setRemember] = useState<boolean>(!!localStorage.getItem('rememberedEmail'));
+  const [error, setError] = useState<string>("");
 
-  const [darkMode, setDarkMode] = useState(() => {
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
     const stored = localStorage.getItem('theme');
     if (stored) return stored === 'dark';
     // Default to light mode initially
@@ -35,10 +35,10 @@ const Login = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem("darkMode", darkMode);
+    localStorage.setItem("darkMode", darkMode.toString());
   }, [darkMode]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (!email || !password) {
       setError("Please enter both email and password.");
@@ -79,7 +79,7 @@ const Login = () => {
               autoComplete="email"
               className="w-full max-w-[420px] px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               required
             />
           </div>
@@ -94,7 +94,7 @@ const Login = () => {
                 autoComplete="current-password"
                 className="w-full max-w-[420px] px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none pr-10"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 required
               />
               <button

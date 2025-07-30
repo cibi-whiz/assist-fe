@@ -6,6 +6,7 @@ import AppBar from './components/AppBar';
 import Sidebar from './components/Sidebar';
 import { ToastProvider } from './components/ToastContext';
 import Toast from './components/Toast';
+
 // Lazy imports for route components
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Analytics = lazy(() => import('./pages/Analytics'));
@@ -14,7 +15,14 @@ const Login = lazy(() => import('./pages/Login'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const AbandonedCart = lazy(() => import('./pages/DM/AbandonedCart'));
 
-function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }) {
+interface AppRoutesProps {
+  sidebarOpen: boolean;
+  toggleSidebar: () => void;
+  darkMode: boolean;
+  handleThemeToggle: () => void;
+}
+
+function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }: AppRoutesProps) {
   const location = useLocation();
   const { user, loading } = useAuth();
 
@@ -72,8 +80,8 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }) 
 }
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => {
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
     const stored = localStorage.getItem('theme');
     if (stored) return stored === 'dark';
     // Default to light mode initially
@@ -124,4 +132,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 
