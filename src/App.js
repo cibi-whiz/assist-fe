@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './Hooks/useAuth';
 import 'react-toastify/dist/ReactToastify.css';
 import AppBar from './components/AppBar';
 import Sidebar from './components/Sidebar';
-import Dashboard from './pages/Dashboard';
-import Analytics from './pages/Analytics';
-import Settings from './pages/Settings';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
 import { ToastProvider } from './components/ToastContext';
 import Toast from './components/Toast';
+// Lazy imports for route components
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Analytics = lazy(() => import('./pages/Analytics'));
+const Settings = lazy(() => import('./pages/Settings'));
+const Login = lazy(() => import('./pages/Login'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const AbandonedCart = lazy(() => import('./pages/DM/AbandonedCart'));
 
 function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }) {
   const location = useLocation();
@@ -19,10 +21,12 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }) 
   if (!user) {
     // Not authenticated: Only allow /login, redirect all else to /login
     return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
+      <Suspense fallback={<div className="flex justify-center items-center h-96"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div></div>}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Suspense>
     );
   }
 
@@ -49,13 +53,16 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }) 
                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
               </div>
             ) : (
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <Suspense fallback={<div className="flex justify-center items-center h-96"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div></div>}>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/dm/abandonedcart" element={<AbandonedCart />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
             )}
           </div>
         </main>
