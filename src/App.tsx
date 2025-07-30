@@ -13,7 +13,7 @@ const Analytics = lazy(() => import('./pages/Analytics'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Login = lazy(() => import('./pages/Login'));
 const NotFound = lazy(() => import('./pages/NotFound'));
-const AbandonedCart = lazy(() => import('./pages/DM/AbandonedCart'));
+const AbandonedCart = lazy(() => import('./pages/DM/AbandonedCart/AbandonedCart'));
 
 interface AppRoutesProps {
   sidebarOpen: boolean;
@@ -55,7 +55,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }: 
         <main className={`flex-1 w-full transition-all duration-300 ease-in-out pt-16 ${
           sidebarOpen ? 'lg:ml-64 md:ml-16' : 'lg:ml-16'
         } ml-0`}>
-          <div className="p-4 sm:p-6 w-full max-w-full">
+          <div className="p-4 sm:p-6 w-full max-w-full transition-colors duration-300">
             {loading ? (
               <div className="flex justify-center items-center h-96">
                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>

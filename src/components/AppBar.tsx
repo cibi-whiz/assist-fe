@@ -38,20 +38,20 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, darkMode, onThemeToggle })
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full h-16 bg-white dark:bg-gray-900 shadow z-50 flex items-center justify-between px-4  transition-colors duration-300">
+    <header className="fixed top-0 left-0 w-full h-16 bg-white dark:bg-gray-900 shadow z-50 flex items-center justify-between px-4 transition-colors duration-300">
       {/* Left Section */}
       <div className="flex items-center space-x-4">
         <button
           onClick={onMenuClick}
-          className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900"
+          className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors duration-300"
           aria-label="Toggle Sidebar"
         >
-          <FaBars className="text-gray-700 dark:text-gray-200 text-lg" />
+          <FaBars className="text-gray-700 dark:text-gray-200 text-lg transition-colors duration-300" />
         </button>
         <img
           src={darkMode ? assistWhite : assistBlack}
           alt="Assist"
-          className="w-auto h-8 object-contain transition-all duration-300"
+          className="w-auto h-8 object-contain transition-opacity duration-300"
         />
       </div>
 
@@ -60,21 +60,21 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, darkMode, onThemeToggle })
         {/* Theme Toggle */}
         <button
           onClick={onThemeToggle}
-          className="relative flex items-center px-1.5 py-1 bg-gray-200 dark:bg-gray-800 rounded-full transition duration-300 shadow-inner"
+          className="relative flex items-center px-1.5 py-1 bg-gray-200 dark:bg-gray-800 rounded-full transition-colors duration-300 shadow-inner hover:shadow-md"
           style={{ width: '52px', height: '32px' }}
           role="switch"
           aria-checked={darkMode}
         >
           <span
-            className={`absolute left-1 text-yellow-400 text-sm transition-opacity duration-300 ${
-              darkMode ? 'opacity-100' : 'opacity-0'
+            className={`absolute left-1 text-yellow-400 text-sm transition-all duration-300 ${
+              darkMode ? 'opacity-100 scale-110' : 'opacity-0 scale-90'
             }`}
           >
             🌙
           </span>
           <span
-            className={`absolute right-1 text-blue-500 text-sm transition-opacity duration-300 ${
-              darkMode ? 'opacity-0' : 'opacity-100'
+            className={`absolute right-1 text-blue-500 text-sm transition-all duration-300 ${
+              darkMode ? 'opacity-0 scale-90' : 'opacity-100 scale-110'
             }`}
           >
             ☀️
@@ -91,29 +91,29 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, darkMode, onThemeToggle })
           <button
             ref={avatarRef}
             onClick={() => setPopoverOpen((prev) => !prev)}
-            className="w-9 h-9 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center border-2 border-white dark:border-gray-800"
+            className="w-9 h-9 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center border-2 border-white dark:border-gray-800 transition-colors duration-300"
           >
             {user?.user_name?.charAt(0)}
           </button>
           {popoverOpen && (
             <div
               ref={popoverRef}
-              className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-xl ring-1 ring-black/5 dark:ring-white/10 py-2 z-50"
+              className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-900 rounded-xl shadow-xl ring-1 ring-black/5 dark:ring-white/10 py-2 z-50 transition-colors duration-300 animate-fade-in-up"
             >
               <button
-                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-300"
                 onClick={() => setPopoverOpen(false)}
               >
                 Profile
               </button>
               <button
-                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-300"
                 onClick={() => setPopoverOpen(false)}
               >
                 Account Settings
               </button>
               <button
-                className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 transition border-t border-gray-200 dark:border-gray-800"
+                className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-300 border-t border-gray-200 dark:border-gray-800"
                 onClick={handleLogout}
               >
                 Logout

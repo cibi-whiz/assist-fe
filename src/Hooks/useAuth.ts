@@ -58,12 +58,14 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
   const [access, setAccess] = useState<Access>(DEFAULT_ACCESS);
   const [role, setRole] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [privilegesFetched, setPrivilegesFetched] = useState<boolean>(false);
   const { showToast } = useToast();
 
   // Helper to reset access state
   const resetAccess = (): void => {
     setAccess(DEFAULT_ACCESS);
     setRole("");
+    setPrivilegesFetched(false);
   };
 
   // Set axios token if user exists
@@ -71,10 +73,10 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
     setAxiosAuthToken(user?.token || null);
   }, [user]);
 
-  // Fetch privileges when user changes
+  // Fetch privileges only on initial load if user exists and privileges haven't been fetched
   useEffect(() => {
     let isMounted = true;
-    if (user) {
+    if (user && !privilegesFetched) {
       setLoading(true);
       privileges(user)
         .then((response: any) => {
@@ -91,6 +93,7 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
               setRole("Guest");
             }
             setAccess(response?.data || DEFAULT_ACCESS);
+            setPrivilegesFetched(true);
           } else {
             resetAccess();
             showToast(response?.message || "Failed to fetch privileges", "error");
@@ -115,14 +118,57 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
         .finally(() => {
           if (isMounted) setLoading(false);
         });
-    } else {
+    } else if (!user) {
       resetAccess();
     }
     return () => {
       isMounted = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  }, [user, privilegesFetched]);
+
+  /**
+   * Fetch user privileges
+   */
+  const fetchPrivileges = async (userData: User): Promise<void> => {
+    setLoading(true);
+    try {
+      const response = await privileges(userData);
+      if (response?.status === "success") {
+        let roleValue = response?.data?.role;
+        if (roleValue.includes("1")) {
+          setRole("Super Admin");
+        } else if (roleValue.includes("2")) {
+          setRole("Admin");
+        } else if (!roleValue.includes("1") && !roleValue.includes("2")) {
+          setRole("User");
+        } else {
+          setRole("Guest");
+        }
+        setAccess(response?.data || DEFAULT_ACCESS);
+        setPrivilegesFetched(true);
+      } else {
+        resetAccess();
+        showToast(response?.message || "Failed to fetch privileges", "error");
+      }
+    } catch (err: any) {
+      resetAccess();
+      if (err?.response?.status === 401) {
+        showToast("Session Expired. Please log in again.", "error");
+        setTimeout(() => {
+          setUser(null);
+        }, 2000);
+      } else {
+        showToast("Error fetching privileges", "error");
+        if (process.env.NODE_ENV === "development") {
+          // eslint-disable-next-line no-console
+          console.error("Privileges fetch error:", err);
+        }
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   /**
    * Logs in the user and sets auth state.
@@ -134,9 +180,13 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
       const response = await userLogin(data);
       if (response?.status === "success") {
         setUser(response.data);
+        setAxiosAuthToken(response?.data?.token);
+        
+        // Fetch privileges immediately after successful login
+        await fetchPrivileges(response.data);
+        
         showToast("Login Success", "success");
         navigate("/dashboard", { replace: true });
-        setAxiosAuthToken(response?.data?.token);
       } else {
         showToast(response?.message || "Login failed", "error");
       }

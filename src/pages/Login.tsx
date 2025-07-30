@@ -27,16 +27,12 @@ const Login: React.FC = () => {
   const [remember, setRemember] = useState<boolean>(!!localStorage.getItem('rememberedEmail'));
   const [error, setError] = useState<string>("");
 
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
+  const [darkMode] = useState<boolean>(() => {
     const stored = localStorage.getItem('theme');
     if (stored) return stored === 'dark';
     // Default to light mode initially
     return false;
   });
-
-  useEffect(() => {
-    localStorage.setItem("darkMode", darkMode.toString());
-  }, [darkMode]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -60,31 +56,31 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
-      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 sm:p-10 flex flex-col items-center">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 sm:p-10 flex flex-col items-center transition-colors duration-300">
         {/* Logo */}
-        <div className=" flex flex-col items-center">
-          <div className="w-56 h-22 bg-white dark:bg-gray-900 flex items-center justify-center">
-            <img src={darkMode ? assistWhite : assistBlack} alt="Assist Logo" className="w-48 h-20 object-contain" draggable={false} />
+        <div className="flex flex-col items-center transition-colors duration-300">
+          <div className="w-56 h-22 bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
+            <img src={darkMode ? assistWhite : assistBlack} alt="Assist Logo" className="w-48 h-20 object-contain transition-opacity duration-300" draggable={false} />
           </div>
         </div>
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center">Sign in to your account</h2>
-        <form className="space-y-3 w-full" onSubmit={handleSubmit}>
+        <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center transition-colors duration-300">Sign in to your account</h2>
+        <form className="space-y-3 w-full transition-colors duration-300" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1 transition-colors duration-300">
               Email address
             </label>
             <input
               id="email"
               type="email"
               autoComplete="email"
-              className="w-full max-w-[420px] px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full max-w-[420px] px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-300"
               value={email}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               required
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1 transition-colors duration-300">
               Password
             </label>
             <div className="relative flex items-center">
@@ -92,14 +88,14 @@ const Login: React.FC = () => {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
-                className="w-full max-w-[420px] px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none pr-10"
+                className="w-full max-w-[420px] px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none pr-10 transition-colors duration-300"
                 value={password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 required
               />
               <button
                 type="button"
-                className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none"
+                className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none transition-colors duration-300"
                 onClick={() => setShowPassword((prev) => !prev)}
                 tabIndex={0}
                 aria-label={showPassword ? "Hide password" : "Show password"}
@@ -109,23 +105,23 @@ const Login: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <label className="flex items-center text-sm text-gray-700 dark:text-gray-200 cursor-pointer">
+            <label className="flex items-center text-sm text-gray-700 dark:text-gray-200 cursor-pointer transition-colors duration-300">
               <input
                 type="checkbox"
-                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2"
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 mr-2 transition-colors duration-300"
                 checked={remember}
                 onChange={() => setRemember((prev) => !prev)}
               />
               Remember me
             </label>
-            <Link to="/forgot-password" className="text-sm text-blue-600 dark:text-blue-400 hover:underline">
+            <Link to="/forgot-password" className="text-sm text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-300">
               Forgot password?
             </Link>
           </div>
-          {error && <div className="text-red-500 text-sm text-center">{error}</div>}
+          {error && <div className="text-red-500 text-sm text-center transition-colors duration-300">{error}</div>}
           <button
             type="submit"
-            className={`w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 hover:scale-105 active:scale-100 disabled:opacity-60 disabled:cursor-not-allowed ${(!email || !password || loading) ? 'opacity-60 cursor-not-allowed' : 'opacity-100'}`}
+            className={`w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 hover:scale-105 active:scale-100 disabled:opacity-60 disabled:cursor-not-allowed ${(!email || !password || loading) ? 'opacity-60 cursor-not-allowed' : 'opacity-100'}`}
             disabled={!email || !password || loading}
           >
             {loading ? "Logging in..." : "Login"}

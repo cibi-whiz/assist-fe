@@ -21,14 +21,14 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 transition-theme">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Settings</h1>
-          <p className="text-gray-600 dark:text-gray-300 mt-1">Manage your account settings and preferences.</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 transition-theme">Settings</h1>
+          <p className="text-gray-600 dark:text-gray-300 mt-1 transition-theme">Manage your account settings and preferences.</p>
         </div>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200">
+        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-theme">
           Save Changes
         </button>
       </div>
@@ -38,49 +38,49 @@ const Settings: React.FC = () => {
         {/* Profile Settings */}
         <div className="lg:col-span-2 space-y-6">
           {/* Profile Information */}
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Profile Information</h3>
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 transition-theme">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-theme">Profile Information</h3>
             <div className="space-y-4">
               <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center transition-theme">
                   <span className="text-white font-bold text-xl">A</span>
                 </div>
                 <div>
-                  <button className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200 text-gray-700 dark:text-gray-200">
+                  <button className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-theme text-gray-700 dark:text-gray-200">
                     Change Photo
                   </button>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">First Name</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 transition-theme">First Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100 transition-theme"
                     defaultValue="Admin"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Last Name</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 transition-theme">Last Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100 transition-theme"
                     defaultValue="User"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Email</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 transition-theme">Email</label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100 transition-theme"
                     defaultValue="admin@example.com"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Phone</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 transition-theme">Phone</label>
                   <input
                     type="tel"
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100 transition-theme"
                     defaultValue="+1 (555) 123-4567"
                   />
                 </div>
@@ -88,33 +88,33 @@ const Settings: React.FC = () => {
             </div>
           </div>
           {/* Security Settings */}
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Security</h3>
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 transition-theme">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-theme">Security</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Current Password</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 transition-theme">Current Password</label>
                 <input
                   type="password"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100 transition-theme"
                   placeholder="Enter current password"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">New Password</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 transition-theme">New Password</label>
                 <input
                   type="password"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100 transition-theme"
                   placeholder="Enter new password"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Confirm New Password</label>
-                <input
-                  type="password"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100"
-                  placeholder="Confirm new password"
-                />
-              </div>
+                              <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 transition-theme">Confirm New Password</label>
+                  <input
+                    type="password"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100 transition-theme"
+                    placeholder="Confirm new password"
+                  />
+                </div>
             </div>
           </div>
         </div>
@@ -122,22 +122,22 @@ const Settings: React.FC = () => {
         {/* Sidebar Settings */}
         <div className="space-y-6">
           {/* Notification Settings */}
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Notifications</h3>
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 transition-theme">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-theme">Notifications</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Email Notifications</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Receive email updates</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 transition-theme">Email Notifications</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 transition-theme">Receive email updates</p>
                 </div>
                 <button
                   onClick={() => handleNotificationChange('email')}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-theme focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     notifications.email ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                   }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-theme ${
                       notifications.email ? 'translate-x-6' : 'translate-x-1'
                     }`}
                   />
@@ -145,17 +145,17 @@ const Settings: React.FC = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Push Notifications</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Receive push notifications</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 transition-theme">Push Notifications</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 transition-theme">Receive push notifications</p>
                 </div>
                 <button
                   onClick={() => handleNotificationChange('push')}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-theme focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     notifications.push ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                   }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-theme ${
                       notifications.push ? 'translate-x-6' : 'translate-x-1'
                     }`}
                   />
@@ -163,17 +163,17 @@ const Settings: React.FC = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200">SMS Notifications</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Receive SMS updates</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200 transition-theme">SMS Notifications</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 transition-theme">Receive SMS updates</p>
                 </div>
                 <button
                   onClick={() => handleNotificationChange('sms')}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-theme focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     notifications.sms ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-700'
                   }`}
                 >
                   <span
-                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-theme ${
                       notifications.sms ? 'translate-x-6' : 'translate-x-1'
                     }`}
                   />
@@ -183,20 +183,20 @@ const Settings: React.FC = () => {
           </div>
 
           {/* Theme Settings */}
-          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Appearance</h3>
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 transition-theme">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 transition-theme">Appearance</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Theme</label>
-                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 transition-theme">Theme</label>
+                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100 transition-theme">
                   <option>Light</option>
                   <option>Dark</option>
                   <option>System</option>
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Language</label>
-                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2 transition-theme">Language</label>
+                <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:text-gray-100 transition-theme">
                   <option>English</option>
                   <option>Spanish</option>
                   <option>French</option>

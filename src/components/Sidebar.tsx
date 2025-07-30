@@ -208,14 +208,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <button
               type="button"
               onClick={() => handleToggle(item.title, depth)}
-              className={`group flex items-center w-full rounded-xl transition-all hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
+              className={`group flex items-center w-full rounded-xl transition-colors duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
                 isOpen ? "justify-start px-4" : "justify-center px-2"
               } text-gray-600 dark:text-gray-300 focus:outline-none`}
               aria-expanded={isOpenMenu}
               {...tooltipProps}
             >
-              <span className="w-6 h-6 flex items-center justify-center">
-                {item.icon || <FaChevronRight className="opacity-60" />}
+              <span className="w-6 h-6 flex items-center justify-center transition-colors duration-300">
+                {item.icon || <FaChevronRight className="opacity-60 transition-colors duration-300" />}
               </span>
               <span
                 className={`ml-3 text-sm font-medium transition-opacity duration-300 ${
@@ -225,7 +225,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               >
                 {item.title}
               </span>
-              <span className={`ml-auto transition-transform duration-200 ${isOpenMenu ? "rotate-90" : ""} ${!isOpen ? "hidden" : ""}`}>
+              <span className={`ml-auto transition-transform duration-300 ${isOpenMenu ? "rotate-90" : ""} ${!isOpen ? "hidden" : ""}`}>
                 <FaChevronDown />
               </span>
             </button>
@@ -233,7 +233,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <NavLink
               to={item.url || ""}
               className={({ isActive }) =>
-                `group flex items-center w-full rounded-xl transition-all hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
+                `group flex items-center w-full rounded-xl transition-colors duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
                   isOpen ? "justify-start px-4" : "justify-center px-2"
                 } ${
                   isActive
@@ -243,8 +243,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
               }
               {...tooltipProps}
             >
-              <span className="w-6 h-6 flex items-center justify-center">
-                {item.icon || <FaChevronRight className="opacity-60" />}
+              <span className="w-6 h-6 flex items-center justify-center transition-colors duration-300">
+                {item.icon || <FaChevronRight className="opacity-60 transition-colors duration-300" />}
               </span>
               <span
                 className={`ml-3 text-sm font-medium transition-opacity duration-300 ${
@@ -267,7 +267,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   return (
     <>
       <aside
-        className={`fixed top-16 left-0 h-[calc(100%-4rem)] z-50 flex flex-col justify-between border-r shadow-md transition-all duration-300 ease-in-out
+        className={`fixed top-16 left-0 h-[calc(100%-4rem)] z-50 flex flex-col justify-between border-r shadow-md transition-colors duration-300
           ${isOpen ? "w-64" : "w-16"}
           bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800
         `}
@@ -275,26 +275,26 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
       >
         {/* Navigation Items */}
         {/* NOTE: Add the .scrollbar-hide CSS to your global styles if not using the Tailwind plugin */}
-        <nav className="flex flex-col p-2 pb-4 gap-2 items-center w-full overflow-y-auto scrollbar-hide" style={{msOverflowStyle:'none', scrollbarWidth:'none'}}>
+        <nav className="flex flex-col p-2 pb-4 gap-2 items-center w-full overflow-y-auto scrollbar-hide transition-colors duration-300" style={{msOverflowStyle:'none', scrollbarWidth:'none'}}>
           {renderNav(navItems)}
         </nav>
         {/* Bottom User Info */}
         {isOpen ? (
-          <div className="w-full px-4 pb-4 transition-all duration-500 ease-in-out">
+          <div className="w-full px-4 pb-4 transition-colors duration-300">
             <div
               className={`flex items-center p-3 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-sm
-          justify-start space-x-3 hover:shadow-md transition-all duration-300 ease-in-out
+          justify-start space-x-3 hover:shadow-md transition-colors duration-300
         `}
             >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center transition-colors duration-300">
                 {(user?.user_name && user.user_name.charAt(0))}
                 
               </div>
-              <div className="transition-all whitespace-nowrap duration-300 ease-in-out">
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">
+              <div className="transition-colors duration-300 whitespace-nowrap">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-300">
                   {user?.user_name}
                 </p>
-                <p className="text-xs truncate max-w-[140px] text-gray-500 dark:text-gray-300" title={user?.user_email}>
+                <p className="text-xs truncate max-w-[140px] text-gray-500 dark:text-gray-300 transition-colors duration-300" title={user?.user_email}>
                   {user?.user_email}
                 </p>
               </div>
