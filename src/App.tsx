@@ -67,7 +67,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }: 
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/analytics" element={<Analytics />} />
                   <Route path="/settings" element={<Settings />} />
-                  <Route path="/dm/abandonedcart" element={<AbandonedCart />} />
+                  <Route path="/dm/abandonedcart" element={<AbandonedCart darkMode={darkMode} />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

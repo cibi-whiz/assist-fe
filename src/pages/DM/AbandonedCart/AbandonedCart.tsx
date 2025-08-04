@@ -39,6 +39,7 @@ interface Filters {
 interface CartItem {
   id: number;
   first_name: string;
+  user_id: number;
   last_name: string;
   email: string;
   country: string;
@@ -64,7 +65,11 @@ interface SortConfig {
   direction: 'asc' | 'desc';
 }
 
-const AbandonedCart: React.FC = () => {
+interface AbandonedCartProps {
+  darkMode?: boolean;
+}
+
+const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
   const { showToast } = useToast();
   const [filters, setFilters] = useState<Filters>({
     from_date: moment().subtract(6, 'days').format('YYYY-MM-DD'),
@@ -917,7 +922,9 @@ const AbandonedCart: React.FC = () => {
         <MailModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
+          item={selectedCartItem.user_id}
           products={selectedCartItem.cart_details}
+          darkMode={darkMode}
         />
       )}
     </div>
