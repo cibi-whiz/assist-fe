@@ -779,7 +779,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
                     <td className="px-4 py-2 whitespace-nowrap">
                       <div>
                         <div className="text-xs font-medium text-gray-900 dark:text-gray-100">
-                          {item.first_name} {item.last_name}
+                          {item.first_name}
                         </div>
                         <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
                           {item.email} 

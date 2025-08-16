@@ -5,6 +5,7 @@ import {
   FaRegFileAlt, FaRegChartBar, FaRegStar, FaRegListAlt, FaRegBell, FaRegHeart, FaRegUser, FaRegClock, FaRegCheckCircle, FaRegEdit, FaRegFolderOpen, FaRegFlag, FaRegEnvelope, FaRegThumbsUp, FaRegCalendarAlt, FaRegMoneyBillAlt, FaRegLightbulb, FaRegBookmark, FaRegCopy, FaRegQuestionCircle, FaBox, FaSearch
 } from "react-icons/fa";
 import { useAuth } from "../Hooks/useAuth";
+import { useLocalStorage } from "../Hooks/useLocalStorage";
 
 interface NavItem {
   title: string;
@@ -116,12 +117,9 @@ const navItems: NavItem[] = [
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
-  const [openPath, setOpenPath] = useState<string[]>([]);
-  const { user, access } = useAuth();
+  const [openPath, setOpenPath] = useLocalStorage<string[]>('sidebar-openPath', []);
+  const { user } = useAuth();
   
-  // Debug logging
-  console.log('Sidebar access:', access);
-  console.log('Sidebar user:', user);
   // Tooltip state: { title, depth, position: {top, left, width} }
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);
 
@@ -138,15 +136,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   }, [tooltip]);
 
   const handleToggle = (title: string, depth: number): void => {
-    setOpenPath((prev) => {
-      if (prev[depth] === title) {
-        return prev.slice(0, depth);
-      } else {
-        const newPath = prev.slice(0, depth);
-        newPath[depth] = title;
-        return newPath;
-      }
-    });
+    if (openPath[depth] === title) {
+      setOpenPath(openPath.slice(0, depth));
+    } else {
+      const newPath = openPath.slice(0, depth);
+      newPath[depth] = title;
+      setOpenPath(newPath);
+    }
   };
 
   // Show tooltip if sidebar is collapsed or title is long

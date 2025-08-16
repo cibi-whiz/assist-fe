@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './Hooks/useAuth';
 import 'react-toastify/dist/ReactToastify.css';
 import AppBar from './components/AppBar';
 import Sidebar from './components/Sidebar';
+import WelcomeScreen from './components/WelcomeScreen';
 import { ToastProvider } from './components/ToastContext';
 import Toast from './components/Toast';
 
@@ -20,9 +21,11 @@ interface AppRoutesProps {
   toggleSidebar: () => void;
   darkMode: boolean;
   handleThemeToggle: () => void;
+  showWelcome: boolean;
+  onWelcomeComplete: () => void;
 }
 
-function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }: AppRoutesProps) {
+function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle, showWelcome, onWelcomeComplete }: AppRoutesProps) {
   const location = useLocation();
   const { user, loading } = useAuth();
 
@@ -38,8 +41,20 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }: 
     );
   }
 
-  // Authenticated: If on /login, redirect to /dashboard
-  if (location.pathname === '/login') {
+  // Show welcome screen if just logged in (ensure user exists or is loading)
+  if (showWelcome && (user || loading)) {
+    return (
+      <WelcomeScreen 
+        isVisible={showWelcome}
+        onComplete={onWelcomeComplete}
+        userName={user?.user_name || "User"}
+        darkMode={darkMode}
+      />
+    );
+  }
+
+  // Authenticated: If on /login or root, redirect to /dashboard
+  if (location.pathname === '/login' || location.pathname === '/') {
     return <Navigate to="/dashboard" replace />;
   }
 
@@ -80,13 +95,45 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle }: 
 }
 
 function App() {
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
+    const stored = localStorage.getItem('sidebarOpen');
+    if (stored) return stored === 'true';
+    // Default to open initially
+    return true;
+  });
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     const stored = localStorage.getItem('theme');
     if (stored) return stored === 'dark';
     // Default to light mode initially
     return false;
   });
+  const [showWelcome, setShowWelcome] = useState<boolean>(false);
+
+  // Check for welcome screen flag when component mounts and on storage changes
+  useEffect(() => {
+    const checkWelcomeFlag = () => {
+      const justLoggedIn = localStorage.getItem('justLoggedIn');
+      if (justLoggedIn === 'true') {
+        localStorage.removeItem('justLoggedIn'); // Remove flag after reading
+        // Small delay to ensure user state is fully loaded
+        setTimeout(() => {
+          setShowWelcome(true);
+        }, 100);
+      }
+    };
+
+    // Check on mount
+    checkWelcomeFlag();
+
+    // Listen for storage changes and custom welcome trigger event
+    window.addEventListener('storage', checkWelcomeFlag);
+    window.addEventListener('welcomeScreenTrigger', checkWelcomeFlag);
+    
+    return () => {
+      window.removeEventListener('storage', checkWelcomeFlag);
+      window.removeEventListener('welcomeScreenTrigger', checkWelcomeFlag);
+    };
+  }, []);
 
   useEffect(() => {
     // Apply theme immediately on mount and when darkMode changes
@@ -107,11 +154,17 @@ function App() {
   }, [darkMode]);
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+    const newSidebarState = !sidebarOpen;
+    setSidebarOpen(newSidebarState);
+    localStorage.setItem('sidebarOpen', newSidebarState.toString());
   };
 
   const handleThemeToggle = () => {
     setDarkMode((prev) => !prev);
+  };
+
+  const handleWelcomeComplete = () => {
+    setShowWelcome(false);
   };
 
   return (
@@ -123,6 +176,8 @@ function App() {
             toggleSidebar={toggleSidebar}
             darkMode={darkMode}
             handleThemeToggle={handleThemeToggle}
+            showWelcome={showWelcome}
+            onWelcomeComplete={handleWelcomeComplete}
           />
           <Toast />
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import assistBlack from '../Assets/Images/assist-black.svg';
 import assistWhite from '../Assets/Images/assist-white.svg';
@@ -49,6 +49,11 @@ const Login: React.FC = () => {
       } else {
         localStorage.removeItem('rememberedEmail');
       }
+      // Set flag to show welcome screen
+      localStorage.setItem('justLoggedIn', 'true');
+      
+      // Dispatch custom event to notify App component
+      window.dispatchEvent(new CustomEvent('welcomeScreenTrigger'));
     } catch (err) {
       setError("Login failed. Please try again.");
     }

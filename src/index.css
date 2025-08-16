@@ -44,11 +44,79 @@ code {
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(20px) scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Enhanced Portal Dropdown Animations */
+@keyframes portal-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes portal-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.5);
+  }
+}
+
+/* Welcome Screen Animations */
+@keyframes welcome-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(-5px) rotate(-1deg);
+  }
+}
+
+@keyframes star-twinkle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
   }
 }
 
@@ -64,7 +132,29 @@ code {
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.3s cubic-bezier(0.4,0,0.2,1);
+  animation: portal-slide-in 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+.animate-portal-glow {
+  animation: portal-glow 2s ease-in-out infinite;
+}
+
+.animate-welcome-float {
+  animation: welcome-float 3s ease-in-out infinite;
+}
+
+.animate-star-twinkle {
+  animation: star-twinkle 1.5s ease-in-out infinite;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 8s ease-in-out infinite;
+}
+
+.animate-text-shimmer {
+  background-size: 200% auto;
+  animation: text-shimmer 2s linear infinite;
 }
 
 .animate-fade-out {

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocalStorage } from "./useLocalStorage";
 import { userLogin, privileges } from "../Services/Auth";
@@ -174,7 +174,7 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
    * Logs in the user and sets auth state.
    * @param data - Login credentials
    */
-  const login = async (data: any): Promise<void> => {
+  const login = useCallback(async (data: any): Promise<void> => {
     setLoading(true);
     try {
       const response = await userLogin(data);
@@ -186,7 +186,7 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
         await fetchPrivileges(response.data);
         
         showToast("Login Success", "success");
-        navigate("/dashboard", { replace: true });
+        // Navigation will be handled by App component based on welcome screen logic
       } else {
         showToast(response?.message || "Login failed", "error");
       }
@@ -199,17 +199,17 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setUser, showToast, fetchPrivileges]);
 
   /**
    * Logs out the user and resets auth state.
    */
-  const logout = (): void => {
+  const logout = useCallback((): void => {
     setUser(null);
     resetAccess();
     setAxiosAuthToken(null);
-    navigate("/", { replace: true });
-  };
+    navigate("/login", { replace: true });
+  }, [setUser, navigate]);
 
   // Memoize context value for performance
   const value = useMemo<AuthContextValue>(
@@ -221,7 +221,7 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
       logout,
       loading,
     }),
-    [user, access, role, loading]
+    [user, access, role, loading, login, logout]
   );
 
   return React.createElement(AuthContext.Provider, { value }, children);
