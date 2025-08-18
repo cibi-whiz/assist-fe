@@ -41,20 +41,41 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [particles, setParticles] = useState<Array<{id: number, x: number, y: number, delay: number}>>([]);
+  const [geometricShapes, setGeometricShapes] = useState<Array<{id: number, x: number, y: number, size: number, type: string, delay: number}>>([]);
+  const [constellationStars, setConstellationStars] = useState<Array<{id: number, x: number, y: number, brightness: number, delay: number}>>([]);
   const [showSparkles, setShowSparkles] = useState(false);
   
   const controls = useAnimation();
   const currentQuote = inspirationalQuotes[currentQuoteIndex];
 
-  // Generate floating particles
+  // Generate refined particles and shapes
   useEffect(() => {
-    const newParticles = Array.from({ length: 8 }, (_, i) => ({
+    const newParticles = Array.from({ length: 10 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      delay: Math.random() * 2
+      delay: Math.random() * 6
     }));
     setParticles(newParticles);
+
+    const newGeometricShapes = Array.from({ length: 3 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 40 + 30,
+      type: 'circle',
+      delay: Math.random() * 4
+    }));
+    setGeometricShapes(newGeometricShapes);
+
+    const newConstellationStars = Array.from({ length: 12 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      brightness: Math.random() * 0.6 + 0.4,
+      delay: Math.random() * 3
+    }));
+    setConstellationStars(newConstellationStars);
   }, []);
 
   // Animation variants
@@ -177,79 +198,218 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
           : "bg-gradient-to-br from-violet-600 via-purple-600 to-indigo-800"
       }`}
     >
-      {/* Enhanced Animated Background */}
+      {/* Elegant Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
-        {/* Optimized gradient orbs */}
+        {/* Refined gradient orbs with harmonious movement */}
         <motion.div
           animate={{
             x: [-200, 200, -200],
-            y: [-200, 100, -200],
+            y: [-100, 100, -100],
             scale: [0.8, 1.2, 0.8],
-            opacity: [0.3, 0.6, 0.3],
+            opacity: [0.15, 0.4, 0.15],
           }}
           transition={{
-            duration: 12,
+            duration: 20,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: [0.4, 0.0, 0.2, 1]
           }}
-          className="absolute -top-32 -right-32 w-80 h-80 bg-gradient-to-br from-cyan-400/40 to-blue-600/40 rounded-full blur-3xl"
+          className="absolute -top-32 -right-32 w-96 h-96 bg-gradient-to-br from-violet-500/30 to-purple-600/40 rounded-full blur-3xl"
         />
 
         <motion.div
           animate={{
             x: [200, -200, 200],
-            y: [200, -100, 200],
+            y: [150, -150, 150],
             scale: [0.9, 1.4, 0.9],
-            opacity: [0.2, 0.5, 0.2],
+            opacity: [0.12, 0.35, 0.12],
           }}
           transition={{
-            duration: 15,
+            duration: 25,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: [0.4, 0.0, 0.2, 1],
+            delay: 2
           }}
-          className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-tr from-pink-400/35 to-purple-700/35 rounded-full blur-3xl"
+          className="absolute -bottom-32 -left-32 w-[32rem] h-[32rem] bg-gradient-to-tr from-cyan-400/25 to-blue-600/35 rounded-full blur-3xl"
         />
 
         <motion.div
           animate={{
-            x: [-100, 100, -100],
+            x: [-150, 150, -150],
             y: [100, -100, 100],
             scale: [0.7, 1.1, 0.7],
-            opacity: [0.25, 0.45, 0.25],
+            opacity: [0.1, 0.3, 0.1],
           }}
           transition={{
             duration: 18,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: [0.4, 0.0, 0.2, 1],
+            delay: 4
           }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-yellow-400/25 to-orange-500/25 rounded-full blur-3xl"
+          className="absolute top-1/3 left-1/2 -translate-x-1/2 w-72 h-72 bg-gradient-to-r from-indigo-400/20 to-purple-500/30 rounded-full blur-2xl"
         />
 
-        {/* Floating particles */}
+        {/* Sophisticated floating particles */}
         {particles.map((particle) => (
           <motion.div
             key={particle.id}
-            className="absolute w-1 h-1 bg-white/60 rounded-full"
+            className="absolute w-1 h-1 bg-white/40 rounded-full"
             style={{
               left: `${particle.x}%`,
               top: `${particle.y}%`,
+              filter: 'blur(0.5px)'
             }}
             animate={{
-              y: [0, -30, 0],
-              opacity: [0, 1, 0],
-              scale: [0, 1.5, 0],
+              y: [0, -40, 0],
+              opacity: [0, 0.6, 0],
+              scale: [0, 1.2, 0],
             }}
             transition={{
-              duration: 4,
+              duration: 8 + particle.id * 0.2,
               repeat: Infinity,
               delay: particle.delay,
-              ease: "easeInOut"
+              ease: [0.4, 0.0, 0.2, 1]
             }}
           />
         ))}
 
-        {/* Mesh gradient overlay */}
+        {/* Subtle geometric elements */}
+        {geometricShapes.slice(0, 3).map((shape) => (
+          <motion.div
+            key={shape.id}
+            className="absolute pointer-events-none"
+            style={{
+              left: `${shape.x}%`,
+              top: `${shape.y}%`,
+              width: `${shape.size * 0.6}px`,
+              height: `${shape.size * 0.6}px`,
+            }}
+            animate={{
+              rotate: [0, 360],
+              scale: [0.8, 1, 0.8],
+              opacity: [0.05, 0.15, 0.05],
+            }}
+            transition={{
+              duration: 20 + shape.id * 3,
+              repeat: Infinity,
+              delay: shape.delay,
+              ease: "linear"
+            }}
+          >
+            <div
+              className="w-full h-full rounded-full bg-gradient-to-br from-white/10 to-violet-400/20 border border-white/5 backdrop-blur-sm"
+            />
+          </motion.div>
+        ))}
+
+        {/* Elegant wave system */}
+        <motion.div
+          className="absolute inset-0 opacity-30"
+          animate={{
+            background: [
+              'linear-gradient(45deg, transparent 0%, rgba(139, 92, 246, 0.1) 50%, transparent 100%)',
+              'linear-gradient(135deg, transparent 0%, rgba(59, 130, 246, 0.1) 50%, transparent 100%)',
+              'linear-gradient(225deg, transparent 0%, rgba(168, 85, 247, 0.1) 50%, transparent 100%)',
+              'linear-gradient(315deg, transparent 0%, rgba(79, 70, 229, 0.1) 50%, transparent 100%)',
+              'linear-gradient(45deg, transparent 0%, rgba(139, 92, 246, 0.1) 50%, transparent 100%)',
+            ]
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: [0.4, 0.0, 0.2, 1]
+          }}
+        />
+
+        {/* Breathing light effect */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] rounded-full"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.05, 0.15, 0.05],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: [0.4, 0.0, 0.2, 1]
+          }}
+          style={{
+            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.1) 30%, transparent 70%)',
+            filter: 'blur(40px)'
+          }}
+        />
+
+        {/* Subtle constellation */}
+        {constellationStars.slice(0, 12).map((star) => (
+          <motion.div
+            key={star.id}
+            className="absolute w-px h-px bg-white rounded-full"
+            style={{
+              left: `${star.x}%`,
+              top: `${star.y}%`,
+              boxShadow: '0 0 2px rgba(255,255,255,0.5)'
+            }}
+            animate={{
+              opacity: [0.3, 0.8, 0.3],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: 3 + star.id * 0.3,
+              repeat: Infinity,
+              delay: star.delay,
+              ease: [0.4, 0.0, 0.2, 1]
+            }}
+          />
+        ))}
+
+        {/* Flowing aurora */}
+        <motion.div
+          className="absolute inset-0 opacity-20"
+          animate={{
+            background: [
+              'linear-gradient(0deg, transparent 0%, rgba(139, 92, 246, 0.2) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(168, 85, 247, 0.1) 75%, transparent 100%)',
+              'linear-gradient(60deg, transparent 0%, rgba(59, 130, 246, 0.2) 25%, rgba(168, 85, 247, 0.15) 50%, rgba(139, 92, 246, 0.1) 75%, transparent 100%)',
+              'linear-gradient(120deg, transparent 0%, rgba(168, 85, 247, 0.2) 25%, rgba(139, 92, 246, 0.15) 50%, rgba(59, 130, 246, 0.1) 75%, transparent 100%)',
+              'linear-gradient(180deg, transparent 0%, rgba(139, 92, 246, 0.2) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(168, 85, 247, 0.1) 75%, transparent 100%)',
+              'linear-gradient(0deg, transparent 0%, rgba(139, 92, 246, 0.2) 25%, rgba(59, 130, 246, 0.15) 50%, rgba(168, 85, 247, 0.1) 75%, transparent 100%)',
+            ]
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: [0.4, 0.0, 0.2, 1]
+          }}
+        />
+
+        {/* Elegant mesh overlay */}
+        <motion.div 
+          className="absolute inset-0"
+          animate={{
+            background: [
+              'radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.06) 0%, transparent 50%)',
+              'radial-gradient(circle at 75% 25%, rgba(168, 85, 247, 0.08) 0%, transparent 50%), radial-gradient(circle at 25% 75%, rgba(79, 70, 229, 0.06) 0%, transparent 50%)',
+              'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.06) 0%, transparent 50%)',
+              'radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.08) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(59, 130, 246, 0.06) 0%, transparent 50%)',
+            ]
+          }}
+          transition={{
+            duration: 30,
+            repeat: Infinity,
+            ease: [0.4, 0.0, 0.2, 1]
+          }}
+        />
+
+        {/* Subtle depth gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/5 via-transparent to-indigo-900/8" />
+        <div className="absolute inset-0 bg-gradient-to-tl from-transparent via-white/3 to-transparent" />
+        
+        {/* Elegant vignette */}
+        <div 
+          className="absolute inset-0" 
+          style={{
+            background: 'radial-gradient(circle at center, transparent 0%, transparent 60%, rgba(0,0,0,0.1) 100%)'
+          }} 
+        />
       </div>
 
       {/* Main Content */}
