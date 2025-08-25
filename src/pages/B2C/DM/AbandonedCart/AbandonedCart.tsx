@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaDownload,
   FaSearch,
@@ -9,20 +9,21 @@ import {
   FaEnvelope,
   FaUser,
   FaEye,
-  FaChevronDown,
   FaFilter,
   FaRedo,
   FaSort,
   FaSortUp,
   FaSortDown,
 } from "react-icons/fa";
-import { FaCopy } from "react-icons/fa6";
 import { getCartData, createdByRequest } from "../../../../Services/DM/Abandoned/services";
 import Daterange from "../../../../components/Daterange";
-
+import { Input } from 'antd';
 import { useToast } from "../../../../components/ToastContext";
 import { Countries } from "../../../../Props/Countries";
-import MailModal from "./MailModal";
+import MailDrawer from "./MailDrawer";
+
+import Autocomplete from "../../../../components/Autocomplete";
+import Table from "../../../../components/Table";
 // @ts-ignore
 const moment = require("moment").default || require("moment");
 
@@ -30,10 +31,10 @@ interface Filters {
   from_date: string;
   to_date: string;
   email: string;
-  country: string;
+  country: { value: string | number; label: string } | null;
   customer: boolean;
   sent: string;
-  sent_by: string;
+  sent_by: { value: string; label?: string } | null;
 }
 
 interface CartItem {
@@ -42,7 +43,7 @@ interface CartItem {
   user_id: number;
   last_name: string;
   email: string;
-  country: string;
+  country: { value: string | number; label: string } | null ;
   total_price: number;
   items_count: number;
   added_on: string;
@@ -75,10 +76,10 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
     from_date: moment().subtract(6, 'days').format('YYYY-MM-DD'),
     to_date: moment().format('YYYY-MM-DD'),
     email: "",
-    country: "",
+    country: null,
     customer: false,
     sent: "",
-    sent_by: "",
+    sent_by: null,
   });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
@@ -94,21 +95,56 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
   });
 
   // Country autocomplete states
-  const [countrySearch, setCountrySearch] = useState("");
-  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
-  const [filteredCountries, setFilteredCountries] = useState(Countries.data);
-  const countryDropdownRef = useRef<HTMLDivElement>(null);
-  const createdByDropdownRef = useRef<HTMLDivElement>(null);
   const [createdByOptions, setCreatedByOptions] = useState<CreatedByOption[]>([]);
-  const [showCreatedByDropdown, setShowCreatedByDropdown] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<any>(null);
-  const [selectedCreatedBy, setSelectedCreatedBy] = useState<CreatedByOption | null>(null);
   
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(null);
-  const [createdBySearch, setCreatedBySearch] = useState("");
-  const [filteredCreatedByOptions, setFilteredCreatedByOptions] = useState<CreatedByOption[]>([]);
+
+  const columns = [
+    {
+      key: 'index',
+      label: '#',
+      sortable: false,
+    },
+    {
+      key: 'email',
+      label: 'Customer',
+      sortable: true,
+    },
+    {
+      key: 'total_price',
+      label: 'Total Price',
+      sortable: true,
+    },
+    {
+      key: 'items_count',
+      label: 'Items Count',
+      sortable: true,
+    },
+    {
+      key: 'updated_at',
+      label: 'Added On',
+      sortable: true,
+    },
+    {
+      key: 'items_count',
+      label: 'Priority',
+      sortable: true,
+    },
+    {
+      key: 'sender_name',
+      label: 'Mail Sent By',
+      sortable: true,
+    }
+  ]
+  const actions = [
+    {
+      icon: <FaEye />,
+      onClick: (item:any) => handleOpenModal(item),
+      title: 'View Details'
+    }
+  ]
 
   const fetchData = async (page: number = 1) => {
     try {
@@ -117,9 +153,9 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
         from_date: filters.from_date,
         to_date: filters.to_date,
         email: filters.email,
-        country: filters.country,
+        country: filters.country ? String(filters.country.value) : "",
         sent: filters.sent,
-        sent_by: filters.sent_by,
+        sent_by: filters.sent_by ? String(filters.sent_by.value) : "",
         customer: filters.customer ? 1 : 0,
         page: page,
         limit: pagination.per_page,
@@ -168,7 +204,6 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
   const fetchCreatedBy = async () => {
     try {
       const res = await createdByRequest();
-      console.log("Created by response:", res);
       setCreatedByOptions(res.data || []);
     } catch (error) {
       console.error('Error fetching created by:', error);
@@ -184,62 +219,8 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
     fetchCreatedBy();
   }, []);
 
-  // Handle country search and filtering
-  useEffect(() => {
-    if (countrySearch.trim() === "") {
-      setFilteredCountries(Countries.data);
-    } else {
-      const filtered = Countries.data.filter((country) =>
-        country.label.toLowerCase().includes(countrySearch.toLowerCase())
-      );
-      setFilteredCountries(filtered);
-    }
-  }, [countrySearch]);
 
-  // Handle created by search and filtering
-  useEffect(() => {
-    if (createdBySearch.trim() === "") {
-      setFilteredCreatedByOptions(createdByOptions);
-    } else {
-      const filtered = createdByOptions.filter((option) =>
-        (option.name?.toLowerCase().includes(createdBySearch.toLowerCase()) ||
-         option.email?.toLowerCase().includes(createdBySearch.toLowerCase()))
-      );
-      setFilteredCreatedByOptions(filtered);
-    }
-  }, [createdBySearch, createdByOptions]);
-
-  // Handle click outside to close dropdowns
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (countryDropdownRef.current && !countryDropdownRef.current.contains(event.target as Node)) {
-        setShowCountryDropdown(false);
-      }
-      if (createdByDropdownRef.current && !createdByDropdownRef.current.contains(event.target as Node)) {
-        setShowCreatedByDropdown(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  // Keyboard navigation for dropdowns
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setShowCountryDropdown(false);
-        setShowCreatedByDropdown(false);
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const handleFilterChange = (key: keyof Filters, value: string | boolean) => {
+  const handleFilterChange = (key: keyof Filters, value: string | boolean | { value: string | number; label: string } | { value: string; label?: string } | null) => {
     setFilters((prev) => ({
       ...prev,
       [key]: value,
@@ -314,29 +295,14 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
       from_date: moment().subtract(6, 'days').format('YYYY-MM-DD'),
       to_date: moment().format('YYYY-MM-DD'),
       email: "",
-      country: "",
+      country: null,
       customer: false,
       sent: "",
-      sent_by: "",
+      sent_by: null,
     });
-    setCountrySearch("");
-    setCreatedBySearch("");
-    setSelectedCountry(null);
-    setSelectedCreatedBy(null);
     showToast('Filters cleared', 'info');
   };
 
-  const handleCreatedBySelect = (createdBy: CreatedByOption) => {
-    console.log("Selecting user:", createdBy);
-    setFilters(prev => {
-      const newFilters = { ...prev, sent_by: createdBy.value };
-      console.log("Updated filters:", newFilters);
-      return newFilters;
-    });
-    setSelectedCreatedBy(createdBy);
-    setCreatedBySearch(createdBy.name || createdBy.email || "");
-    setShowCreatedByDropdown(false);
-  };
 
   // Modal handlers
   const handleOpenModal = (item: CartItem) => {
@@ -350,21 +316,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
   };
 
   // Country autocomplete handlers
-  const handleCountrySelect = (country: any) => {
-    setFilters(prev => ({ ...prev, country: country.value.toString() }));
-    setCountrySearch(country.label);
-    setSelectedCountry(country);
-    setShowCountryDropdown(false);
-  };
 
-  const handleCountryInputChange = (value: string) => {
-    setCountrySearch(value);
-    setShowCountryDropdown(true);
-    if (value === "") {
-      setFilters(prev => ({ ...prev, country: "" }));
-      setSelectedCountry(null);
-    }
-  };
 
   const handlePageChange = (page: number) => {
     setPagination(prev => ({ ...prev, current_page: page }));
@@ -380,12 +332,6 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
     fetchData(1);
   };
 
-  const handleSort = (key: keyof CartItem) => {
-    setSortConfig(prev => ({
-      key,
-      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc'
-    }));
-  };
 
   const getSortedData = (): CartItem[] => {
     if (!sortConfig.key) return tableData;
@@ -478,7 +424,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
           </p>
         </div>
         <div className="flex space-x-2">
-                      <button
+            <button
               onClick={handleRefresh}
               disabled={isRefreshing}
               className="px-3 py-1.5 bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-700 transition-colors duration-200 flex items-center space-x-1 disabled:opacity-50"
@@ -517,7 +463,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
               <FaEnvelope className="w-3 h-3 mr-1" />
               Email
             </label>
-            <input
+            <Input
               type="email"
               value={filters.email}
               onChange={(e) => handleFilterChange("email", e.target.value)}
@@ -525,50 +471,20 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
               className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
-          <div className="relative" ref={countryDropdownRef}>
-            <label className="flex block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">
-              <FaGlobe className="w-3 h-3 mr-1" />
-              Country
-            </label>
-            <div className="relative">
-              <input
-                type="text"
-                value={countrySearch}
-                onChange={(e) => handleCountryInputChange(e.target.value)}
-                onFocus={() => setShowCountryDropdown(true)}
-                placeholder="Search countries..."
-                className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-              <button
-                type="button"
-                onClick={() => setShowCountryDropdown(!showCountryDropdown)}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-              >
-                <FaChevronDown className="w-3 h-3" />
-              </button>
-            </div>
-            
-            {/* Dropdown */}
-            {showCountryDropdown && (
-              <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                {filteredCountries.length > 0 ? (
-                  filteredCountries.map((country) => (
-                    <div
-                      key={country.value}
-                      onClick={() => handleCountrySelect(country)}
-                      className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0"
-                    >
-                      {country.label}
-                    </div>
-                  ))
-                ) : (
-                  <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-                    No countries found
-                  </div>
-                )}
-              </div>
-            )}
+          <div>
+            <Autocomplete
+              label="Country"
+              options={Countries.data.map((country:any) => ({
+                value: country.value,
+                label: country.label
+              }))}
+              Icon={<FaGlobe />}
+              value={filters.country}
+              onChange={(value: any) => handleFilterChange("country", value)}
+              placeholder="Search by country"
+            />
           </div>
+
           <div>
             <label className="flex block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">
               <FaEnvelope className="w-3 h-3 mr-1" />
@@ -584,75 +500,14 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
               <option value="0">Generate Email</option>
             </select>
           </div>
-                      <div className="relative" ref={createdByDropdownRef}>
-              <label className="flex block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">
-                <FaUser className="w-3 h-3 mr-1" />
-                Mail Sent By
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  value={createdBySearch}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setCreatedBySearch(value);
-                    setShowCreatedByDropdown(true);
-                    
-                    // Only clear the filter if the search is empty and no user is selected
-                    if (value === "" && !selectedCreatedBy) {
-                      setFilters(prev => ({ ...prev, sent_by: "" }));
-                    }
-                  }}
-                  onFocus={() => setShowCreatedByDropdown(true)}
-                  placeholder="Search created by..."
-                  className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 pr-12 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center space-x-1">
-                  {selectedCreatedBy && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedCreatedBy(null);
-                        setCreatedBySearch("");
-                        setFilters(prev => ({ ...prev, sent_by: "" }));
-                      }}
-                      className="text-gray-400 hover:text-red-600 dark:hover:text-red-400"
-                      title="Clear selection"
-                    >
-                      <FaTimes className="w-3 h-3" />
-                    </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => setShowCreatedByDropdown(!showCreatedByDropdown)}
-                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                  >
-                    <FaChevronDown className="w-3 h-3" />
-                  </button>
-                </div>
-              </div>
-              
-              {/* Dropdown */}
-              {showCreatedByDropdown && (
-                <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                  {filteredCreatedByOptions.length > 0 ? (
-                    filteredCreatedByOptions.map((createdBy: CreatedByOption) => (
-                      <div
-                        key={createdBy.value}
-                        onClick={() => handleCreatedBySelect(createdBy)}
-                        className="px-3 py-2 text-sm text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-700 last:border-b-0"
-                      >
-                        {createdBy?.name || createdBy?.email}
-                      </div>
-                    ))
-                  ) : (
-                    <div className="px-3 py-2 text-sm text-gray-500 dark:text-gray-400">
-                      No users found
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+          <Autocomplete
+            label="Mail Sent By"
+            options={createdByOptions}
+            Icon={<FaUser />}
+            value={filters.sent_by}
+            onChange={(value: any) => handleFilterChange("sent_by", value)}
+            placeholder="Search by created by"
+          />
           <div className="flex items-center space-x-2">
             <input
               type="checkbox"
@@ -694,152 +549,12 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
       {/* Table */}
       <div className="bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-800">
-              <tr>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  #
-                </th>
-                <th 
-                  className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                  onClick={() => handleSort('first_name')}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>Customer</span>
-                    {getSortIcon('first_name')}
-                  </div>
-                </th>
-                <th 
-                  className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                  onClick={() => handleSort('added_on')}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>Added On</span>
-                    {getSortIcon('added_on')}
-                  </div>
-                </th>
-                <th 
-                  className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                  onClick={() => handleSort('total_price')}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>Order Total</span>
-                    {getSortIcon('total_price')}
-                  </div>
-                </th>
-                <th 
-                  className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
-                  onClick={() => handleSort('items_count')}
-                >
-                  <div className="flex items-center space-x-1">
-                    <span>Items</span>
-                    {getSortIcon('items_count')}
-                  </div>
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Priority
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Mail Sent By
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-              {isLoading ? (
-                <tr>
-                  <td colSpan={8} className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                      <span>Loading abandoned cart data...</span>
-                    </div>
-                  </td>
-                </tr>
-              ) : sortedData.length === 0 ? (
-                <tr>
-                  <td colSpan={8} className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
-                    <div className="flex flex-col items-center space-y-2">
-                      <FaSearch className="w-8 h-8 text-gray-300" />
-                      <span>No abandoned cart data found</span>
-                      <span className="text-xs text-gray-400">Try adjusting your filters</span>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                sortedData.map((item, index) => (
-                  <tr
-                    key={item.id}
-                    className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150"
-                  >
-                    <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-900 dark:text-gray-100">
-                      {pagination.from + index + 1}
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
-                      <div>
-                        <div className="text-xs font-medium text-gray-900 dark:text-gray-100">
-                          {item.first_name}
-                        </div>
-                        <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                          {item.email} 
-                          <FaCopy 
-                            className="w-3 h-3 cursor-pointer hover:text-blue-600 transition-colors" 
-                            onClick={() => {
-                              navigator.clipboard.writeText(item.email);
-                              showToast("Email copied to clipboard", "success");
-                            }}
-                            title="Copy email"
-                          />
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-900 dark:text-gray-100">
-                      {moment(item.added_on).format("DD-MM-YYYY")}
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-900 dark:text-gray-100">
-                     {item.currency_type === "INR" ? "₹" :item.currency_type === "USD" ? "$" : item.currency_type === "EUR" ? "€" : item.currency_type === "GBP" ? "£" :"₹"} {item.total_price}
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-900 dark:text-gray-100">
-                      {item.items_count}
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap">
-                      <span
-                        className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full border ${getPriorityColor(
-                          item.items_count 
-                        )}`}
-                      >
-                        {item.items_count >= 3 ? "High" : item.items_count == 2 ? "Medium" : "Low"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-900 dark:text-gray-100">
-                      {item.sender_name ? item.sender_name : "-"}
-                    </td>
-                    <td className="px-4 py-2 whitespace-nowrap text-xs font-medium">
-                      <div className="flex space-x-1">
-                        <button
-                          onClick={() => handleOpenModal(item)}
-                          className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 p-1 transition-colors duration-150"
-                          title="Generate Email"
-                        >
-                          <FaEnvelope className="w-3 h-3" />
-                        </button>
-                        <button
-                          onClick={() =>
-                            console.log("View details for:", item.id)
-                          }
-                          className="text-green-600 hover:text-green-900 dark:text-green-400 dark:hover:text-green-300 p-1 transition-colors duration-150"
-                          title="View Details"
-                        >
-                          <FaEye className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+          <Table
+            data={sortedData}
+            isLoading={isLoading}
+            columns={columns}
+            actions={actions}
+          />
         </div>
       </div>
 
@@ -919,12 +634,12 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
 
       {/* Mail Modal */}
       {selectedCartItem && (
-        <MailModal
+        <MailDrawer
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          item={selectedCartItem.user_id}
-          products={selectedCartItem.cart_details}
-          darkMode={darkMode}
+          userId={selectedCartItem?.user_id}
+          cartDetails={selectedCartItem.cart_details}
+          
         />
       )}
     </div>
