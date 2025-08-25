@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { TiptapEditor } from '../../../components/TiptapEditor';
-import { getCartDetails } from "../../../Services/DM/Abandoned/services";
+import { TiptapEditor } from '../../../../components/TiptapEditor';
+import { getCartDetails } from "../../../../Services/DM/Abandoned/services";
 
 interface Product {
   name?: string;

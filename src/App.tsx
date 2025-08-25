@@ -9,12 +9,8 @@ import { ToastProvider } from './components/ToastContext';
 import Toast from './components/Toast';
 
 // Lazy imports for route components
-const Dashboard = lazy(() => import('./pages/Dashboard'));
-const Analytics = lazy(() => import('./pages/Analytics'));
-const Settings = lazy(() => import('./pages/Settings'));
-const Login = lazy(() => import('./pages/Login'));
-const NotFound = lazy(() => import('./pages/NotFound'));
-const AbandonedCart = lazy(() => import('./pages/DM/AbandonedCart/AbandonedCart'));
+const Login = lazy(() => import('./pages/Login/Login'));
+const AbandonedCart = lazy(() => import('./pages/B2C/DM/AbandonedCart/AbandonedCart'));
 
 interface AppRoutesProps {
   sidebarOpen: boolean;
@@ -29,6 +25,17 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle, sh
   const location = useLocation();
   const { user, loading } = useAuth();
 
+  if (showWelcome && (user || loading)) {
+    return (
+      <WelcomeScreen 
+        isVisible={showWelcome}
+        onComplete={onWelcomeComplete}
+        userName={user?.user_name || "User"}
+        darkMode={darkMode}
+      />
+    );
+  }
+
   if (!user) {
     // Not authenticated: Only allow /login, redirect all else to /login
     return (
@@ -42,16 +49,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle, sh
   }
 
   // Show welcome screen if just logged in (ensure user exists or is loading)
-  if (showWelcome && (user || loading)) {
-    return (
-      <WelcomeScreen 
-        isVisible={showWelcome}
-        onComplete={onWelcomeComplete}
-        userName={user?.user_name || "User"}
-        darkMode={darkMode}
-      />
-    );
-  }
+
 
   // Authenticated: If on /login or root, redirect to /dashboard
   if (location.pathname === '/login' || location.pathname === '/') {
@@ -78,12 +76,9 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle, sh
             ) : (
               <Suspense fallback={<div className="flex justify-center items-center h-96"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div></div>}>
                 <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/analytics" element={<Analytics />} />
-                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/" element={<Login />} />
                   <Route path="/dm/abandonedcart" element={<AbandonedCart darkMode={darkMode} />} />
-                  <Route path="*" element={<NotFound />} />
+                  <Route path="*" element={<Login />} />
                 </Routes>
               </Suspense>
             )}

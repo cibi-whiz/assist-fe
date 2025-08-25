@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import assistBlack from '../Assets/Images/assist-black.svg';
-import assistWhite from '../Assets/Images/assist-white.svg';
-import { useAuth } from '../Hooks/useAuth';
+import assistBlack from '../../Assets/Images/assist-black.svg';
+import assistWhite from '../../Assets/Images/assist-white.svg';
+import { useAuth } from '../../Hooks/useAuth';
 
 const EyeIcon: React.FC = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
