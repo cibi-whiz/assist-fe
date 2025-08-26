@@ -113,7 +113,7 @@ const Table: React.FC<TableProps> = ({
     }
 
 
-    if (column.key == 'created_at' || column.key == 'updated_at' && value) {
+    if ((column.key === 'created_at' || column.key === 'updated_at') && value) {
       return moment(value).format("DD-MMM-YYYY")
     }
 
@@ -127,10 +127,10 @@ const Table: React.FC<TableProps> = ({
       return `${currencySymbols[item.currency_type] || "₹"} ${item.total_price || value}`
     }
 
-    if (column.key === 'items_count' && column.label == 'Priority') {
+    if (column.key === 'items_count' && column.label === 'Priority') {
       const getPriorityColor = (count: number) => {
         if (count >= 3) return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-700"
-        if (count == 1) return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-700"
+        if (count === 1) return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-700"
         return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-700"
       }
       
@@ -221,7 +221,9 @@ const Table: React.FC<TableProps> = ({
                             className={`p-1 transition-colors duration-150 ${action.className || 'text-yellow-400 hover:text-yellow-900 dark:text-blue-400 dark:hover:text-blue-200'}`}
                             title={action.title}
                           >
+                            <span className="text-base">
                             {action.icon}
+                            </span>
                           </button>
                         ))}
                       </div>

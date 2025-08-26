@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer, Input, Button, Divider, Tag, Card, Badge, Typography } from 'antd';
-import { getCartDetails } from "../../../../Services/DM/Abandoned/services";
+import { getCartDetails, mailSubject } from "../../../../Services/DM/Abandoned/services";
 import {
   MailOutlined,
   UserOutlined,
@@ -11,8 +11,9 @@ import {
   LoadingOutlined,
   ShoppingOutlined,
 } from '@ant-design/icons';
-
+import { TinyEditor } from '../../../../components/TextEditor';
 const { Title, Text } = Typography;
+
 
 interface Product {
   name?: string;
@@ -101,6 +102,11 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
     if (isOpen && userId) {
       fetchCartDetails();
     }
+    const fetchMailSubject = async () => {
+      const res = await mailSubject();
+      setSubject(res.data[0].value);
+    }
+    fetchMailSubject();
   }, [userId, isOpen]);
   
   const handleSendMail = async () => {
@@ -156,10 +162,10 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
             <ShoppingCartOutlined className="text-white text-lg" />
           </div>
           <div>
-            <Title level={4} className="!mb-0 !text-gray-800">
+            <Title level={4} className="!mb-0 text-gray-500 dark:text-white text-sm">
               Send Abandoned Cart Email
             </Title>
-            <Text className="text-gray-500 dark:text-gray-400 text-sm">
+            <Text className="text-gray-500 dark:text-white text-sm">
               Recover lost sales with personalized emails
             </Text>
           </div>
@@ -336,7 +342,7 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
           className="shadow-sm border-gray-200 dark:border-gray-700 dark:bg-gray-800"
           bodyStyle={{ padding: '24px' }}
         >
-
+          <TinyEditor data={mailContent} handleEditorChange={setMailContent} darkMode={darkMode} />
 
         </Card>
       </div>

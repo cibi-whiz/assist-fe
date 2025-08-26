@@ -41,7 +41,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle, sh
     return (
       <Suspense fallback={<div className="flex justify-center items-center h-96"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div></div>}>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="*" element={<Dashboard />} />
         </Routes>
       </Suspense>
