@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import {
-  FaBullhorn, FaUsers, FaChartBar, FaRocket, FaChevronDown, FaChevronRight,
-  FaRegFileAlt, FaRegChartBar, FaRegStar, FaRegListAlt, FaRegBell, FaRegHeart, FaRegUser, FaRegClock, FaRegCheckCircle, FaRegEdit, FaRegFolderOpen, FaRegFlag, FaRegEnvelope, FaRegThumbsUp, FaRegCalendarAlt, FaRegMoneyBillAlt, FaRegLightbulb, FaRegBookmark, FaRegCopy, FaRegQuestionCircle, FaBox, FaSearch
+  FaChartBar, FaChevronDown, FaChevronRight,
+  FaRegFileAlt
 } from "react-icons/fa";
 import { useAuth } from "../Hooks/useAuth";
 import { useLocalStorage } from "../Hooks/useLocalStorage";

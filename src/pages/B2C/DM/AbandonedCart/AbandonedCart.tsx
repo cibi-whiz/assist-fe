@@ -638,8 +638,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
           isOpen={isModalOpen}
           onClose={handleCloseModal}
           userId={selectedCartItem?.user_id}
-          cartDetails={selectedCartItem.cart_details}
-          
+          userEmail={selectedCartItem?.email}
         />
       )}
     </div>

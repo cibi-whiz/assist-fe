@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Drawer, Input, Button, Divider, Tag, Card, Badge, Typography } from 'antd';
-import { TiptapEditor } from '../../../../components/TiptapEditor';
 import { getCartDetails } from "../../../../Services/DM/Abandoned/services";
 import {
   MailOutlined,
@@ -11,7 +10,6 @@ import {
   SendOutlined,
   LoadingOutlined,
   ShoppingOutlined,
-  ClockCircleOutlined
 } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
@@ -39,32 +37,72 @@ interface MailModalProps {
   products?: Product[];
   darkMode?: boolean;
   userId?: number;
+  userEmail?: string;
+
 }
 
-const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], darkMode = false, userId }) => {
-  const [fromEmail, setFromEmail] = useState('');
-  const [toEmail, setToEmail] = useState('');
+const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], darkMode = false, userId, userEmail }) => {
+  const [fromEmail, setFromEmail] = useState('support@whizlabs.com');
+  const [toEmail, setToEmail] = useState(userEmail);
   const [subject, setSubject] = useState('');
   const [mailContent, setMailContent] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [cartDetails, setCartDetails] = useState<any>(null);
   const [currencyType, setCurrencyType] = useState<string>('');
+  const [cartItems, setCartItems] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchCartDetails = async () => {
       try {
         const cartDetails = await getCartDetails(userId?.toString() || '');
         setCartDetails(cartDetails);
+        const items = cartDetails?.cart_details || [];
+        if (items.length === 0) return;
+        
+        let filteredItems: any[] = [];
+        
+        // Process each item separately for clarity
+        items.forEach((item: any) => {
+          const selectedTypes = item.selectedCourseType || [];
+          const courses = item.course_details || [];
+          const courseName = item.courseName;
+          const courseId = item.course_id;
+          
+          // Find matching courses for this item
+          courses.forEach((course: any) => {
+            if (selectedTypes.includes(course.course_type)) {
+              filteredItems.push({
+                ...course,
+                courseName,
+                courseId
+              });
+            }
+          });
+        });
+        let orderBy = ['pt', 'oc', 'lab', 'sandbox', 'sandbox-1', 'sandbox-3', 'sandbox-6'];
+
+        filteredItems = filteredItems?.sort((a: any, b: any) => {
+          let courseId = a.courseId - b.courseId;
+          let courseType = orderBy.indexOf(a.course_type) - orderBy.indexOf(b.course_type);
+          if (courseId !== 0) {
+            return courseId; // primary sort by course_id
+          }
+          return courseType; // secondary sort by course_type
+        });
+        setCartItems(filteredItems);
         const currency = cartDetails?.cart?.currency_type || 'USD';
         setCurrencyType(currency);
+        
       } catch (error) {
         console.error('Error fetching cart details:', error);
       }
     };
-    if (isOpen) fetchCartDetails();
+    
+    if (isOpen && userId) {
+      fetchCartDetails();
+    }
   }, [userId, isOpen]);
-
-
+  
   const handleSendMail = async () => {
     setIsSending(true);
     try {
@@ -113,12 +151,12 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
   return (
     <Drawer
       title={
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 dark:text-gray-100">
           <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
             <ShoppingCartOutlined className="text-white text-lg" />
           </div>
           <div>
-            <Title level={4} className="!mb-0 !text-gray-800 dark:!text-gray-100">
+            <Title level={4} className="!mb-0 !text-gray-800">
               Send Abandoned Cart Email
             </Title>
             <Text className="text-gray-500 dark:text-gray-400 text-sm">
@@ -216,39 +254,34 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
             <div className="flex items-center gap-2">
               <ShoppingOutlined className="text-orange-500" />
               <span className="font-semibold text-gray-800 dark:text-gray-100">Abandoned Cart Items</span>
-              <Badge count={cartDetails?.cart_details?.length || 0} className="ml-2" />
+              <Badge count={cartItems?.length || 0} className="ml-2" />
             </div>
           }
           className="shadow-sm border-gray-200 dark:border-gray-700 dark:bg-gray-800"
           bodyStyle={{ padding: '24px' }}
         >
-          {cartDetails?.cart_details?.length ? (
+          {cartItems?.length ? (
             <div className="space-y-4">
-              {cartDetails?.cart_details?.map((item: any, index: number) => (
-                <div key={index} className="bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-600">
-                  <div className="flex items-center gap-2 mb-3">
-                    <ClockCircleOutlined className="text-orange-500" />
-                    <Text className="text-sm text-gray-600 dark:text-gray-400">
-                      Cart #{item?.cart_id || index + 1}
-                    </Text>
-                  </div>
-                  
-                  {item?.course_details?.map((itm: any, i: number) => {
+                                {cartItems?.map((itm: any, i: number) => {
                     const courseTypeDisplay = getCourseTypeDisplay(itm.course_type);
                     const courseTypeColor = getCourseTypeColor(itm.course_type);
 
                     const priceDisplay =
                       currencyType === "INR" && itm.sale_price?.inr
                         ? `₹ ${itm.sale_price.inr}`
-                        : itm.sale_price?.usd
+                        : currencyType === "USD" && itm.sale_price?.usd
                           ? `$ ${itm.sale_price.usd}`
-                          : "Free";
+                          : currencyType === "EUR" && itm.sale_price?.eur
+                            ? `€ ${itm.sale_price.eur}`
+                            : currencyType === "GBP" && itm.sale_price?.gbp
+                              ? `£ ${itm.sale_price.gbp}`
+                              : "Free";
 
                     return (
                       <div key={i} className="flex justify-between items-center py-3 px-4 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
                         <div className="flex-1">
                           <Text className="font-medium text-gray-900 dark:text-gray-100">
-                            {itm.course_name || 'Course Name'}
+                            {itm.courseName || 'Course Name'}
                           </Text>
                           {courseTypeDisplay && (
                             <Tag color={courseTypeColor} className="ml-2">
@@ -257,9 +290,6 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
                           )}
                         </div>
                         <div className="flex items-center gap-4">
-                          <Tag color="blue" className="font-medium">
-                            Qty: 1
-                          </Tag>
                           <Text className="font-semibold text-lg text-green-600 dark:text-green-400">
                             {priceDisplay}
                           </Text>
@@ -267,8 +297,6 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
                       </div>
                     );
                   })}
-                </div>
-              ))}
 
               <Divider className="my-6" />
               
@@ -279,7 +307,7 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
                     <Text className="text-lg font-bold text-gray-800 dark:text-gray-100">Total Amount</Text>
                   </div>
                   <Text className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                
+                  {currencyType == "INR" ? "₹" : currencyType == "USD" ? "$" : currencyType == "EUR" ? "€" : currencyType == "GBP" ? "£" : ""}  {cartDetails?.cart?.total_price}
                   </Text>
                 </div>
               </div>
@@ -308,11 +336,8 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
           className="shadow-sm border-gray-200 dark:border-gray-700 dark:bg-gray-800"
           bodyStyle={{ padding: '24px' }}
         >
-          <TiptapEditor
-            data={mailContent}
-            handleEditorChange={setMailContent}
-            darkMode={darkMode}
-          />
+
+
         </Card>
       </div>
     </Drawer>
