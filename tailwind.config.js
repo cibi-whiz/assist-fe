@@ -23,7 +23,7 @@ module.exports = {
       },
       animation: {
         wave: 'wave 1.5s infinite',
-      }
+      },
     },
   },
   plugins: [],

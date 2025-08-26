@@ -208,7 +208,7 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
     setUser(null);
     resetAccess();
     setAxiosAuthToken(null);
-    navigate("/login", { replace: true });
+    navigate("/", { replace: true });
   }, [setUser, navigate]);
 
   // Memoize context value for performance

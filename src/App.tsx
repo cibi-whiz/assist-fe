@@ -7,10 +7,10 @@ import Sidebar from './components/Sidebar';
 import WelcomeScreen from './components/WelcomeScreen';
 import { ToastProvider } from './components/ToastContext';
 import Toast from './components/Toast';
-
 // Lazy imports for route components
 const Login = lazy(() => import('./pages/Login/Login'));
 const AbandonedCart = lazy(() => import('./pages/B2C/DM/AbandonedCart/AbandonedCart'));
+const Dashboard = lazy(() => import('./pages/B2C/Dashboard/Dashboard'));
 
 interface AppRoutesProps {
   sidebarOpen: boolean;
@@ -41,8 +41,8 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle, sh
     return (
       <Suspense fallback={<div className="flex justify-center items-center h-96"><div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div></div>}>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
+          <Route path="/" element={<Login />} />
+          <Route path="*" element={<Dashboard />} />
         </Routes>
       </Suspense>
     );
@@ -78,7 +78,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle, sh
                 <Routes>
                   <Route path="/" element={<Login />} />
                   <Route path="/dm/abandonedcart" element={<AbandonedCart darkMode={darkMode} />} />
-                  <Route path="*" element={<Login />} />
+                  <Route path="*" element={<Dashboard />} />
                 </Routes>
               </Suspense>
             )}
