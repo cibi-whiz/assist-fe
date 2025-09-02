@@ -14,7 +14,8 @@ import './i18n'; // Initialize i18n
 const Login = lazy(() => import('./pages/Login/Login'));
 const AbandonedCart = lazy(() => import('./pages/B2C/DM/AbandonedCart/AbandonedCart'));
 const Dashboard = lazy(() => import('./pages/B2C/Dashboard/Dashboard'));
-const RolesandPermission = lazy(() => import('./pages/RolesandPermission/RolesandPermission'));
+const RolesandPermission = lazy(() => import('./pages/Auth/RolesandPermission/RolesandPermission'));
+const AssistUsers = lazy(() => import('./pages/Auth/AssistUsers/AssistUsers'));
 
 interface AppRoutesProps {
   sidebarOpen: boolean;
@@ -83,6 +84,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle, sh
                   <Route path="/" element={<Login />} />
                   <Route path="/dm/abandonedcart" element={<AbandonedCart darkMode={darkMode} />} />
                   <Route path="/roles-and-permission" element={<RolesandPermission />} />
+                  <Route path="/assist-users" element={<AssistUsers />} />
                   <Route path="*" element={<Dashboard />} />
                 </Routes>
               </Suspense>

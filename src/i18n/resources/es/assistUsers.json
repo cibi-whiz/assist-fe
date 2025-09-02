@@ -1,0 +1,55 @@
+{
+    "title": "Usuarios de Asistencia",
+    "description": "Usuarios de asistencia que",
+    "filters": {
+      "title": "Filtros",
+      "assistUsersDateRange": "Rango de Fechas de Usuarios de Asistencia",
+      "email": "Correo Electrónico",
+      "status": "Estado",
+      "createdBy": "Creado Por"
+    },
+    "buttons": {
+      "search": "Buscar",
+      "clear": "Limpiar",
+      "refresh": "Actualizar",
+      "export": "Exportar",
+      "viewDetails": "Ver Detalles"
+    },
+    "table": {
+      "columns": {
+        "index": "#",
+        "email": "Correo Electrónico",
+        "user_name": "Nombre de Usuario",
+        "status": "Estado",
+        "created_at": "Creado En",
+        "created_by": "Creado Por"
+      },
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo"
+      }
+    },
+    "modal": {
+      "title": "Detalles del Usuario de Asistencia",
+      "userInfo": "Información del Usuario",
+      "assistUsers": "Usuarios de Asistencia",
+      "total": "Total",
+      "actions": "Acciones"
+    },
+    "export": {
+      "filename": "usuarios-asistencia-{{date}}.csv",
+      "headers": {
+        "userName": "Nombre de Usuario",
+        "email": "Correo Electrónico",
+        "status": "Estado",
+        "createdAt": "Creado En",
+        "createdBy": "Creado Por"
+      }
+    },
+    "messages": {
+      "noDataToExport": "No hay datos para exportar",
+      "exportCompleted": "Exportación completada exitosamente",
+      "dataRefreshed": "Datos actualizados exitosamente",
+      "filtersCleared": "Filtros limpiados"
+    }
+  }

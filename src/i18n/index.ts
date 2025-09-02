@@ -6,10 +6,12 @@ import enCommon from './resources/en/common.json';
 import enAbandonedCart from './resources/en/abandonedCart.json';
 import enDashboard from './resources/en/dashboard.json';
 import enRoles from './resources/en/roles.json';
+import enAssistUsers from './resources/en/assistUsers.json';
 
 import esCommon from './resources/es/common.json';
 import esAbandonedCart from './resources/es/abandonedCart.json';
 import esRoles from './resources/es/roles.json';
+import esAssistUsers from './resources/es/assistUsers.json';
 
 // Language resources
 const resources = {
@@ -18,12 +20,14 @@ const resources = {
     abandonedCart: enAbandonedCart,
     dashboard: enDashboard,
     roles: enRoles,
+    assistUsers: enAssistUsers,
   },
   es: {
     common: esCommon,
     abandonedCart: esAbandonedCart,
     dashboard: enDashboard, // Fallback to English for now
     roles: esRoles,
+    assistUsers: esAssistUsers,
   },
 };
 
@@ -43,7 +47,7 @@ i18n
 
     // Namespace configuration
     defaultNS: 'common',
-    ns: ['common', 'abandonedCart', 'dashboard', 'roles'],
+    ns: ['common', 'abandonedCart', 'dashboard', 'roles', 'assistUsers'],
 
     // React i18next options
     react: {

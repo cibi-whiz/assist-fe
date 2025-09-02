@@ -1,0 +1,56 @@
+{
+    "title": "Assist Users",
+    "description": "Manage users who has access to the portal",
+    "filters": {
+      "title": "Filters",
+      "assistUsersDateRange": "Assist Users Date Range",
+      "email": "Email",
+      "status": "Status",
+      "createdBy": "Created By"
+    },
+    "buttons": {
+      "search": "Search",
+      "clear": "Clear",
+      "refresh": "Refresh",
+      "export": "Export",
+      "viewDetails": "View Details"
+    },
+    "table": {
+      "columns": {
+        "index": "#",
+        "email": "Email",
+        "user_name": "User Name",
+        "status": "Status",
+        "created_at": "Created At",
+        "created_by": "Created By"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive"
+      }
+    },
+    "modal": {
+      "title": "Assist User Details",
+      "userInfo": "User Information",
+      "assistUsers": "Assist Users",
+      "total": "Total",
+      "actions": "Actions"
+    },
+    "export": {
+      "filename": "assist-users-{{date}}.csv",
+      "headers": {
+        "userName": "User Name",
+        "email": "Email",
+        "status": "Status",
+        "createdAt": "Created At",
+        "createdBy": "Created By"
+      }
+    },
+    "messages": {
+      "noDataToExport": "No data to export",
+      "exportCompleted": "Export completed successfully",
+      "dataRefreshed": "Data refreshed successfully",
+      "filtersCleared": "Filters cleared"
+    }
+  }
+  
