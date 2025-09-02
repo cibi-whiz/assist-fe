@@ -1,0 +1,38 @@
+{
+    "table_columns": [
+        {
+          "key": "index",
+          "label": "#"
+  
+        },
+        {
+          "key": "email",
+          "label": "Customer"
+      
+        },
+        {
+          "key": "total_price",
+          "label": "Total Price"
+          
+        },
+        {
+          "key": "items_count",
+          "label": "Items Count"
+          
+        },
+        {
+          "key": "updated_at",
+          "label": "Added On"
+          
+        },
+        {
+          "key": "priority",
+          "label": "Priority"
+          
+        },
+        {
+          "key": "sender_name",
+          "label": "Mail Sent By"
+        }
+      ]
+}

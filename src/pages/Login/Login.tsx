@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import assistBlack from '../../Assets/Images/assist-black.svg';
 import assistWhite from '../../Assets/Images/assist-white.svg';
 import { useAuth } from '../../Hooks/useAuth';
+import { useTranslation } from 'react-i18next';
 
 const EyeIcon: React.FC = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -20,6 +21,7 @@ const EyeOffIcon: React.FC = () => (
 );
 
 const Login: React.FC = () => {
+  const { t } = useTranslation('common');
   const { login, loading } = useAuth();
   const [email, setEmail] = useState<string>(localStorage.getItem('rememberedEmail') || "");
   const [password, setPassword] = useState<string>("");
@@ -37,7 +39,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (!email || !password) {
-      setError("Please enter both email and password.");
+      setError(t('login.errors.requiredFields'));
       return;
     }
     setError("");
@@ -55,7 +57,7 @@ const Login: React.FC = () => {
       // Dispatch custom event to notify App component
       window.dispatchEvent(new CustomEvent('welcomeScreenTrigger'));
     } catch (err) {
-      setError("Login failed. Please try again.");
+      setError(t('login.errors.loginFailed'));
     }
   };
 
@@ -68,11 +70,11 @@ const Login: React.FC = () => {
             <img src={darkMode ? assistWhite : assistBlack} alt="Assist Logo" className="w-48 h-20 object-contain transition-opacity duration-300" draggable={false} />
           </div>
         </div>
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center transition-colors duration-300">Sign in to your account</h2>
+        <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center transition-colors duration-300">{t('login.title')}</h2>
         <form className="space-y-3 w-full transition-colors duration-300" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1 transition-colors duration-300">
-              Email address
+              {t('login.emailLabel')}
             </label>
             <input
               id="email"
@@ -86,7 +88,7 @@ const Login: React.FC = () => {
           </div>
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1 transition-colors duration-300">
-              Password
+              {t('login.passwordLabel')}
             </label>
             <div className="relative flex items-center">
               <input
@@ -103,7 +105,7 @@ const Login: React.FC = () => {
                 className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center justify-center text-gray-500 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none transition-colors duration-300"
                 onClick={() => setShowPassword((prev) => !prev)}
                 tabIndex={0}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword ? t('login.hidePassword') : t('login.showPassword')}
               >
                 {showPassword ? <EyeOffIcon /> : <EyeIcon />}
               </button>
@@ -117,10 +119,10 @@ const Login: React.FC = () => {
                 checked={remember}
                 onChange={() => setRemember((prev) => !prev)}
               />
-              Remember me
+              {t('login.rememberMe')}
             </label>
             <Link to="/forgot-password" className="text-sm text-blue-600 dark:text-blue-400 hover:underline transition-colors duration-300">
-              Forgot password?
+              {t('login.forgotPassword')}
             </Link>
           </div>
           {error && <div className="text-red-500 text-sm text-center transition-colors duration-300">{error}</div>}
@@ -129,7 +131,7 @@ const Login: React.FC = () => {
             className={`w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 hover:scale-105 active:scale-100 disabled:opacity-60 disabled:cursor-not-allowed ${(!email || !password || loading) ? 'opacity-60 cursor-not-allowed' : 'opacity-100'}`}
             disabled={!email || !password || loading}
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? t('login.loggingIn') : t('login.loginButton')}
           </button>
         </form>
       </div>

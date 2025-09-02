@@ -2,6 +2,7 @@ import React from 'react'
 import { FaSearch, FaCopy } from 'react-icons/fa'
 import moment from 'moment'
 import { useToast } from './ToastContext';
+import { useTranslation } from 'react-i18next';
 // TypeScript interfaces for better type safety
 interface Column {
   key: string
@@ -51,14 +52,19 @@ const Table: React.FC<TableProps> = ({
   onSort,
   sortKey,
   sortDirection,
-  emptyStateMessage = "No data found",
-  emptyStateSubMessage = "Try adjusting your filters",
-  loadingMessage = "Loading data...",
+  emptyStateMessage,
+  emptyStateSubMessage,
+  loadingMessage,
   className = "",
   rowKey = "id"
 }) => {
-  // Helper function to get row key
+  const { t } = useTranslation('common');
   const { showToast } = useToast();
+
+  // Use translations as defaults if not provided
+  const defaultEmptyMessage = emptyStateMessage || t('table.noData');
+  const defaultEmptySubMessage = emptyStateSubMessage || t('common.clear');
+  const defaultLoadingMessage = loadingMessage || t('table.loading');
   const getRowKey = (item: any, index: number): string => {
     if (typeof rowKey === 'function') {
       return rowKey(item)
@@ -97,10 +103,10 @@ const Table: React.FC<TableProps> = ({
             className="w-3 h-3 cursor-pointer hover:text-blue-600 transition-colors" 
             onClick={() => {
               navigator.clipboard.writeText(value)
-              showToast('Email copied to clipboard', 'success');
+              showToast(t('messages.success.saved'), 'success');
               // You can add a toast notification here if needed
             }}
-            title="Copy email"
+            title={t('common.copy')}
           />
           </div>
         </div>
@@ -127,14 +133,14 @@ const Table: React.FC<TableProps> = ({
       return `${currencySymbols[item.currency_type] || "₹"} ${item.total_price || value}`
     }
 
-    if (column.key === 'items_count' && column.label === 'Priority') {
+    if (column.key === 'priority') {
       const getPriorityColor = (count: number) => {
         if (count >= 3) return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900 dark:text-red-200 dark:border-red-700"
         if (count === 1) return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900 dark:text-yellow-200 dark:border-yellow-700"
         return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-200 dark:border-green-700"
       }
       
-      const priorityText = value >= 3 ? "High" : value === 2 ? "Medium" : "Low"
+      const priorityText = value >= 3 ? t('common.high') : value === 2 ? t('common.medium') : t('common.low')
       
       return (
         <span className={`inline-flex px-2 py-0.5 text-xs font-medium rounded-full border ${getPriorityColor(value)}`}>
@@ -173,7 +179,7 @@ const Table: React.FC<TableProps> = ({
             ))}
             {actions.length > 0 && (
               <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-20">
-                Actions
+                {t('common.actions')}
               </th>
             )}
           </thead>
@@ -183,7 +189,7 @@ const Table: React.FC<TableProps> = ({
                 <td colSpan={columns.length + (actions.length > 0 ? 1 : 0)} className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
                   <div className="flex items-center justify-center space-x-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-                    <span>{loadingMessage}</span>
+                    <span>{defaultLoadingMessage}</span>
                   </div>
                 </td>
               </tr>
@@ -192,8 +198,8 @@ const Table: React.FC<TableProps> = ({
                 <td colSpan={columns.length + (actions.length > 0 ? 1 : 0)} className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
                   <div className="flex flex-col items-center space-y-2">
                     <FaSearch className="w-8 h-8 text-gray-300" />
-                    <span>{emptyStateMessage}</span>
-                    <span className="text-xs text-gray-400">{emptyStateSubMessage}</span>
+                    <span>{defaultEmptyMessage}</span>
+                    <span className="text-xs text-gray-400">{defaultEmptySubMessage}</span>
                   </div>
                 </td>
               </tr>

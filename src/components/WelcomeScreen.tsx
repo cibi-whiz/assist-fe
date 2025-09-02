@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Quote, Star } from "lucide-react";
 import { motion, AnimatePresence, useAnimation, Variants } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 // Typewriter component
 interface TypewriterProps {
@@ -132,6 +133,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   onComplete,
   userName = "User",
 }) => {
+  const { t } = useTranslation('common');
   const [progress, setProgress] = useState(0);
   const [particles, setParticles] = useState<
     Array<{ id: number; x: number; y: number; delay: number }>
@@ -278,9 +280,9 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Good Morning";
-    if (hour < 17) return "Good Afternoon";
-    return "Good Evening";
+    if (hour < 12) return t('welcome.goodMorning');
+    if (hour < 17) return t('welcome.goodAfternoon');
+    return t('welcome.goodEvening');
   };
 
   return (
@@ -565,7 +567,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             transition={{ duration: 0.8, delay: 1 }}
           >
             <Typewriter
-              text={`Welcome to Assist, ${userName}!`}
+              text={t('welcome.welcomeMessage', { userName })}
               delay={1000}
               speed={80}
               renderText={(text: string) => (
@@ -717,7 +719,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
               animate={progress === 100 ? { scale: [1, 1.05, 1] } : {}}
               transition={{ duration: 0.5, repeat: progress === 100 ? 3 : 0 }}
             >
-              {progress < 100 ? "Preparing your workspace..." : "Ready ✨"}
+              {progress < 100 ? t('welcome.preparingWorkspace') : t('welcome.ready')}
             </motion.span>
             <span className="text-sm sm:text-base text-white/80 font-mono tabular-nums font-medium 
                          antialiased hover:text-white/90 transition-colors duration-300">
@@ -771,7 +773,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
                 }}
                 transition={{ duration: 2, repeat: Infinity }}
               >
-                Ready to go! 🚀✨
+                {t('welcome.readyToGo')} 🚀✨
               </motion.span>
             </motion.div>
           )}

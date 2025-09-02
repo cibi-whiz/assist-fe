@@ -7,10 +7,14 @@ import Sidebar from './components/Sidebar';
 import WelcomeScreen from './components/WelcomeScreen';
 import { ToastProvider } from './components/ToastContext';
 import Toast from './components/Toast';
+import { LanguageProvider } from './Hooks/useLanguage';
+import './i18n'; // Initialize i18n
+
 // Lazy imports for route components
 const Login = lazy(() => import('./pages/Login/Login'));
 const AbandonedCart = lazy(() => import('./pages/B2C/DM/AbandonedCart/AbandonedCart'));
 const Dashboard = lazy(() => import('./pages/B2C/Dashboard/Dashboard'));
+const RolesandPermission = lazy(() => import('./pages/RolesandPermission/RolesandPermission'));
 
 interface AppRoutesProps {
   sidebarOpen: boolean;
@@ -78,6 +82,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, darkMode, handleThemeToggle, sh
                 <Routes>
                   <Route path="/" element={<Login />} />
                   <Route path="/dm/abandonedcart" element={<AbandonedCart darkMode={darkMode} />} />
+                  <Route path="/roles-and-permission" element={<RolesandPermission />} />
                   <Route path="*" element={<Dashboard />} />
                 </Routes>
               </Suspense>
@@ -163,7 +168,8 @@ function App() {
   };
 
   return (
-    <ToastProvider>
+    <LanguageProvider>
+      <ToastProvider>
       <Router>
         <AuthProvider>
           <AppRoutes
@@ -178,7 +184,8 @@ function App() {
 
         </AuthProvider>
       </Router>
-    </ToastProvider>
+      </ToastProvider>
+    </LanguageProvider>
   );
 }
 

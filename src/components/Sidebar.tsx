@@ -6,6 +6,7 @@ import {
 } from "react-icons/fa";
 import { useAuth } from "../Hooks/useAuth";
 import { useLocalStorage } from "../Hooks/useLocalStorage";
+import { useTranslation } from "react-i18next";
 
 interface NavItem {
   title: string;
@@ -28,19 +29,21 @@ interface SidebarProps {
   isOpen: boolean;
 }
 
-const navItems: NavItem[] = [
-  {
-    title: "Digital Marketing",
-    icon: <FaChartBar />,
-    subNav: [
-      { title: "Abandoned Cart", url: "/dm/abandonedcart", icon: <FaRegFileAlt /> },
-    ],
-  },
-];
-
 const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
+  const { t } = useTranslation('common');
   const [openPath, setOpenPath] = useLocalStorage<string[]>('sidebar-openPath', []);
   const { user } = useAuth();
+
+  // Create navItems with translations
+  const navItems: NavItem[] = [
+    {
+      title: t('sidebar.digitalMarketing'),
+      icon: <FaChartBar />,
+      subNav: [
+        { title: t('sidebar.abandonedCart'), url: "/dm/abandonedcart", icon: <FaRegFileAlt /> },
+      ],
+    },
+  ];
   
   // Tooltip state: { title, depth, position: {top, left, width} }
   const [tooltip, setTooltip] = useState<TooltipState | null>(null);

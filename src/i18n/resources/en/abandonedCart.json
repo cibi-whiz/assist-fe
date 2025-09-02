@@ -1,0 +1,66 @@
+{
+  "title": "Abandoned Cart",
+  "description": "Manage and recover abandoned shopping carts",
+  "filters": {
+    "title": "Filters",
+    "abandonedCartDateRange": "Abandoned Cart Date Range",
+    "email": "Email",
+    "country": "Country",
+    "customer": "Customer",
+    "sent": "Sent",
+    "sentBy": "Sent By"
+  },
+  "buttons": {
+    "search": "Search",
+    "clear": "Clear",
+    "refresh": "Refresh",
+    "export": "Export",
+    "viewDetails": "View Details",
+    "sendEmail": "Send Email"
+  },
+  "table": {
+    "columns": {
+      "index": "#",
+      "email": "Customer",
+      "total_price": "Total Price",
+      "items_count": "Items Count",
+      "updated_at": "Added On",
+      "priority": "Priority",
+      "sender_name": "Mail Sent By"
+    },
+    "priority": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "status": {
+      "sent": "Already Sent",
+      "notSent": "Generate Email"
+    }
+  },
+  "modal": {
+    "title": "Cart Details",
+    "customerInfo": "Customer Information",
+    "cartItems": "Cart Items",
+    "total": "Total",
+    "actions": "Actions"
+  },
+  "export": {
+    "filename": "abandoned-cart-{{date}}.csv",
+    "headers": {
+      "customerName": "Customer Name",
+      "email": "Email",
+      "totalPrice": "Total Price",
+      "itemsCount": "Items Count",
+      "addedOn": "Added On",
+      "priority": "Priority",
+      "mailSentBy": "Mail Sent By"
+    }
+  },
+  "messages": {
+    "noDataToExport": "No data to export",
+    "exportCompleted": "Export completed successfully",
+    "dataRefreshed": "Data refreshed successfully",
+    "filtersCleared": "Filters cleared"
+  }
+}

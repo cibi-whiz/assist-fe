@@ -1,0 +1,56 @@
+{
+  "title": "Roles y Permisos",
+  "description": "Gestionar roles de usuario y sus permisos",
+  "roles": {
+    "title": "Roles",
+    "addRole": "Agregar Rol",
+    "editRole": "Editar Rol",
+    "deleteRole": "Eliminar Rol",
+    "roleName": "Nombre del Rol",
+    "description": "Descripción",
+    "permissions": "Permisos",
+    "users": "Usuarios"
+  },
+  "permissions": {
+    "title": "Permisos",
+    "dashboard": "Panel de Control",
+    "abandonedCart": "Carrito Abandonado",
+    "rolesAndPermissions": "Roles y Permisos",
+    "settings": "Configuración",
+    "users": "Usuarios",
+    "reports": "Reportes",
+    "view": "Ver",
+    "create": "Crear",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "export": "Exportar",
+    "import": "Importar"
+  },
+  "users": {
+    "title": "Usuarios",
+    "addUser": "Agregar Usuario",
+    "editUser": "Editar Usuario",
+    "deleteUser": "Eliminar Usuario",
+    "userName": "Nombre de Usuario",
+    "email": "Correo Electrónico",
+    "role": "Rol",
+    "status": "Estado",
+    "lastLogin": "Último Acceso",
+    "actions": "Acciones"
+  },
+  "status": {
+    "active": "Activo",
+    "inactive": "Inactivo",
+    "pending": "Pendiente"
+  },
+  "messages": {
+    "roleCreated": "Rol creado exitosamente",
+    "roleUpdated": "Rol actualizado exitosamente",
+    "roleDeleted": "Rol eliminado exitosamente",
+    "userCreated": "Usuario creado exitosamente",
+    "userUpdated": "Usuario actualizado exitosamente",
+    "userDeleted": "Usuario eliminado exitosamente",
+    "confirmDeleteRole": "¿Está seguro de que desea eliminar este rol?",
+    "confirmDeleteUser": "¿Está seguro de que desea eliminar este usuario?"
+  }
+}

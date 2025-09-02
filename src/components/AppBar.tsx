@@ -1,9 +1,11 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import assistBlack from "../Assets/Images/assist-black.svg";
 import assistWhite from "../Assets/Images/assist-white.svg";
 import { FaBars, FaChevronDown, FaStore, FaBuilding, FaGraduationCap, FaComments, FaPlay } from "react-icons/fa";
 import { useAuth } from "../Hooks/useAuth";
 import { useLocalStorage } from "../Hooks/useLocalStorage";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 interface Portal {
   id: string;
@@ -21,62 +23,16 @@ interface AppBarProps {
   onThemeToggle: () => void;
 }
 
-const portals: Portal[] = [
-  {
-    id: 'b2c',
-    name: 'B2C',
-    description: 'Business to Consumer platform',
-    iconName: 'FaStore',
-    color: 'bg-blue-500',
-    bgColor: 'from-blue-500 to-blue-600',
-    status: 'active'
-  },
-  {
-    id: 'b2b',
-    name: 'B2B',
-    description: 'Business to Business platform',
-    iconName: 'FaBuilding',
-    color: 'bg-purple-500',
-    bgColor: 'from-purple-500 to-purple-600',
-    status: 'active'
-  },
-  {
-    id: 'lms',
-    name: 'LMS',
-    description: 'Learning Management System',
-    iconName: 'FaGraduationCap',
-    color: 'bg-green-500',
-    bgColor: 'from-green-500 to-green-600',
-    status: 'active'
-  },
-  {
-    id: 'forums',
-    name: 'Forums',
-    description: 'Community discussions',
-    iconName: 'FaComments',
-    color: 'bg-orange-500',
-    bgColor: 'from-orange-500 to-orange-600',
-    status: 'beta'
-  },
-  {
-    id: 'play',
-    name: 'Play',
-    description: 'Labs Portal',
-    iconName: 'FaPlay',
-    color: 'bg-red-500',
-    bgColor: 'from-red-500 to-red-600',
-    status: 'beta'
-  }
-];
+// Portal configuration will be created inside the component to access translations
 
 const AppBar: React.FC<AppBarProps> = ({
   onMenuClick,
   darkMode,
   onThemeToggle,
 }) => {
+  const { t } = useTranslation('common');
   const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
   const [portalDropdownOpen, setPortalDropdownOpen] = useState<boolean>(false);
-  const [selectedPortal, setSelectedPortal] = useLocalStorage<Portal>('selectedPortal', portals[0]);
   const [focusedPortalIndex, setFocusedPortalIndex] = useState<number>(-1);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   
@@ -86,6 +42,57 @@ const AppBar: React.FC<AppBarProps> = ({
   const portalButtonRef = useRef<HTMLButtonElement>(null);
   
   const { logout, user } = useAuth();
+
+  // Create portals array with translations
+  const portals: Portal[] = useMemo(() => [
+    {
+      id: 'b2c',
+      name: t('portals.b2c.name'),
+      description: t('portals.b2c.description'),
+      iconName: 'FaStore',
+      color: 'bg-blue-500',
+      bgColor: 'from-blue-500 to-blue-600',
+      status: 'active'
+    },
+    {
+      id: 'b2b',
+      name: t('portals.b2b.name'),
+      description: t('portals.b2b.description'),
+      iconName: 'FaBuilding',
+      color: 'bg-purple-500',
+      bgColor: 'from-purple-500 to-purple-600',
+      status: 'active'
+    },
+    {
+      id: 'lms',
+      name: t('portals.lms.name'),
+      description: t('portals.lms.description'),
+      iconName: 'FaGraduationCap',
+      color: 'bg-green-500',
+      bgColor: 'from-green-500 to-green-600',
+      status: 'active'
+    },
+    {
+      id: 'forums',
+      name: t('portals.forums.name'),
+      description: t('portals.forums.description'),
+      iconName: 'FaComments',
+      color: 'bg-orange-500',
+      bgColor: 'from-orange-500 to-orange-600',
+      status: 'beta'
+    },
+    {
+      id: 'play',
+      name: t('portals.play.name'),
+      description: t('portals.play.description'),
+      iconName: 'FaPlay',
+      color: 'bg-red-500',
+      bgColor: 'from-red-500 to-red-600',
+      status: 'beta'
+    }
+  ], [t]);
+
+  const [selectedPortal, setSelectedPortal] = useLocalStorage<Portal>('selectedPortal', portals[0]);
 
   // Function to render icons based on iconName
   const renderIcon = (iconName: string, className: string = "w-4 h-4") => {
@@ -196,20 +203,20 @@ const AppBar: React.FC<AppBarProps> = ({
       document.addEventListener('keydown', handleKeyDown);
       return () => document.removeEventListener('keydown', handleKeyDown);
     }
-  }, [portalDropdownOpen, focusedPortalIndex, handlePortalSelect]);
+  }, [portalDropdownOpen, focusedPortalIndex, handlePortalSelect, portals]);
 
   const getStatusBadge = (status: Portal['status']) => {
     switch (status) {
       case 'beta':
         return (
           <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300">
-            BETA
+            {t('appBar.beta')}
           </span>
         );
       case 'maintenance':
         return (
           <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300">
-            MAINTENANCE
+            {t('appBar.maintenance')}
           </span>
         );
       default:
@@ -224,7 +231,7 @@ const AppBar: React.FC<AppBarProps> = ({
         <button
           onClick={onMenuClick}
           className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors duration-300"
-          aria-label="Toggle Sidebar"
+          aria-label={t('appBar.toggleSidebar')}
         >
           <FaBars className="text-gray-700 dark:text-gray-200 text-lg" />
         </button>
@@ -265,7 +272,7 @@ const AppBar: React.FC<AppBarProps> = ({
               </div>
               {selectedPortal.status === 'beta' && (
                 <div className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">
-                  BETA
+                  {t('appBar.beta')}
                 </div>
               )}
             </div>
@@ -281,10 +288,10 @@ const AppBar: React.FC<AppBarProps> = ({
             >
               <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-800">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                  Switch Portal
+                  {t('appBar.switchPortal')}
                 </h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Choose your workspace environment
+                  {t('appBar.chooseWorkspace')}
                 </p>
               </div>
               
@@ -331,7 +338,7 @@ const AppBar: React.FC<AppBarProps> = ({
                       <div className="flex items-center space-x-2">
                         <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                         <span className="text-xs font-medium text-blue-600 dark:text-blue-400">
-                          ACTIVE
+                          {t('appBar.active')}
                         </span>
                       </div>
                     )}
@@ -341,12 +348,15 @@ const AppBar: React.FC<AppBarProps> = ({
               
               <div className="px-4 py-2 border-t border-gray-100 dark:border-gray-800">
                 <div className="text-xs text-gray-400 dark:text-gray-500">
-                  Use ↑↓ to navigate • Enter to select • Esc to close
+                  {t('appBar.keyboardNavigation')}
                 </div>
               </div>
             </div>
           )}
         </div>
+
+        {/* Language Switcher */}
+        <LanguageSwitcher darkMode={darkMode} />
 
         {/* Avatar + Popover */}
         <div className="relative">
@@ -366,7 +376,7 @@ const AppBar: React.FC<AppBarProps> = ({
               {/* Dark Mode Toggle */}
               <div className="px-4 py-2 flex items-center justify-between">
                 <span className="text-sm text-gray-700 dark:text-gray-200">
-                  Dark Mode
+                  {t('appBar.darkMode')}
                 </span>
                 <button
                   onClick={onThemeToggle}
@@ -387,13 +397,13 @@ const AppBar: React.FC<AppBarProps> = ({
                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                 onClick={() => setPopoverOpen(false)}
               >
-                Profile
+                {t('appBar.profile')}
               </button>
               <button
                 className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 border-t border-gray-200 dark:border-gray-800"
                 onClick={handleLogout}
               >
-                Logout
+                {t('appBar.logout')}
               </button>
             </div>
           )}

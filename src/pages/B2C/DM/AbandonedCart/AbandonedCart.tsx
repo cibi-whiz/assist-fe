@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   FaDownload,
   FaSearch,
@@ -10,10 +10,7 @@ import {
   FaUser,
   FaEye,
   FaFilter,
-  FaRedo,
-  FaSort,
-  FaSortUp,
-  FaSortDown,
+  FaRedo
 } from "react-icons/fa";
 import { getCartData, createdByRequest } from "../../../../Services/DM/Abandoned/services";
 import Daterange from "../../../../components/Daterange";
@@ -21,9 +18,10 @@ import { Input } from 'antd';
 import { useToast } from "../../../../components/ToastContext";
 import { Countries } from "../../../../Props/Countries";
 import MailDrawer from "./MailDrawer";
-
+import { useTranslation } from "react-i18next";
 import Autocomplete from "../../../../components/Autocomplete";
 import Table from "../../../../components/Table";
+import tableProps from "../../../../Props/TableProps/B2C/DM/AbandonedCart.json";
 // @ts-ignore
 const moment = require("moment").default || require("moment");
 
@@ -72,6 +70,7 @@ interface AbandonedCartProps {
 
 const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
   const { showToast } = useToast();
+  const { t } = useTranslation(['abandonedCart', 'common']);
   const [filters, setFilters] = useState<Filters>({
     from_date: moment().subtract(6, 'days').format('YYYY-MM-DD'),
     to_date: moment().format('YYYY-MM-DD'),
@@ -84,7 +83,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [tableData, setTableData] = useState<CartItem[]>([]);
-  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
+  const [sortConfig] = useState<SortConfig>({ key: null, direction: 'asc' });
   const [pagination, setPagination] = useState({
     total: 0,
     page: 1,
@@ -101,52 +100,15 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(null);
 
-  const columns = [
-    {
-      key: 'index',
-      label: '#',
-      sortable: false,
-    },
-    {
-      key: 'email',
-      label: 'Customer',
-      sortable: true,
-    },
-    {
-      key: 'total_price',
-      label: 'Total Price',
-      sortable: true,
-    },
-    {
-      key: 'items_count',
-      label: 'Items Count',
-      sortable: true,
-    },
-    {
-      key: 'updated_at',
-      label: 'Added On',
-      sortable: true,
-    },
-    {
-      key: 'items_count',
-      label: 'Priority',
-      sortable: true,
-    },
-    {
-      key: 'sender_name',
-      label: 'Mail Sent By',
-      sortable: true,
-    }
-  ]
   const actions = [
     {
       icon: <FaEye />,
       onClick: (item:any) => handleOpenModal(item),
-      title: 'View Details'
+      title: t('buttons.viewDetails', { ns: 'abandonedCart' })
     }
   ]
 
-  const fetchData = async (page: number = 1) => {
+  const fetchData = useCallback(async (page: number = 1) => {
     try {
       setIsLoading(true);
       const res = await getCartData({
@@ -186,7 +148,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
       });
     } catch (error) {
       console.error('Error fetching cart data:', error);
-      showToast('Failed to load abandoned cart data', 'error');
+      showToast(t('messages.error.loadFailed', { ns: 'common' }), 'error');
       setTableData([]);
       setPagination({
         total: 0,
@@ -199,25 +161,25 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [filters, pagination.per_page, showToast, t]);
 
-  const fetchCreatedBy = async () => {
+  const fetchCreatedBy = useCallback(async () => {
     try {
       const res = await createdByRequest();
       setCreatedByOptions(res.data || []);
     } catch (error) {
       console.error('Error fetching created by:', error);
-      showToast('Failed to load created by options', 'error');
+      showToast(t('messages.error.loadFailed', { ns: 'common' }), 'error');
     }
-  };
+  }, [showToast, t]);
 
   useEffect(() => {
     fetchData();
-  }, [filters]);
+  }, [fetchData]);
 
   useEffect(() => {
     fetchCreatedBy();
-  }, []);
+  }, [fetchCreatedBy]);
 
 
   const handleFilterChange = (key: keyof Filters, value: string | boolean | { value: string | number; label: string } | { value: string; label?: string } | null) => {
@@ -243,9 +205,9 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
     setIsRefreshing(true);
     try {
       await fetchData(1);
-      showToast('Data refreshed successfully', 'success');
+      showToast(t('messages.dataRefreshed', { ns: 'abandonedCart' }), 'success');
     } catch (error) {
-      showToast('Failed to refresh data', 'error');
+      showToast(t('messages.error.loadFailed', { ns: 'common' }), 'error');
     } finally {
       setIsRefreshing(false);
     }
@@ -254,24 +216,32 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
   const handleExport = (): void => {
     // Enhanced export functionality
     if (tableData.length === 0) {
-      showToast('No data to export', 'warning');
+      showToast(t('messages.noDataToExport', { ns: 'abandonedCart' }), 'warning');
       return;
     }
     
     const csvContent = generateCSV();
-    downloadCSV(csvContent, `abandoned-cart-${moment().format('YYYY-MM-DD')}.csv`);
-    showToast('Export completed successfully', 'success');
+    downloadCSV(csvContent, t('export.filename', { ns: 'abandonedCart', date: moment().format('YYYY-MM-DD') }));
+    showToast(t('messages.exportCompleted', { ns: 'abandonedCart' }), 'success');
   };
 
   const generateCSV = (): string => {
-    const headers = ['Customer Name', 'Email', 'Total Price', 'Items Count', 'Added On', 'Priority', 'Mail Sent By'];
+    const headers = [
+      t('export.headers.customerName', { ns: 'abandonedCart' }),
+      t('export.headers.email', { ns: 'abandonedCart' }),
+      t('export.headers.totalPrice', { ns: 'abandonedCart' }),
+      t('export.headers.itemsCount', { ns: 'abandonedCart' }),
+      t('export.headers.addedOn', { ns: 'abandonedCart' }),
+      t('export.headers.priority', { ns: 'abandonedCart' }),
+      t('export.headers.mailSentBy', { ns: 'abandonedCart' })
+    ];
     const rows = tableData.map(item => [
       `${item.first_name} ${item.last_name}`,
       item.email,
       `${item.currency_type === 'INR' ? '₹' :item.currency_type === 'USD' ? '$' :item.currency_type === 'EUR' ? '€' :item.currency_type ==="GBP" ? '£' : ''} ${item.total_price}`,
       item.items_count,
       moment(item.added_on).format('DD-MM-YYYY'),
-      item.items_count >= 3 ? 'High' : item.items_count === 2 ? 'Medium' : 'Low',
+      item.items_count >= 3 ? t('table.priority.high', { ns: 'abandonedCart' }) : item.items_count === 2 ? t('table.priority.medium', { ns: 'abandonedCart' }) : t('table.priority.low', { ns: 'abandonedCart' }),
       item.sender_name || '-'
     ]);
     
@@ -300,7 +270,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
       sent: "",
       sent_by: null,
     });
-    showToast('Filters cleared', 'info');
+    showToast(t('messages.filtersCleared', { ns: 'abandonedCart' }), 'info');
   };
 
 
@@ -390,26 +360,25 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
     return pages;
   };
 
-  const getPriorityColor = (items: number): string => {
-    if (items >= 3) {
-      return "text-emerald-700 bg-emerald-100 border-emerald-300 dark:text-emerald-400 dark:bg-emerald-900/30 dark:border-emerald-600";
-    } else if (items == 2) {
-      return "text-amber-700 bg-amber-100 border-amber-300 dark:text-amber-400 dark:bg-amber-900/30 dark:border-amber-600";
-    } else {
-      return "text-slate-700 bg-slate-100 border-slate-300 dark:text-slate-400 dark:bg-slate-900/30 dark:border-slate-600";
-    }
-  };
-
-  const getSortIcon = (columnKey: keyof CartItem) => {
-    if (sortConfig.key !== columnKey) {
-      return <FaSort className="w-3 h-3 text-gray-400" />;
-    }
-    return sortConfig.direction === 'asc' 
-      ? <FaSortUp className="w-3 h-3 text-blue-600" />
-      : <FaSortDown className="w-3 h-3 text-blue-600" />;
-  };
-
   const sortedData = getSortedData();
+
+  // Create columns with translated labels
+  const columns = tableProps.table_columns.map((column: any) => {
+    const baseColumn = {
+      ...column,
+      label: t(`table.columns.${column.key}`, { ns: 'abandonedCart' }) || column.label
+    };
+
+    // Add custom render function for priority column
+    if (column.key === 'priority') {
+      return {
+        ...baseColumn,
+        render: (value: any, item: any) => item.items_count // Use items_count for priority calculation
+      };
+    }
+
+    return baseColumn;
+  });
 
   return (
     <div className="space-y-4">
@@ -417,10 +386,10 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
-            Abandoned Cart
+            {t('title', { ns: 'abandonedCart' })}
           </h1>
           <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-            Manage and recover abandoned shopping carts
+            {t('description', { ns: 'abandonedCart' })}
           </p>
         </div>
         <div className="flex space-x-2">
@@ -431,7 +400,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
               title="Refresh Data"
             >
               <FaRedo className={`w-3 h-3 ${isRefreshing ? 'animate-spin' : ''}`} />
-              <span>{isRefreshing ? 'Refreshing...' : 'Refresh'}</span>
+              <span>{isRefreshing ? t('common.loading', { ns: 'common' }) : t('buttons.refresh', { ns: 'abandonedCart' })}</span>
             </button>
           <button
             onClick={handleExport}
@@ -440,7 +409,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
             title="Export to CSV"
           >
             <FaDownload className="w-3 h-3" />
-            <span>Export</span>
+            <span>{t('buttons.export', { ns: 'abandonedCart' })}</span>
           </button>
         </div>
       </div>
@@ -449,31 +418,31 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
       <div className="bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800">
         <div className="flex items-center space-x-2 mb-3">
           <FaFilter className="w-4 h-4 text-gray-500" />
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200">Filters</h3>
+          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-200">{t('filters.title', { ns: 'abandonedCart' })}</h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           <div>
             <Daterange
-              label="Abandoned Cart Date Range"
+              label={t('filters.abandonedCartDateRange', { ns: 'abandonedCart' })}
               onChange={handleDateRangeChange}
             />
           </div>
           <div>
             <label className="flex block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">
               <FaEnvelope className="w-3 h-3 mr-1" />
-              Email
+              {t('filters.email', { ns: 'abandonedCart' })}
             </label>
             <Input
               type="email"
               value={filters.email}
               onChange={(e) => handleFilterChange("email", e.target.value)}
-              placeholder="Search by email"
+              placeholder={t('common.searchByEmail', { ns: 'common' })}
               className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
             <Autocomplete
-              label="Country"
+              label={t('filters.country', { ns: 'abandonedCart' })}
               options={Countries.data.map((country:any) => ({
                 value: country.value,
                 label: country.label
@@ -481,32 +450,32 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
               Icon={<FaGlobe />}
               value={filters.country}
               onChange={(value: any) => handleFilterChange("country", value)}
-              placeholder="Search by country"
+              placeholder={t('common.searchByCountry', { ns: 'common' })}
             />
           </div>
 
           <div>
             <label className="flex block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">
               <FaEnvelope className="w-3 h-3 mr-1" />
-              Mail Status
+              {t('filters.sent', { ns: 'abandonedCart' })}
             </label>
             <select
               value={filters.sent}
               onChange={(e) => handleFilterChange("sent", e.target.value)}
               className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              <option value="">All</option>
-              <option value="1">Already Sent</option>
-              <option value="0">Generate Email</option>
+              <option value="">{t('common.all', { ns: 'common' })}</option>
+              <option value="1">{t('table.status.sent', { ns: 'abandonedCart' })}</option>
+              <option value="0">{t('table.status.notSent', { ns: 'abandonedCart' })}</option>
             </select>
           </div>
           <Autocomplete
-            label="Mail Sent By"
+            label={t('filters.sentBy', { ns: 'abandonedCart' })}
             options={createdByOptions}
             Icon={<FaUser />}
             value={filters.sent_by}
             onChange={(value: any) => handleFilterChange("sent_by", value)}
-            placeholder="Search by created by"
+            placeholder={t('common.searchBySentBy', { ns: 'common' })}
           />
           <div className="flex items-center space-x-2">
             <input
@@ -522,7 +491,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
               htmlFor="existingCustomers"
               className="text-sm font-medium text-gray-700 dark:text-gray-200"
             >
-              Existing Customers Only
+              {t('filters.customer', { ns: 'abandonedCart' })}
             </label>
           </div>
         </div>
@@ -534,14 +503,14 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
             className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-1 disabled:opacity-50"
           >
             <FaSearch className="w-3 h-3" />
-            <span>{isLoading ? "Searching..." : "Search"}</span>
+            <span>{isLoading ? t('common.loading', { ns: 'common' }) : t('buttons.search', { ns: 'abandonedCart' })}</span>
           </button>
           <button
             onClick={handleClear}
             className="px-3 py-1.5 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600 transition-colors duration-200 flex items-center space-x-1"
           >
             <FaTimes className="w-3 h-3" />
-            <span>Clear</span>
+            <span>{t('buttons.clear', { ns: 'abandonedCart' })}</span>
           </button>
         </div>
       </div>
@@ -564,7 +533,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
             {/* Items per page and info */}
             <div className="flex items-center space-x-2 text-xs text-gray-700 dark:text-gray-300">
-              <span>Show</span>
+              <span>{t('pagination.showing', { ns: 'common' })}</span>
               <select
                 value={pagination.per_page}
                 onChange={(e) => handlePerPageChange(Number(e.target.value))}
@@ -575,10 +544,10 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
                 <option value={25}>25</option>
                 <option value={50}>50</option>
               </select>
-              <span>entries</span>
+              <span>{t('pagination.entries', { ns: 'common' })}</span>
               <span className="text-gray-500 dark:text-gray-400">
-                Showing {pagination.from + 1} to {Math.min(pagination.from + sortedData.length, pagination.total)}{" "}
-                of {pagination.total} results
+                {t('pagination.showing', { ns: 'common' })} {pagination.from + 1} {t('pagination.to', { ns: 'common' })} {Math.min(pagination.from + sortedData.length, pagination.total)}{" "}
+                {t('pagination.of', { ns: 'common' })} {pagination.total} {t('pagination.results', { ns: 'common' })}
               </span>
             </div>
 
@@ -591,7 +560,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
                 className="px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1 transition-colors duration-150"
               >
                 <FaChevronLeft className="w-2 h-2" />
-                <span>Prev</span>
+                <span>{t('pagination.previous', { ns: 'common' })}</span>
               </button>
 
               {/* Page Numbers */}
@@ -624,7 +593,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
                 disabled={pagination.current_page === pagination.last_page}
                 className="px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1 transition-colors duration-150"
               >
-                <span>Next</span>
+                <span>{t('pagination.next', { ns: 'common' })}</span>
                 <FaChevronRight className="w-2 h-2" />
               </button>
             </div>

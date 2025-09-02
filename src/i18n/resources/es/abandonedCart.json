@@ -1,0 +1,68 @@
+{
+  "title": "Carrito Abandonado",
+  "description": "Gestionar y recuperar carritos de compras abandonados",
+  "filters": {
+    "title": "Filtros",
+    "abandonedCartDateRange": "Rango de Fechas del Carrito Abandonado",
+    "email": "Email",
+    "country": "País",
+    "customer": "Cliente",
+    "sent": "Enviado",
+    "sentBy": "Enviado Por"
+  },
+  "buttons": {
+    "search": "Buscar",
+    "clear": "Limpiar",
+    "refresh": "Actualizar",
+    "export": "Exportar",
+    "viewDetails": "Ver Detalles",
+    "sendEmail": "Enviar Email"
+  },
+  "table": {
+    "columns": {
+      "index": "#",
+      "email": "Cliente",
+      "total_price": "Precio Total",
+      "items_count": "Cantidad de Artículos",
+      "updated_at": "Agregado El",
+      "priority": "Prioridad",
+      "sender_name": "Correo Enviado Por"
+
+    },
+
+    "priority": {
+      "high": "Alta",
+      "medium": "Media",
+      "low": "Baja"
+    },
+    "status": {
+      "sent": "Ya Enviado",
+      "notSent": "Generar Email"
+    }
+  },
+  "modal": {
+    "title": "Detalles del Carrito",
+    "customerInfo": "Información del Cliente",
+    "cartItems": "Artículos del Carrito",
+    "total": "Total",
+    "actions": "Acciones"
+  },
+  "export": {
+    "filename": "carrito-abandonado-{{date}}.csv",
+    "headers": {
+      "customerName": "Nombre del Cliente",
+      "email": "Email",
+      "totalPrice": "Precio Total",
+      "itemsCount": "Cantidad de Artículos",
+      "addedOn": "Agregado el",
+      "priority": "Prioridad",
+      "mailSentBy": "Email Enviado Por"
+    }
+  },
+  "messages": {
+    "noDataToExport": "No hay datos para exportar",
+    "exportCompleted": "Exportación completada exitosamente",
+    "dataRefreshed": "Datos actualizados exitosamente",
+    "filtersCleared": "Filtros limpiados"
+  }
+}

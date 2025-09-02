@@ -1,0 +1,173 @@
+{
+  "app": {
+    "name": "Assist",
+    "version": "2.0"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "abandonedCart": "Abandoned Cart",
+    "rolesAndPermissions": "Roles and Permissions",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "common": {
+    "searchByEmail": "Search by email",
+    "searchByCustomer": "Search by customer",
+    "searchBySent": "Search by sent",
+    "searchBySentBy": "Search by sent by",
+    "searchByCountry": "Search by country",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Info",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "clear": "Clear",
+    "refresh": "Refresh",
+    "export": "Export",
+    "import": "Import",
+    "filter": "Filter",
+    "filters": "Filters",
+    "actions": "Actions",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "select": "Select",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "copy": "Copy",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "pagination": {
+    "showing": "Showing",
+    "to": "to",
+    "of": "of",
+    "results": "results",
+    "entries": "entries",
+    "perPage": "per page",
+    "goToPage": "Go to page",
+    "page": "Page",
+    "totalPages": "Total pages",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "table": {
+    "noData": "No data available",
+    "loading": "Loading data...",
+    "error": "Error loading data",
+    "sortAsc": "Sort ascending",
+    "sortDesc": "Sort descending",
+    "removeSort": "Remove sort"
+  },
+  "form": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidPhone": "Please enter a valid phone number",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "passwordsDoNotMatch": "Passwords do not match",
+    "invalidDate": "Please enter a valid date",
+    "invalidNumber": "Please enter a valid number"
+  },
+  "messages": {
+    "success": {
+      "saved": "Data saved successfully",
+      "deleted": "Data deleted successfully",
+      "updated": "Data updated successfully",
+      "exported": "Data exported successfully",
+      "imported": "Data imported successfully"
+    },
+    "error": {
+      "saveFailed": "Failed to save data",
+      "deleteFailed": "Failed to delete data",
+      "updateFailed": "Failed to update data",
+      "exportFailed": "Failed to export data",
+      "importFailed": "Failed to import data",
+      "loadFailed": "Failed to load data",
+      "networkError": "Network error occurred",
+      "unauthorized": "You are not authorized to perform this action",
+      "forbidden": "Access denied"
+    },
+    "confirm": {
+      "delete": "Are you sure you want to delete this item?",
+      "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
+      "reset": "Are you sure you want to reset all changes?"
+    }
+  },
+  "appBar": {
+    "toggleSidebar": "Toggle Sidebar",
+    "switchPortal": "Switch Portal",
+    "chooseWorkspace": "Choose your workspace environment",
+    "darkMode": "Dark Mode",
+    "profile": "Profile",
+    "logout": "Logout",
+    "active": "ACTIVE",
+    "beta": "BETA",
+    "maintenance": "MAINTENANCE",
+    "keyboardNavigation": "Use ↑↓ to navigate • Enter to select • Esc to close"
+  },
+  "portals": {
+    "b2c": {
+      "name": "B2C",
+      "description": "Business to Consumer platform"
+    },
+    "b2b": {
+      "name": "B2B", 
+      "description": "Business to Business platform"
+    },
+    "lms": {
+      "name": "LMS",
+      "description": "Learning Management System"
+    },
+    "forums": {
+      "name": "Forums",
+      "description": "Community discussions"
+    },
+    "play": {
+      "name": "Play",
+      "description": "Labs Portal"
+    }
+  },
+  "sidebar": {
+    "digitalMarketing": "Digital Marketing",
+    "abandonedCart": "Abandoned Cart"
+  },
+  "welcome": {
+    "goodMorning": "Good Morning",
+    "goodAfternoon": "Good Afternoon", 
+    "goodEvening": "Good Evening",
+    "welcomeMessage": "Welcome to Assist, {{userName}}!",
+    "preparingWorkspace": "Preparing your workspace...",
+    "ready": "Ready ✨",
+    "readyToGo": "Ready to go!"
+  },
+  "login": {
+    "title": "Sign in to your account",
+    "emailLabel": "Email address",
+    "passwordLabel": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "loginButton": "Login",
+    "loggingIn": "Logging in...",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "errors": {
+      "requiredFields": "Please enter both email and password.",
+      "loginFailed": "Login failed. Please try again."
+    }
+  }
+}

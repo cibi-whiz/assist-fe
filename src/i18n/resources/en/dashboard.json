@@ -1,0 +1,36 @@
+{
+  "title": "Dashboard",
+  "description": "Overview of your business metrics and activities",
+  "welcome": {
+    "title": "Welcome back, {{name}}!",
+    "subtitle": "Here's what's happening with your business today"
+  },
+  "metrics": {
+    "totalCustomers": "Total Customers",
+    "totalOrders": "Total Orders",
+    "totalRevenue": "Total Revenue",
+    "abandonedCarts": "Abandoned Carts",
+    "conversionRate": "Conversion Rate",
+    "averageOrderValue": "Average Order Value"
+  },
+  "charts": {
+    "salesTrend": "Sales Trend",
+    "customerGrowth": "Customer Growth",
+    "revenueByMonth": "Revenue by Month",
+    "topProducts": "Top Products"
+  },
+  "recentActivity": {
+    "title": "Recent Activity",
+    "newOrder": "New order from {{customer}}",
+    "abandonedCart": "Cart abandoned by {{customer}}",
+    "newCustomer": "New customer registered: {{customer}}",
+    "paymentReceived": "Payment received from {{customer}}"
+  },
+  "quickActions": {
+    "title": "Quick Actions",
+    "viewOrders": "View Orders",
+    "manageCustomers": "Manage Customers",
+    "abandonedCarts": "Abandoned Carts",
+    "reports": "Reports"
+  }
+}

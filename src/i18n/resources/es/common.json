@@ -1,0 +1,173 @@
+{
+  "app": {
+    "name": "Assist",
+    "version": "2.0"
+  },
+  "navigation": {
+    "dashboard": "Panel de Control",
+    "abandonedCart": "Carrito Abandonado",
+    "rolesAndPermissions": "Roles y Permisos",
+    "settings": "Configuración",
+    "logout": "Cerrar Sesión"
+  },
+  "common": {
+    "searchByEmail": "Buscar por correo electrónico",
+    "searchByCustomer": "Buscar por cliente",
+    "searchBySent": "Buscar por enviado",
+    "searchBySentBy": "Buscar por enviado por",
+    "searchByCountry": "Buscar por país",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "info": "Información",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "view": "Ver",
+    "search": "Buscar",
+    "clear": "Limpiar",
+    "refresh": "Actualizar",
+    "export": "Exportar",
+    "import": "Importar",
+    "filter": "Filtrar",
+    "filters": "Filtros",
+    "actions": "Acciones",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "reset": "Restablecer",
+    "confirm": "Confirmar",
+    "yes": "Sí",
+    "no": "No",
+    "all": "Todos",
+    "none": "Ninguno",
+    "select": "Seleccionar",
+    "selectAll": "Seleccionar Todo",
+    "deselectAll": "Deseleccionar Todo",
+    "copy": "Copiar",
+    "high": "Alto",
+    "medium": "Medio",
+    "low": "Bajo"
+  },
+  "pagination": {
+    "showing": "Mostrando",
+    "to": "a",
+    "of": "de",
+    "results": "resultados",
+    "entries": "entradas",
+    "perPage": "por página",
+    "goToPage": "Ir a página",
+    "page": "Página",
+    "totalPages": "Páginas totales",
+    "previous": "Anterior",
+    "next": "Siguiente"
+  },
+  "table": {
+    "noData": "No hay datos disponibles",
+    "loading": "Cargando datos...",
+    "error": "Error al cargar datos",
+    "sortAsc": "Ordenar ascendente",
+    "sortDesc": "Ordenar descendente",
+    "removeSort": "Quitar ordenación"
+  },
+  "form": {
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Por favor ingrese un email válido",
+    "invalidPhone": "Por favor ingrese un teléfono válido",
+    "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden",
+    "invalidDate": "Por favor ingrese una fecha válida",
+    "invalidNumber": "Por favor ingrese un número válido"
+  },
+  "messages": {
+    "success": {
+      "saved": "Datos guardados exitosamente",
+      "deleted": "Datos eliminados exitosamente",
+      "updated": "Datos actualizados exitosamente",
+      "exported": "Datos exportados exitosamente",
+      "imported": "Datos importados exitosamente"
+    },
+    "error": {
+      "saveFailed": "Error al guardar datos",
+      "deleteFailed": "Error al eliminar datos",
+      "updateFailed": "Error al actualizar datos",
+      "exportFailed": "Error al exportar datos",
+      "importFailed": "Error al importar datos",
+      "loadFailed": "Error al cargar datos",
+      "networkError": "Error de red",
+      "unauthorized": "No está autorizado para realizar esta acción",
+      "forbidden": "Acceso denegado"
+    },
+    "confirm": {
+      "delete": "¿Está seguro de que desea eliminar este elemento?",
+      "unsavedChanges": "Tiene cambios sin guardar. ¿Está seguro de que desea salir?",
+      "reset": "¿Está seguro de que desea restablecer todos los cambios?"
+    }
+  },
+  "appBar": {
+    "toggleSidebar": "Alternar Barra Lateral",
+    "switchPortal": "Cambiar Portal",
+    "chooseWorkspace": "Elige tu entorno de trabajo",
+    "darkMode": "Modo Oscuro",
+    "profile": "Perfil",
+    "logout": "Cerrar Sesión",
+    "active": "ACTIVO",
+    "beta": "BETA",
+    "maintenance": "MANTENIMIENTO",
+    "keyboardNavigation": "Usa ↑↓ para navegar • Enter para seleccionar • Esc para cerrar"
+  },
+  "portals": {
+    "b2c": {
+      "name": "B2C",
+      "description": "Plataforma de Empresa a Consumidor"
+    },
+    "b2b": {
+      "name": "B2B",
+      "description": "Plataforma de Empresa a Empresa"
+    },
+    "lms": {
+      "name": "LMS",
+      "description": "Sistema de Gestión de Aprendizaje"
+    },
+    "forums": {
+      "name": "Foros",
+      "description": "Discusiones de la comunidad"
+    },
+    "play": {
+      "name": "Play",
+      "description": "Portal de Laboratorios"
+    }
+  },
+  "sidebar": {
+    "digitalMarketing": "Mercadotecnia Digital",
+    "abandonedCart": "Carrito Abandonado"
+  },
+  "welcome": {
+    "goodMorning": "Buenos Días",
+    "goodAfternoon": "Buenas Tardes",
+    "goodEvening": "Buenas Noches",
+    "welcomeMessage": "¡Bienvenido a Assist, {{userName}}!",
+    "preparingWorkspace": "Preparando tu espacio de trabajo...",
+    "ready": "¡Listo ✨",
+    "readyToGo": "¡Listo para comenzar!"
+  },
+  "login": {
+    "title": "Inicia sesión en tu cuenta",
+    "emailLabel": "Dirección de correo electrónico",
+    "passwordLabel": "Contraseña",
+    "rememberMe": "Recordarme",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "loginButton": "Iniciar Sesión",
+    "loggingIn": "Iniciando sesión...",
+    "showPassword": "Mostrar contraseña",
+    "hidePassword": "Ocultar contraseña",
+    "errors": {
+      "requiredFields": "Por favor ingresa tanto el email como la contraseña.",
+      "loginFailed": "Error al iniciar sesión. Por favor intenta de nuevo."
+    }
+  }
+}
