@@ -10,9 +10,10 @@ interface UseThemeReturn {
 export const useTheme = (): UseThemeReturn => {
   const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>(() => {
     const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || stored === 'light') {
+    if (stored === 'dark' || stored === 'light' || stored === 'system') {
       return stored;
     }
+    // Default to system preference
     return 'system';
   });
 
@@ -73,12 +74,12 @@ export const useTheme = (): UseThemeReturn => {
   };
 
   const toggleTheme = () => {
-    if (theme === 'system') {
-      setTheme('light');
-    } else if (theme === 'light') {
+    if (theme === 'light') {
       setTheme('dark');
-    } else {
+    } else if (theme === 'dark') {
       setTheme('system');
+    } else {
+      setTheme('light');
     }
   };
 

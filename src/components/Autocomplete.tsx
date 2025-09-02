@@ -156,8 +156,8 @@ const Autocomplete = ({
 
   return (
     <div className="relative" ref={inputRef}>
-      <label className="flex block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">
-        <span className="w-3 h-3 mr-1">{Icon}</span>
+      <label className="flex items-center block text-sm font-medium text-gray-700 dark:text-gray-100">
+        <span className="w-4 h-4 text-500 dark:text-gray-100">{Icon}</span>
         {label}
       </label>
       <div className="relative">

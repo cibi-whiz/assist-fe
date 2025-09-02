@@ -4,6 +4,7 @@ import assistBlack from '../../Assets/Images/assist-black.svg';
 import assistWhite from '../../Assets/Images/assist-white.svg';
 import { useAuth } from '../../Hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../Hooks/useTheme';
 
 const EyeIcon: React.FC = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -23,18 +24,12 @@ const EyeOffIcon: React.FC = () => (
 const Login: React.FC = () => {
   const { t } = useTranslation('common');
   const { login, loading } = useAuth();
+  const { isDark } = useTheme();
   const [email, setEmail] = useState<string>(localStorage.getItem('rememberedEmail') || "");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [remember, setRemember] = useState<boolean>(!!localStorage.getItem('rememberedEmail'));
   const [error, setError] = useState<string>("");
-
-  const [darkMode] = useState<boolean>(() => {
-    const stored = localStorage.getItem('theme');
-    if (stored) return stored === 'dark';
-    // Default to light mode initially
-    return false;
-  });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -67,7 +62,7 @@ const Login: React.FC = () => {
         {/* Logo */}
         <div className="flex flex-col items-center transition-colors duration-300">
           <div className="w-56 h-22 bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
-            <img src={darkMode ? assistWhite : assistBlack} alt="Assist Logo" className="w-48 h-20 object-contain transition-opacity duration-300" draggable={false} />
+            <img src={isDark ? assistWhite : assistBlack} alt="Assist Logo" className="w-48 h-20 object-contain transition-opacity duration-300" draggable={false} />
           </div>
         </div>
         <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center transition-colors duration-300">{t('login.title')}</h2>

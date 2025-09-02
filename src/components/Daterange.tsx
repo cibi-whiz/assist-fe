@@ -192,8 +192,8 @@ const Daterange = (props: any) => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <label className="flex block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">
-        <FaCalendarAlt className="w-3 h-3 mr-1 " />
+      <label className="flex block text-sm font-medium text-gray-700 dark:text-gray-100">
+        <FaCalendarAlt className="w-4 h-4 text-500 dark:text-gray-100" />
         {props.label}
       </label>
       

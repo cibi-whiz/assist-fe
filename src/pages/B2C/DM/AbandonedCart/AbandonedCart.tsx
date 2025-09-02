@@ -13,7 +13,7 @@ import {
   createdByRequest,
 } from "../../../../Services/DM/Abandoned/services";
 import Daterange from "../../../../components/Daterange";
-import { Input } from "antd";
+import Input from "../../../../components/Input";
 import { useToast } from "../../../../components/ToastContext";
 import { Countries } from "../../../../Props/Countries";
 import MailDrawer from "./MailDrawer";
@@ -23,7 +23,9 @@ import Table from "../../../../components/Table";
 import Header from "../../../../components/Header";
 import tableProps from "../../../../Props/TableProps/B2C/DM/AbandonedCart.json";
 import FilterBox from "../../../../components/FilterBox";
-import SearchandClearButtons from "../../../../components/SearchandClearButtons";
+import FilterProps from "../../../../Props/FilterProps/FilterProps";
+import Select from "../../../../components/Select";
+import { useTheme } from "../../../../Hooks/useTheme";
 // @ts-ignore
 const moment = require("moment").default || require("moment");
 
@@ -73,15 +75,8 @@ interface AbandonedCartProps {
 const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
   const { showToast } = useToast();
   const { t } = useTranslation(["abandonedCart", "common"]);
-  const [filters, setFilters] = useState<Filters>({
-    from_date: moment().subtract(6, "days").format("YYYY-MM-DD"),
-    to_date: moment().format("YYYY-MM-DD"),
-    email: "",
-    country: null,
-    customer: false,
-    sent: "",
-    sent_by: null,
-  });
+  const { isDark } = useTheme();
+  const [filters, setFilters] = useState<Filters>(FilterProps as any);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
   const [tableData, setTableData] = useState<CartItem[]>([]);
@@ -452,17 +447,14 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
           />
         </div>
         <div>
-          <label className="flex block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">
-            <FaEnvelope className="w-3 h-3 mr-1" />
-            {t("filters.email", { ns: "abandonedCart" })}
-          </label>
           <Input
-            type="email"
+            label={t("filters.email", { ns: "abandonedCart" })}
             value={filters.email}
             onChange={(e) => handleFilterChange("email", e.target.value)}
             placeholder={t("common.searchByEmail", { ns: "common" })}
-            className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            Icon={<FaEnvelope />}
           />
+         
         </div>
         <div>
           <Autocomplete
@@ -477,25 +469,15 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
             placeholder={t("common.searchByCountry", { ns: "common" })}
           />
         </div>
-
         <div>
-          <label className="flex block text-xs font-medium text-gray-700 dark:text-gray-200 mb-1">
-            <FaEnvelope className="w-3 h-3 mr-1" />
-            {t("filters.sent", { ns: "abandonedCart" })}
-          </label>
-          <select
+          <Select
+            label={t("filters.sent", { ns: "abandonedCart" })}
+            options={[{ label: t("common.all", { ns: "common" }), value: "" }, { label: t("table.status.sent", { ns: "abandonedCart" }), value: "1" }, { label: t("table.status.notSent", { ns: "abandonedCart" }), value: "0" }]}
+            Icon={<FaEnvelope />}
             value={filters.sent}
-            onChange={(e) => handleFilterChange("sent", e.target.value)}
-            className="w-full px-2 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          >
-            <option value="">{t("common.all", { ns: "common" })}</option>
-            <option value="1">
-              {t("table.status.sent", { ns: "abandonedCart" })}
-            </option>
-            <option value="0">
-              {t("table.status.notSent", { ns: "abandonedCart" })}
-            </option>
-          </select>
+            onChange={(value: any) => handleFilterChange("sent", value)}
+            placeholder={t("common.searchBySent", { ns: "common" })}
+          /> 
         </div>
         <Autocomplete
           label={t("filters.sentBy", { ns: "abandonedCart" })}
@@ -626,7 +608,7 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
           onClose={handleCloseModal}
           userId={selectedCartItem?.user_id}
           userEmail={selectedCartItem?.email}
-          darkMode={darkMode}
+          darkMode={isDark}
         />
       )}
     </div>

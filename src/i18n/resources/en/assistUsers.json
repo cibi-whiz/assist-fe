@@ -3,7 +3,7 @@
     "description": "Manage users who has access to the portal",
     "filters": {
       "title": "Filters",
-      "assistUsersDateRange": "Assist Users Date Range",
+      "assistUsersDateRange": "Users Created Date Range",
       "email": "Email",
       "status": "Status",
       "createdBy": "Created By"

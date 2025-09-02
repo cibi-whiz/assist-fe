@@ -6,6 +6,7 @@ import { useAuth } from "../Hooks/useAuth";
 import { useLocalStorage } from "../Hooks/useLocalStorage";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "../Hooks/useTheme";
 
 interface Portal {
   id: string;
@@ -19,18 +20,15 @@ interface Portal {
 
 interface AppBarProps {
   onMenuClick: () => void;
-  darkMode: boolean;
-  onThemeToggle: () => void;
 }
 
 // Portal configuration will be created inside the component to access translations
 
 const AppBar: React.FC<AppBarProps> = ({
   onMenuClick,
-  darkMode,
-  onThemeToggle,
 }) => {
   const { t } = useTranslation('common');
+  const { isDark, toggleTheme } = useTheme();
   const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
   const [portalDropdownOpen, setPortalDropdownOpen] = useState<boolean>(false);
   const [focusedPortalIndex, setFocusedPortalIndex] = useState<number>(-1);
@@ -236,7 +234,7 @@ const AppBar: React.FC<AppBarProps> = ({
           <FaBars className="text-gray-700 dark:text-gray-200 text-lg" />
         </button>
         <img
-          src={darkMode ? assistWhite : assistBlack}
+          src={isDark ? assistWhite : assistBlack}
           alt="Assist"
           className="w-auto h-8 object-contain"
         />
@@ -356,7 +354,7 @@ const AppBar: React.FC<AppBarProps> = ({
         </div>
 
         {/* Language Switcher */}
-        <LanguageSwitcher darkMode={darkMode} />
+        <LanguageSwitcher darkMode={isDark} />
 
         {/* Avatar + Popover */}
         <div className="relative">
@@ -379,15 +377,15 @@ const AppBar: React.FC<AppBarProps> = ({
                   {t('appBar.darkMode')}
                 </span>
                 <button
-                  onClick={onThemeToggle}
+                  onClick={toggleTheme}
                   className={`relative inline-flex items-center h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none 
-      ${darkMode ? "bg-blue-500" : "bg-gray-300 dark:bg-gray-600"}`}
+      ${isDark ? "bg-blue-500" : "bg-gray-300 dark:bg-gray-600"}`}
                   role="switch"
-                  aria-checked={darkMode}
+                  aria-checked={isDark}
                 >
                   <span
                     className={`inline-block h-5 w-5 transform bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out
-        ${darkMode ? "translate-x-5 scale-105" : "translate-x-0.5 scale-100"}`}
+        ${isDark ? "translate-x-5 scale-105" : "translate-x-0.5 scale-100"}`}
                   />
                 </button>
               </div>
