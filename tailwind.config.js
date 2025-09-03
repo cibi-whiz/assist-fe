@@ -10,7 +10,7 @@ module.exports = {
         'montserrat': ['Montserrat', 'sans-serif'],
       },
       colors: {
-        // Custom dark mode colors
+        // Custom dark mode colors with enhanced contrast
         dark: {
           50: '#f8fafc',
           100: '#f1f5f9',
@@ -22,7 +22,14 @@ module.exports = {
           700: '#334155',
           800: '#1e293b',
           900: '#0f172a',
-          950: '#020617',
+          950: '#0a0a0a',
+        },
+        // Enhanced contrast colors for better readability
+        contrast: {
+          light: '#f8fafc',
+          medium: '#e2e8f0',
+          dark: '#475569',
+          darker: '#334155',
         },
       },
       keyframes: {

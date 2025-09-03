@@ -169,5 +169,22 @@
       "requiredFields": "Por favor ingresa tanto el email como la contraseña.",
       "loginFailed": "Error al iniciar sesión. Por favor intenta de nuevo."
     }
+  },
+  "notFound": {
+    "title": "Página No Encontrada",
+    "subtitle": "¡Ups! La página que buscas no existe.",
+    "description": "La página que solicitaste podría haber sido movida, eliminada, o podrías haber ingresado una URL incorrecta.",
+    "suggestions": {
+      "title": "Esto es lo que puedes hacer:",
+      "checkUrl": "Verifica la URL en busca de errores tipográficos",
+      "goBack": "Regresa a la página anterior",
+      "visitHome": "Visita nuestra página principal",
+      "contactSupport": "Contacta soporte si crees que esto es un error"
+    },
+    "buttons": {
+      "goHome": "Ir al Panel de Control",
+      "goBack": "Regresar",
+      "contactSupport": "Contactar Soporte"
+    }
   }
 }

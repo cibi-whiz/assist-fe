@@ -169,5 +169,22 @@
       "requiredFields": "Please enter both email and password.",
       "loginFailed": "Login failed. Please try again."
     }
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "subtitle": "Oops! The page you're looking for doesn't exist.",
+    "description": "The page you requested might have been moved, deleted, or you might have entered the wrong URL.",
+    "suggestions": {
+      "title": "Here's what you can do:",
+      "checkUrl": "Check the URL for typos",
+      "goBack": "Go back to the previous page",
+      "visitHome": "Visit our homepage",
+      "contactSupport": "Contact support if you believe this is an error"
+    },
+    "buttons": {
+      "goHome": "Go to Dashboard",
+      "goBack": "Go Back",
+      "contactSupport": "Contact Support"
+    }
   }
 }

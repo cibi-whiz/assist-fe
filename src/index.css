@@ -18,8 +18,8 @@ body {
 }
 
 .dark body {
-  background-color: #0f172a;
-  color: #f9fafb;
+  background-color: #0a0a0a;
+  color: #f8fafc;
 }
 
 code {
@@ -253,6 +253,14 @@ code {
   padding: 0.125rem 0.25rem;
 }
 
+/* Dark mode inline code styling */
+.dark .ProseMirror code {
+  background-color: rgba(30, 41, 59, 0.8);
+  color: #fbbf24;
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  font-weight: 500;
+}
+
 .ProseMirror pre {
   background: #f8f9fa;
   border-radius: 0.5rem;
@@ -261,11 +269,133 @@ code {
   margin: 1rem 0;
   padding: 1rem;
   overflow-x: auto;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+/* Enhanced dark mode code block styling */
 .dark .ProseMirror pre {
-  background: #1f2937;
-  color: #f9fafb;
+  background: #0f172a;
+  color: #f1f5f9;
+  border: 1px solid #475569;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+}
+
+/* Syntax highlighting colors for dark mode */
+.dark .ProseMirror pre .token.comment,
+.dark .ProseMirror pre .token.prolog,
+.dark .ProseMirror pre .token.doctype,
+.dark .ProseMirror pre .token.cdata {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.dark .ProseMirror pre .token.punctuation {
+  color: #e2e8f0;
+}
+
+.dark .ProseMirror pre .token.property,
+.dark .ProseMirror pre .token.tag,
+.dark .ProseMirror pre .token.boolean,
+.dark .ProseMirror pre .token.number,
+.dark .ProseMirror pre .token.constant,
+.dark .ProseMirror pre .token.symbol,
+.dark .ProseMirror pre .token.deleted {
+  color: #fca5a5;
+}
+
+.dark .ProseMirror pre .token.selector,
+.dark .ProseMirror pre .token.attr-name,
+.dark .ProseMirror pre .token.string,
+.dark .ProseMirror pre .token.char,
+.dark .ProseMirror pre .token.builtin,
+.dark .ProseMirror pre .token.inserted {
+  color: #6ee7b7;
+}
+
+.dark .ProseMirror pre .token.operator,
+.dark .ProseMirror pre .token.entity,
+.dark .ProseMirror pre .token.url,
+.dark .ProseMirror pre .language-css .token.string,
+.dark .ProseMirror pre .style .token.string {
+  color: #fde047;
+}
+
+.dark .ProseMirror pre .token.atrule,
+.dark .ProseMirror pre .token.attr-value,
+.dark .ProseMirror pre .token.keyword {
+  color: #93c5fd;
+  font-weight: 600;
+}
+
+.dark .ProseMirror pre .token.function,
+.dark .ProseMirror pre .token.class-name {
+  color: #c4b5fd;
+  font-weight: 500;
+}
+
+.dark .ProseMirror pre .token.regex,
+.dark .ProseMirror pre .token.important,
+.dark .ProseMirror pre .token.variable {
+  color: #fda4af;
+}
+
+.dark .ProseMirror pre .token.important,
+.dark .ProseMirror pre .token.bold {
+  font-weight: bold;
+}
+
+.dark .ProseMirror pre .token.italic {
+  font-style: italic;
+}
+
+/* Generic code elements (outside ProseMirror) */
+code {
+  font-family: 'JetBrainsMono', 'SFMono-Regular', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+}
+
+.dark code {
+  background-color: rgba(30, 41, 59, 0.8);
+  color: #fde047;
+  border: 1px solid rgba(71, 85, 105, 0.6);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+/* Dark mode pre blocks (outside ProseMirror) */
+.dark pre {
+  background: #0f172a;
+  color: #f1f5f9;
+  border: 1px solid #475569;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  font-family: 'JetBrainsMono', 'SFMono-Regular', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', monospace;
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  /* Improve touch targets */
+  button, input, select, textarea {
+    min-height: 44px;
+  }
+  
+  /* Better spacing for mobile */
+  .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+  
+  /* Improve table scrolling on mobile */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Better mobile form spacing */
+  .space-y-3 > * + * {
+    margin-top: 0.75rem;
+  }
 }
 
 .ProseMirror img {
@@ -288,7 +418,7 @@ code {
 }
 
 .dark .ProseMirror a {
-  color: #60a5fa;
+  color: #93c5fd;
 }
 
 /* Ant Design Input Font Family Override */
@@ -505,18 +635,18 @@ code {
 }
 
 .dark .ant-input::placeholder {
-  color: #6b7280 !important; /* Dark mode placeholder color */
+  color: #94a3b8 !important; /* Dark mode placeholder color */
 }
 .dark .ant-select-selection-placeholder {
-  color: #6b7280 !important; /* Dark mode placeholder color */
+  color: #94a3b8 !important; /* Dark mode placeholder color */
 }
 .dark .ant-select-selector{
-    background-color: #1f2937 !important;
-    border-color: #4b5563 !important;
-    color: #f9fafb !important;
+    background-color: #1e293b !important;
+    border-color: #475569 !important;
+    color: #f8fafc !important;
 }
 .dark .ant-select-selector .ant-select-selection-wrap:after{
-  background-color: #f9fafb !important;
+  background-color: #f8fafc !important;
 }
 
 /* Enhanced Dark Mode Styles */
@@ -531,26 +661,26 @@ code {
 }
 
 .dark ::-webkit-scrollbar-track {
-  background: #1f2937;
+  background: #1e293b;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #4b5563;
+  background: #475569;
   border-radius: 4px;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #6b7280;
+  background: #64748b;
 }
 
 /* Toast notifications dark mode */
 .dark .Toastify__toast {
-  background-color: #1f2937;
-  color: #f9fafb;
+  background-color: #1e293b;
+  color: #f8fafc;
 }
 
 .dark .Toastify__toast--success {
-  background-color: #065f46;
+  background-color: #064e3b;
 }
 
 .dark .Toastify__toast--error {
@@ -565,11 +695,11 @@ code {
   background-color: #1e3a8a;
 }
 .dark .ant-select-selector {
-  background-color: #1f2937 !important; /* gray-800 */
-  border-color: #374151 !important;     /* gray-700 */
-  color: #f9fafb !important;            /* gray-50 */
+  background-color: #1e293b !important; /* slate-800 */
+  border-color: #475569 !important;     /* slate-600 */
+  color: #f8fafc !important;            /* slate-50 */
 }
 
 .dark .ant-select-arrow {
-  color: #f9fafb !important;
+  color: #f8fafc !important;
 }

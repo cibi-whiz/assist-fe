@@ -42,12 +42,12 @@ export const useTheme = (): UseThemeReturn => {
       
       if (shouldBeDark) {
         root.classList.add('dark');
-        body.classList.add('bg-gray-950');
+        body.classList.add('bg-slate-950');
         body.classList.remove('bg-gray-50');
       } else {
         root.classList.remove('dark');
         body.classList.add('bg-gray-50');
-        body.classList.remove('bg-gray-950');
+        body.classList.remove('bg-slate-950');
       }
     };
 

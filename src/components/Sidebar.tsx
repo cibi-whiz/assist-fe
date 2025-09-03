@@ -112,7 +112,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const handleMouseLeave = (): void => setTooltip(null);
 
   const renderNav = (items: NavItem[], depth: number = 0): React.ReactNode => (
-    <ul className={depth === 0 ? "w-full" : "pl-4 border-l border-gray-200 dark:border-gray-700 ml-2"}>
+    <ul className={depth === 0 ? "w-full" : "pl-4 border-l border-gray-200 dark:border-slate-600 ml-2"}>
       {items.map((item) => {
         const hasChildren = item.subNav && item.subNav.length > 0;
         const isOpenMenu = openPath[depth] === item.title;
@@ -129,9 +129,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <button
               type="button"
               onClick={() => handleToggle(item.title, depth)}
-              className={`group flex items-center w-full rounded-xl transition-colors duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
+              className={`group flex items-center w-full rounded-xl transition-colors duration-300 hover:bg-gray-100 dark:hover:bg-slate-800 py-2 ${
                 isOpen ? "justify-start px-4" : "justify-center px-2"
-              } text-gray-600 dark:text-gray-300 focus:outline-none`}
+              } text-gray-600 dark:text-slate-300 focus:outline-none`}
               aria-expanded={isOpenMenu}
               {...tooltipProps}
             >
@@ -154,12 +154,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <NavLink
               to={item.url || ""}
               className={({ isActive }) =>
-                `group flex items-center w-full rounded-xl transition-colors duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 py-2 ${
+                `group flex items-center w-full rounded-xl transition-colors duration-300 hover:bg-gray-100 dark:hover:bg-slate-800 py-2 ${
                   isOpen ? "justify-start px-4" : "justify-center px-2"
                 } ${
                   isActive
                     ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300"
-                    : "text-gray-600 dark:text-gray-300"
+                    : "text-gray-600 dark:text-slate-300"
                 }`
               }
               {...tooltipProps}
@@ -189,8 +189,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     <>
       <aside
         className={`fixed top-16 left-0 h-[calc(100%-4rem)] z-50 flex flex-col justify-between border-r shadow-md transition-colors duration-300
-          ${isOpen ? "w-64" : "w-16"}
-          bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800
+          ${isOpen ? "w-64 sm:w-64" : "w-16"}
+          bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700
         `}
         style={{ transitionProperty: "width" }}
       >
@@ -200,40 +200,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
           {renderNav(navItems)}
         </nav>
         {/* Bottom User Info */}
-        {isOpen ? (
-          <div className="w-full px-4 pb-4 transition-colors duration-300">
-            <div
-              className={`flex items-center p-3 rounded-xl bg-gray-50 dark:bg-gray-800 shadow-sm
-          justify-start space-x-3 hover:shadow-md transition-colors duration-300
-        `}
-            >
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center transition-colors duration-300">
-                {(user?.user_name && user.user_name.charAt(0))}
-                
-              </div>
-              <div className="transition-colors duration-300 whitespace-nowrap">
-                <p className="text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-300">
-                  {user?.user_name}
-                </p>
-                <p className="text-xs truncate max-w-[140px] text-gray-500 dark:text-gray-300 transition-colors duration-300" title={user?.user_email}>
-                  {user?.user_email}
-                </p>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="w-full px-4 pb-4 flex items-center justify-center transition-all duration-500 ease-in-out">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center">
-              {(user?.user_name && user.user_name.charAt(0)) || "U"}
-            </div>
-          </div>
-        )}
+
 
       </aside>
       {/* Custom Tooltip */}
       {tooltip && (
         <div
-          className="pointer-events-none fixed z-[9999] px-3 py-1.5 text-xs font-medium rounded shadow-lg bg-gray-900 text-white dark:bg-gray-800 dark:text-gray-100 opacity-90 animate-fade-in"
+          className="pointer-events-none fixed z-[9999] px-3 py-1.5 text-xs font-medium rounded shadow-lg bg-gray-900 text-white dark:bg-slate-800 dark:text-slate-100 opacity-90 animate-fade-in"
           style={{
             top: Math.max(0, tooltip.position.top),
             left: Math.max(0, tooltip.position.left),

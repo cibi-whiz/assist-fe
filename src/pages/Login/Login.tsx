@@ -57,15 +57,15 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
-      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 sm:p-10 flex flex-col items-center transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-950 transition-colors duration-300 px-4">
+      <div className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-6 sm:p-8 lg:p-10 flex flex-col items-center transition-colors duration-300">
         {/* Logo */}
         <div className="flex flex-col items-center transition-colors duration-300">
-          <div className="w-56 h-22 bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
-            <img src={isDark ? assistWhite : assistBlack} alt="Assist Logo" className="w-48 h-20 object-contain transition-opacity duration-300" draggable={false} />
+          <div className="w-48 sm:w-56 h-20 sm:h-22 bg-white dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
+            <img src={isDark ? assistWhite : assistBlack} alt="Assist Logo" className="w-40 sm:w-48 h-16 sm:h-20 object-contain transition-opacity duration-300" draggable={false} />
           </div>
         </div>
-        <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center transition-colors duration-300">{t('login.title')}</h2>
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center transition-colors duration-300">{t('login.title')}</h2>
         <form className="space-y-3 w-full transition-colors duration-300" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1 transition-colors duration-300">
@@ -75,7 +75,7 @@ const Login: React.FC = () => {
               id="email"
               type="email"
               autoComplete="email"
-              className="w-full max-w-[420px] px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-300"
+              className="w-full px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors duration-300 text-sm sm:text-base"
               value={email}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               required
@@ -90,7 +90,7 @@ const Login: React.FC = () => {
                 id="password"
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
-                className="w-full max-w-[420px] px-5 py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none pr-10 transition-colors duration-300"
+                className="w-full px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none pr-10 transition-colors duration-300 text-sm sm:text-base"
                 value={password}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                 required
@@ -106,7 +106,7 @@ const Login: React.FC = () => {
               </button>
             </div>
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
             <label className="flex items-center text-sm text-gray-700 dark:text-gray-200 cursor-pointer transition-colors duration-300">
               <input
                 type="checkbox"
@@ -123,7 +123,7 @@ const Login: React.FC = () => {
           {error && <div className="text-red-500 text-sm text-center transition-colors duration-300">{error}</div>}
           <button
             type="submit"
-            className={`w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 hover:scale-105 active:scale-100 disabled:opacity-60 disabled:cursor-not-allowed ${(!email || !password || loading) ? 'opacity-60 cursor-not-allowed' : 'opacity-100'}`}
+            className={`w-full py-2 sm:py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 hover:scale-105 active:scale-100 disabled:opacity-60 disabled:cursor-not-allowed text-sm sm:text-base ${(!email || !password || loading) ? 'opacity-60 cursor-not-allowed' : 'opacity-100'}`}
             disabled={!email || !password || loading}
           >
             {loading ? t('login.loggingIn') : t('login.loginButton')}

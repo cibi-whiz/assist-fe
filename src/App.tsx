@@ -17,6 +17,7 @@ const AbandonedCart = lazy(() => import('./pages/B2C/DM/AbandonedCart/AbandonedC
 const Dashboard = lazy(() => import('./pages/B2C/Dashboard/Dashboard'));
 const RolesandPermission = lazy(() => import('./pages/Auth/RolesandPermission/RolesandPermission'));
 const AssistUsers = lazy(() => import('./pages/Auth/AssistUsers/AssistUsers'));
+const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
 
 interface AppRoutesProps {
   sidebarOpen: boolean;
@@ -63,7 +64,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete 
 
   // Authenticated: Render portal layout for all other routes
   return (
-    <div className="min-h-screen w-full bg-gray-50 dark:bg-gray-950 transition-colors duration-300">
+    <div className=" w-full min-h-full transition-colors duration-300">
       {/* AppBar */}
       <AppBar onMenuClick={toggleSidebar} />
       <div className="flex w-full">
@@ -73,7 +74,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete 
         <main className={`flex-1 w-full transition-all duration-300 ease-in-out pt-16 ${
           sidebarOpen ? 'lg:ml-64 md:ml-16' : 'lg:ml-16'
         } ml-0`}>
-          <div className="p-4 sm:p-6 w-full max-w-full transition-colors duration-300">
+          <div className="p-2 sm:p-4 lg:p-6 w-full max-w-full transition-colors duration-300">
             {loading ? (
               <div className="flex justify-center items-center h-96">
                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
@@ -84,8 +85,10 @@ function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete 
                   <Route path="/" element={<Login />} />
                   <Route path="/dm/abandonedcart" element={<AbandonedCart darkMode={isDark} />} />
                   <Route path="/roles-and-permission" element={<RolesandPermission />} />
-                  <Route path="/assist-users" element={<AssistUsers />} />a
-                  <Route path="*" element={<Dashboard />} />
+                  <Route path="/assist-users" element={<AssistUsers />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="*" element={<NotFound />} />
+
                 </Routes>
               </Suspense>
             )}

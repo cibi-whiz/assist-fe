@@ -192,8 +192,8 @@ const Daterange = (props: any) => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <label className="flex block text-sm font-medium text-gray-700 dark:text-gray-100">
-        <FaCalendarAlt className="w-4 h-4 text-500 dark:text-gray-100" />
+      <label className="flex items-center block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-100 mb-1">
+        <FaCalendarAlt className="w-4 h-4 text-500 dark:text-gray-100 mr-2" />
         {props.label}
       </label>
       
@@ -211,7 +211,7 @@ const Daterange = (props: any) => {
               toggleDropdown()
             }
           }}
-          className="w-full px-2 py-2 text-[13px] border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+          className="w-full px-2 py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
           placeholder="Select Date Range"
           aria-haspopup="listbox"
           aria-expanded={showDropdown}
@@ -276,8 +276,8 @@ const Daterange = (props: any) => {
 
       {/* Custom Date Inputs */}
       {showCustomInputs && (
-        <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg p-4">
-          <div className="flex gap-3">
+        <div className="absolute z-20 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-lg p-3 sm:p-4">
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1">
               <label className="block text-xs font-medium text-gray-700 dark:text-gray-200 mb-2">
                 Start Date

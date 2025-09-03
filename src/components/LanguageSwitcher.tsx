@@ -40,17 +40,17 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          flex items-center space-x-2 px-3 py-2 rounded-lg border transition-colors duration-200
+          flex items-center space-x-2 px-3 py-2 rounded-md border transition-colors duration-200
           ${darkMode 
-            ? 'bg-gray-800 border-gray-600 text-gray-200 hover:bg-gray-700' 
-            : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
+            ? 'border-slate-600 text-slate-200 bg-slate-800' 
+            : 'bg-white border-gray-300 text-gray-700 '
           }
         `}
         aria-label="Select language"
       >
         <FaGlobe className="w-4 h-4" />
         <span className="text-sm font-medium">
-          {currentLang?.flag} {currentLang?.name}
+        {currentLang?.name}
         </span>
         <FaChevronDown className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
       </button>
@@ -59,7 +59,7 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
         <div className={`
           absolute top-full left-0 mt-1 w-48 rounded-lg shadow-lg border z-50
           ${darkMode 
-            ? 'bg-gray-800 border-gray-600' 
+            ? 'bg-slate-800 border-slate-600' 
             : 'bg-white border-gray-200'
           }
         `}>
@@ -75,12 +75,12 @@ const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({
                       ? 'bg-blue-600 text-white'
                       : 'bg-blue-50 text-blue-700'
                     : darkMode
-                    ? 'text-gray-200 hover:bg-gray-700'
+                    ? 'text-slate-200 hover:bg-slate-700'
                     : 'text-gray-700 hover:bg-gray-50'
                   }
                 `}
               >
-                <span className="text-lg">{language.flag}</span>
+                
                 <span className="text-sm font-medium">{language.name}</span>
                 {currentLanguage === language.code && (
                   <span className="ml-auto text-xs">✓</span>

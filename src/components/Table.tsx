@@ -159,13 +159,13 @@ const Table: React.FC<TableProps> = ({
 
   return (
     <div className={`bg-white dark:bg-gray-900 rounded-lg shadow-sm border border-gray-200 dark:border-gray-800 overflow-hidden ${className}`}>
-      <div className="overflow-x-auto">
-        <table className="w-full">
+      <div className="overflow-x-auto -mx-2 sm:mx-0">
+        <table className="w-full min-w-[600px]">
           <thead className="bg-gray-50 dark:bg-gray-800">
             {columns.map((column) => (
               <th 
                 key={column.key}
-                className={`p-4 align-top text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider align-top ${
+                className={`p-2 sm:p-4 align-top text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider align-top ${
                   column.sortable && onSort ? 'cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700' : ''
                 }`}
                 style={{ width: column.width }}
@@ -178,7 +178,7 @@ const Table: React.FC<TableProps> = ({
               </th>
             ))}
             {actions.length > 0 && (
-              <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-20">
+              <th className="px-2 sm:px-4 py-2 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider w-16 sm:w-20">
                 {t('common.actions')}
               </th>
             )}
@@ -186,7 +186,7 @@ const Table: React.FC<TableProps> = ({
           <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
             {isLoading ? (
               <tr>
-                <td colSpan={columns.length + (actions.length > 0 ? 1 : 0)} className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                <td colSpan={columns.length + (actions.length > 0 ? 1 : 0)} className="px-2 sm:px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
                   <div className="flex items-center justify-center space-x-2">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
                     <span>{defaultLoadingMessage}</span>
@@ -195,7 +195,7 @@ const Table: React.FC<TableProps> = ({
               </tr>
             ) : data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length + (actions.length > 0 ? 1 : 0)} className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                <td colSpan={columns.length + (actions.length > 0 ? 1 : 0)} className="px-2 sm:px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
                   <div className="flex flex-col items-center space-y-2">
                     <FaSearch className="w-8 h-8 text-gray-300" />
                     <span>{defaultEmptyMessage}</span>
@@ -212,13 +212,13 @@ const Table: React.FC<TableProps> = ({
                   {columns.map((column) => (
                     <td 
                       key={column.key}
-                      className="px-4 py-2 whitespace-nowrap text-xs text-gray-900 dark:text-gray-100"
+                      className="px-2 sm:px-4 py-2 whitespace-nowrap text-xs text-gray-900 dark:text-gray-100"
                     >
                       {renderCell(column, item, index)}
                     </td>
                   ))}
                   {actions.length > 0 && (
-                    <td className="align-center px-4 py-2 whitespace-nowrap text-xs font-medium">
+                    <td className="align-center px-2 sm:px-4 py-2 whitespace-nowrap text-xs font-medium">
                       <div className="flex space-x-1">
                         {actions.map((action, actionIndex) => (
                           <button
@@ -227,7 +227,7 @@ const Table: React.FC<TableProps> = ({
                             className={`p-1 transition-colors duration-150 ${action.className || 'text-yellow-400 hover:text-yellow-900 dark:text-blue-400 dark:hover:text-blue-200'}`}
                             title={action.title}
                           >
-                            <span className="text-base">
+                            <span className="text-sm sm:text-base">
                             {action.icon}
                             </span>
                           </button>
