@@ -257,11 +257,11 @@ const AppBar: React.FC<AppBarProps> = ({
                 setFocusedPortalIndex(0);
               }
             }}
-            className="group flex items-center space-x-2 px-3 py-2 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-xl transition-all duration-300 border border-gray-200/60 dark:border-gray-600/60 hover:border-gray-300 dark:hover:border-gray-500 shadow-sm hover:shadow-md"
+            className="group flex items-center space-x-2 px-2 py-1 dark:from-gray-800 dark:to-gray-700 hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-700 dark:hover:to-gray-600 rounded-md transition-all duration-300 border border-gray-200/60 dark:border-gray-600/60 hover:border-gray-300 dark:hover:border-gray-500 shadow-sm hover:shadow-md"
             aria-expanded={portalDropdownOpen}
             aria-haspopup="listbox"
           >
-            <div className={`w-7 h-7 bg-gradient-to-br ${selectedPortal.bgColor} rounded-lg flex items-center justify-center text-white shadow-sm group-hover:shadow-md transition-shadow duration-300`}>
+            <div className={`w-7 h-7 border-2 border-solid bg-gradient-to-br ${selectedPortal.bgColor} rounded-lg flex items-center justify-center text-white  group-hover:shadow-md transition-shadow duration-300`}>
               {renderIcon(selectedPortal.iconName)}
             </div>
             <div className="hidden sm:block">

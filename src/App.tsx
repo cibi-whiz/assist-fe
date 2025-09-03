@@ -84,7 +84,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete 
                   <Route path="/" element={<Login />} />
                   <Route path="/dm/abandonedcart" element={<AbandonedCart darkMode={isDark} />} />
                   <Route path="/roles-and-permission" element={<RolesandPermission />} />
-                  <Route path="/assist-users" element={<AssistUsers />} />
+                  <Route path="/assist-users" element={<AssistUsers />} />a
                   <Route path="*" element={<Dashboard />} />
                 </Routes>
               </Suspense>
