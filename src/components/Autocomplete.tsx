@@ -155,9 +155,8 @@ const Autocomplete = ({
   };
 
   return (
-    <div className="relative" ref={inputRef}>
-      <label className="flex items-center block text-sm font-medium text-gray-700 dark:text-gray-100">
-        <span className="w-4 h-4 text-500 dark:text-gray-100">{Icon}</span>
+    <div className="relative w-full" ref={inputRef}>
+      <label className="flex items-center block text-sm font-medium text-gray-700 dark:text-gray-100 mb-2">
         {label}
       </label>
       <div className="relative">
@@ -169,7 +168,7 @@ const Autocomplete = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
-          className={`w-full px-2 py-2 text-sm border rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+          className={`w-full px-3 py-2.5 text-sm border rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 pr-8 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 ${
             error 
               ? "border-red-500 focus:ring-red-500 focus:border-red-500" 
               : "border-gray-300 dark:border-gray-600"

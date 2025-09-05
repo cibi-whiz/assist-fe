@@ -5,22 +5,28 @@ import React, {
   useCallback,
   useMemo,
 } from "react";
-import assistBlack from "../Assets/Images/assist-black.svg";
-import assistWhite from "../Assets/Images/assist-white.svg";
 import {
-  FaBars,
-  FaChevronDown,
   FaStore,
   FaBuilding,
   FaGraduationCap,
   FaComments,
+  FaChevronDown,
   FaPlay,
+  FaCog,
+  FaUser,
+  FaSignOutAlt,
+  FaSun,
+  FaMoon,
 } from "react-icons/fa";
 import { useAuth } from "../Hooks/useAuth";
 import { useLocalStorage } from "../Hooks/useLocalStorage";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../Hooks/useTheme";
+import { useLocation } from "react-router-dom";
+import { getPageTitle } from "../config/routes";
+import { PanelRightOpen } from "lucide-react";
+import { PanelRightClose } from "lucide-react";
 
 interface Portal {
   id: string;
@@ -34,13 +40,16 @@ interface Portal {
 
 interface AppBarProps {
   onMenuClick: () => void;
+  isMobile: boolean;
+  isOpen: boolean;
 }
 
 // Portal configuration will be created inside the component to access translations
 
-const AppBar: React.FC<AppBarProps> = ({ onMenuClick }) => {
+const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile ,isOpen}) => {
   const { t } = useTranslation("common");
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark, toggleTheme, theme } = useTheme();
+  const location = useLocation();
   const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
   const [portalDropdownOpen, setPortalDropdownOpen] = useState<boolean>(false);
   const [focusedPortalIndex, setFocusedPortalIndex] = useState<number>(-1);
@@ -243,26 +252,69 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick }) => {
     }
   };
 
+  const getThemeIcon = () => {
+    switch (theme) {
+      case "light":
+        return <FaSun className="w-4 h-4" />;
+      case "dark":
+        return <FaMoon className="w-4 h-4" />;
+      default:
+        return <FaMoon className="w-4 h-4" />;
+    }
+  };
+
+  const getCurrentPageTitle = () => {
+    return getPageTitle(location.pathname, t, selectedPortal.name);
+  };
+
   return (
-    <header className="fixed top-0 left-0 w-full h-16 bg-white dark:bg-slate-900 border-b dark:border-slate-700 shadow z-50 flex items-center justify-between px-2 sm:px-4 transition-colors duration-300">
-      {/* Left Section */}
-      <div className="flex items-center space-x-2 sm:space-x-4">
+    <header className={`fixed top-0 h-16 bg-slate-800 dark:bg-slate-800 border-b border-slate-600 shadow-lg z-50 flex items-center justify-between px-2
+      appbar-transition gpu-accelerated
+      ${isMobile ? "left-0 w-full" : (isOpen ? "left-[16rem] w-[calc(100%-16rem)]" : "left-0 w-full")}
+      transition-colors`}>
+      {/* Left Section - Mobile Menu Button */}
+      <div className="flex items-center space-x-3 sm:space-x-6">
+        {/* Mobile menu button - only visible on mobile */}
         <button
           onClick={onMenuClick}
-          className="w-9 h-9 rounded-lg flex items-center justify-center hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors duration-300"
+          className="sm:hidden w-9 h-9 rounded-lg flex items-center button-transition hover:bg-slate-700"
           aria-label={t("appBar.toggleSidebar")}
         >
-          <FaBars className="text-gray-700 dark:text-slate-200 text-lg" />
+          {isOpen ? (
+            <PanelRightClose className="text-slate-200 text-lg transition-transform duration-300 ease-in-out" />
+          ) : (
+            <PanelRightOpen className="text-slate-200 text-lg transition-transform duration-300 ease-in-out" />
+          )}
         </button>
-        <img
-          src={isDark ? assistWhite : assistBlack}
-          alt="Assist"
-          className="w-auto h-6 sm:h-8 object-contain"
-        />
+      </div>
+
+      {/* Center Section - Desktop Menu Button and Title */}
+      <div className="hidden sm:flex flex-1 items-center justify-start">
+        <button
+          onClick={onMenuClick}
+          className="w-9 h-9 rounded-lg flex items-center button-transition hover:bg-slate-700"
+          aria-label={t("appBar.toggleSidebar")}
+        >
+          {isOpen ? (
+            <PanelRightClose className="text-slate-200 text-lg transition-transform duration-300 ease-in-out" />
+          ) : (
+            <PanelRightOpen className="text-slate-200 text-lg transition-transform duration-300 ease-in-out" />
+          )}
+        </button>
+        <h1 className="lg:text-lg md:text-base font-semibold text-slate-200 truncate transition-all duration-300 ease-in-out">
+          {getCurrentPageTitle()}
+        </h1>
+      </div>
+
+      {/* Mobile Title Section */}
+      <div className="flex-1 sm:hidden flex items-center">
+        <h1 className="text-base font-semibold text-slate-200 truncate transition-all duration-300 ease-in-out">
+          {getCurrentPageTitle()}
+        </h1>
       </div>
 
       {/* Right Section */}
-      <div className="flex items-center space-x-1 sm:space-x-4">
+      <div className="flex items-center space-x-1 sm:space-x-2">
         {/* Portal Selector */}
         <div className="relative">
           <button
@@ -278,7 +330,7 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick }) => {
                 setFocusedPortalIndex(0);
               }
             }}
-            className="group flex items-center space-x-1 sm:space-x-2 px-1 sm:px-2 py-1 dark:from-slate-800 dark:to-slate-700 hover:from-gray-100 hover:to-gray-200 dark:hover:from-slate-700 dark:hover:to-slate-600 rounded-md transition-all duration-300 border border-gray-200/60 dark:border-slate-600/60 hover:border-gray-300 dark:hover:border-slate-500 shadow-sm hover:shadow-md"
+            className="group flex items-center space-x-1 sm:space-x-2 px-1 sm:px-2 py-1 from-slate-800 to-slate-700 dark:from-slate-800 dark:to-slate-700 hover:from-slate-700 hover:to-slate-600 dark:hover:from-slate-700 dark:hover:to-slate-600 rounded-md transition-all duration-300 border border-slate-600/60 dark:border-slate-600/60 hover:border-slate-500 dark:hover:border-slate-500 shadow-sm hover:shadow-md"
             aria-expanded={portalDropdownOpen}
             aria-haspopup="listbox"
           >
@@ -288,17 +340,17 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick }) => {
               {renderIcon(selectedPortal.iconName)}
             </div>
             <div className="hidden md:block">
-              <div className="text-sm font-semibold text-gray-900 dark:text-slate-100">
+              <div className="text-sm font-semibold text-slate-100 dark:text-slate-100">
                 {selectedPortal.name}
               </div>
               {selectedPortal.status === "beta" && (
-                <div className="text-xs text-yellow-600 dark:text-yellow-400 font-medium">
+                <div className="text-xs text-yellow-400 dark:text-yellow-400 font-medium">
                   {t("appBar.beta")}
                 </div>
               )}
             </div>
             <FaChevronDown
-              className={`w-3 h-3 text-gray-500 dark:text-slate-400 transition-all duration-300 group-hover:text-gray-700 dark:group-hover:text-slate-200 ${
+              className={`w-3 h-3 text-slate-400 dark:text-slate-400 transition-all duration-300 group-hover:text-slate-200 dark:group-hover:text-slate-200 ${
                 portalDropdownOpen ? "rotate-180 scale-110" : ""
               }`}
             />
@@ -307,66 +359,75 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick }) => {
           {portalDropdownOpen && (
             <div
               ref={portalDropdownRef}
-              className="absolute right-0 mt-3 w-64 sm:w-72 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/50 dark:border-slate-700/50 py-3 z-50 animate-fade-in-up"
+              className="absolute right-0 mt-3 w-64 sm:w-72 
+           bg-white/95 dark:bg-slate-900/95 
+           backdrop-blur-xl rounded-2xl shadow-2xl 
+           border border-slate-200 dark:border-slate-700/50 
+           py-3 z-50 animate-fade-in-up"
               role="listbox"
               aria-label="Portal selection"
             >
-              <div className="px-4 py-2 border-b border-gray-100 dark:border-slate-700">
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-slate-100">
+              {/* Header */}
+              <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-700">
+                <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                   {t("appBar.switchPortal")}
                 </h3>
-                <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   {t("appBar.chooseWorkspace")}
                 </p>
               </div>
 
+              {/* List */}
               <div className="py-2">
                 {portals.map((portal, index) => (
                   <button
                     key={portal.id}
                     onClick={() => handlePortalSelect(portal)}
                     onMouseEnter={() => setFocusedPortalIndex(index)}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 text-left hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-all duration-200 group ${
-                      selectedPortal.id === portal.id
-                        ? "bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-l-4 border-blue-500"
-                        : focusedPortalIndex === index
-                        ? "bg-gray-50 dark:bg-slate-800/30"
-                        : ""
-                    } ${isAnimating ? "pointer-events-none" : ""}`}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 text-left 
+                 hover:bg-slate-100 dark:hover:bg-slate-800/50 
+                 transition-all duration-200 group
+       ${
+         selectedPortal.id === portal.id
+           ? "bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-l-4 border-blue-500"
+           : focusedPortalIndex === index
+           ? "bg-slate-50 dark:bg-slate-800/30"
+           : ""
+       } ${isAnimating ? "pointer-events-none" : ""}`}
                     role="option"
                     aria-selected={selectedPortal.id === portal.id}
                     tabIndex={-1}
                   >
+                    {/* Icon */}
                     <div
-                      className={`w-10 h-10 bg-gradient-to-br ${
-                        portal.bgColor
-                      } rounded-xl flex items-center justify-center text-white shadow-sm group-hover:shadow-md transition-all duration-300 ${
-                        selectedPortal.id === portal.id
-                          ? "scale-110 shadow-lg"
-                          : ""
-                      }`}
+                      className={`w-10 h-10 bg-gradient-to-br ${portal.bgColor} 
+                    rounded-xl flex items-center justify-center text-white 
+                    shadow-sm group-hover:shadow-md transition-all duration-300 
+          ${selectedPortal.id === portal.id ? "scale-110 shadow-lg" : ""}`}
                     >
                       {renderIcon(portal.iconName)}
                     </div>
 
+                    {/* Text */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2">
                         <span
                           className={`font-semibold text-sm ${
                             selectedPortal.id === portal.id
-                              ? "text-blue-700 dark:text-blue-300"
-                              : "text-gray-900 dark:text-slate-100"
+                              ? "text-blue-600 dark:text-blue-300"
+                              : "text-slate-900 dark:text-slate-100"
                           }`}
                         >
                           {portal.name}
                         </span>
                         {getStatusBadge(portal.status)}
                       </div>
-                      <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5 truncate">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
                         {portal.description}
                       </p>
                     </div>
 
+                    {/* Active indicator */}
                     {selectedPortal.id === portal.id && (
                       <div className="flex items-center space-x-2">
                         <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
@@ -379,8 +440,9 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick }) => {
                 ))}
               </div>
 
-              <div className="px-4 py-2 border-t border-gray-100 dark:border-slate-700">
-                <div className="text-xs text-gray-400 dark:text-slate-500">
+              {/* Footer */}
+              <div className="px-4 py-2 border-t border-slate-200 dark:border-slate-700">
+                <div className="text-xs text-slate-500 dark:text-slate-500">
                   {t("appBar.keyboardNavigation")}
                 </div>
               </div>
@@ -391,12 +453,13 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick }) => {
         {/* Language Switcher */}
         <LanguageSwitcher darkMode={isDark} />
 
-        {/* Avatar + Popover */}
+        {/* Avatar */}
         <div className="relative">
           <button
             ref={avatarRef}
             onClick={() => setPopoverOpen((prev) => !prev)}
-            className="w-9 h-9 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center border-2 border-white dark:border-slate-800"
+            className="w-9 h-9 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200 focus:ring-2 focus:ring-blue-500"
+            aria-label="User menu"
           >
             {user?.user_name?.charAt(0).toUpperCase() || "U"}
           </button>
@@ -404,49 +467,72 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick }) => {
           {popoverOpen && (
             <div
               ref={popoverRef}
-              className="absolute right-0 mt-3 w-64 rounded-2xl bg-white dark:bg-slate-900 shadow-2xl ring-1 ring-black/5 dark:ring-white/10 py-3 z-50 animate-fade-in-up"
+              className="absolute right-0 mt-3 w-72 rounded-2xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-700 py-3 z-50 animate-fade-in-up"
             >
               {/* User Info */}
-              <div className="px-4 py-3 border-b border-gray-200 dark:border-slate-700">
-                <p className="text-sm font-medium text-gray-900 dark:text-slate-100 truncate">
-                  {user?.user_name || "User"}
-                </p>
-                <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
-                  {user?.user_email || "user@example.com"}
-                </p>
+              <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
+                    <span className="text-sm font-bold text-white">
+                      {user?.user_name?.charAt(0).toUpperCase() || "U"}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-black dark:text-slate-100 truncate">
+                      {user?.user_name || "User"}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
+                      {user?.user_email || "user@example.com"}
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* Dark Mode Toggle */}
-              <div className="px-4 py-3 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-800 rounded-lg transition">
-                <span className="text-sm text-gray-700 dark:text-slate-200">
-                  {t("appBar.darkMode")}
-                </span>
+              {/* Theme Switcher */}
+              <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-sm font-medium text-black dark:text-slate-200">
+                    Theme
+                  </span>
+                  <div className="flex items-center space-x-1">
+                    {getThemeIcon()}
+                    <span className="text-xs text-gray-600 dark:text-slate-400 capitalize">
+                      {theme}
+                    </span>
+                  </div>
+                </div>
                 <button
                   onClick={toggleTheme}
-                  className={`relative inline-flex items-center h-6 w-11 rounded-full transition-colors duration-300 focus:outline-none shadow-sm 
-        ${isDark ? "bg-blue-600" : "bg-gray-300 dark:bg-slate-600"}`}
-                  role="switch"
-                  aria-checked={isDark}
+                  className="w-full px-3 py-2 text-xs font-medium rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-black dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+                  aria-label="Switch theme"
                 >
-                  <span
-                    className={`inline-block h-5 w-5 transform bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out
-          ${isDark ? "translate-x-5 scale-105" : "translate-x-0.5 scale-100"}`}
-                  />
+                  Switch Theme
                 </button>
               </div>
 
               {/* Menu Items */}
-              <div className="mt-1">
+              <div className="py-1">
                 <button
-                  className="block w-full text-left px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition"
+                  className="flex items-center w-full text-left px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg"
                   onClick={() => setPopoverOpen(false)}
                 >
+                  <FaUser className="w-4 h-4 mr-3 text-gray-500 dark:text-slate-400" />
                   {t("appBar.profile")}
                 </button>
                 <button
-                  className="block w-full text-left px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 border-t border-gray-200 dark:border-slate-700 mt-2 rounded-b-xl transition"
-                  onClick={handleLogout}
+                  className="flex items-center w-full text-left px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg"
+                  onClick={() => setPopoverOpen(false)}
                 >
+                  <FaCog className="w-4 h-4 mr-3 text-gray-500 dark:text-slate-400" />
+                  Settings
+                </button>
+                <div className="border-t border-slate-200 dark:border-slate-700 my-1"></div>
+                <button
+                  className="flex items-center w-full text-left px-4 py-2 text-sm font-medium text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg"
+                  onClick={handleLogout}
+                  aria-label="Logout"
+                >
+                  <FaSignOutAlt className="w-4 h-4 mr-3" />
                   {t("appBar.logout")}
                 </button>
               </div>
@@ -457,5 +543,4 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick }) => {
     </header>
   );
 };
-
 export default AppBar;

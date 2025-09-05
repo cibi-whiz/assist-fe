@@ -3,12 +3,21 @@
   "description": "Manage and recover abandoned shopping carts",
   "filters": {
     "title": "Filters",
+    "subtitle": "Apply filters to refine your search",
     "abandonedCartDateRange": "Abandoned Cart Date Range",
     "email": "Email",
+    "emailPlaceholder": "Enter email address...",
     "country": "Country",
+    "countryPlaceholder": "Select country...",
     "customer": "Customer",
     "sent": "Sent",
-    "sentBy": "Sent By"
+    "sentPlaceholder": "Select sent status...",
+    "sentBy": "Sent By",
+    "sentByPlaceholder": "Select sender...",
+    "yes": "Yes",
+    "no": "No",
+    "search": "Search",
+    "clear": "Clear"
   },
   "buttons": {
     "search": "Search",

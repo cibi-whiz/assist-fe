@@ -6,7 +6,11 @@
   "navigation": {
     "dashboard": "Dashboard",
     "abandonedCart": "Abandoned Cart",
+    "abandonedcart": "Abandoned Cart",
     "rolesAndPermissions": "Roles and Permissions",
+    "roles-and-permission": "Roles and Permissions",
+    "assist-users": "Assist Users",
+    "dm": "Digital Marketing",
     "settings": "Settings",
     "logout": "Logout"
   },
@@ -143,8 +147,22 @@
     }
   },
   "sidebar": {
+    "home": "Home",
+    "reports": "Reports",
+    "projects": "Projects",
+    "collaboration": "Collaboration",
+    "overview": "Overview",
+    "tasks": "Tasks",
+    "issues": "Issues",
+    "phases": "Phases",
+    "timeLogs": "Time Logs",
     "digitalMarketing": "Digital Marketing",
-    "abandonedCart": "Abandoned Cart"
+    "abandonedCart": "Abandoned Cart",
+    "b2c": "B2C",
+    "b2b": "B2B",
+    "lms": "LMS",
+    "forums": "Forums",
+    "play": "Play"
   },
   "welcome": {
     "goodMorning": "Good Morning",
@@ -185,6 +203,38 @@
       "goHome": "Go to Dashboard",
       "goBack": "Go Back",
       "contactSupport": "Contact Support"
+    }
+  },
+  "filters": {
+    "title": "Filter",
+    "subtitle": "Apply filters to refine your search",
+    "search": "Find",
+    "clear": "Cancel",
+    "reset": "Reset",
+    "filterSearch": "Filter Search",
+    "anyOfThese": "Any of these",
+    "allOfThese": "All of these",
+    "sections": {
+      "basic": "Basic Information",
+      "dates": "Date & Time",
+      "status": "Status & Progress",
+      "advanced": "Advanced Filters",
+      "customer_info": "Customer Information",
+      "cart_status": "Cart Status",
+      "date_range": "Date Range"
+    },
+    "categories": {
+      "projectName": "Project Name",
+      "owner": "Owner",
+      "createdTime": "Created Time",
+      "createdBy": "Created By",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedTime": "Last Modified Time",
+      "completionTime": "Completion Time",
+      "projectGroup": "Project Group",
+      "status": "Status"
     }
   }
 }

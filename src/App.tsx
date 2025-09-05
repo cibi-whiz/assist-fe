@@ -24,9 +24,10 @@ interface AppRoutesProps {
   toggleSidebar: () => void;
   showWelcome: boolean;
   onWelcomeComplete: () => void;
+  isMobile: boolean;
 }
 
-function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete }: AppRoutesProps) {
+function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete, isMobile }: AppRoutesProps) {
   const location = useLocation();
   const { user, loading } = useAuth();
   const { isDark } = useTheme();
@@ -66,10 +67,10 @@ function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete 
   return (
     <div className=" w-full min-h-full transition-colors duration-300">
       {/* AppBar */}
-      <AppBar onMenuClick={toggleSidebar} />
+      <AppBar onMenuClick={toggleSidebar} isMobile={isMobile} isOpen={sidebarOpen} />
       <div className="flex w-full">
         {/* Sidebar */}
-        <Sidebar isOpen={sidebarOpen} />
+        <Sidebar isOpen={sidebarOpen} isMobile={isMobile} />
         {/* Main Content */}
         <main className={`flex-1 w-full transition-all duration-300 ease-in-out pt-16 ${
           sidebarOpen ? 'lg:ml-64 md:ml-16' : 'lg:ml-16'
@@ -107,6 +108,18 @@ function App() {
     return true;
   });
   const [showWelcome, setShowWelcome] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  // Check for mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Check for welcome screen flag when component mounts and on storage changes
   useEffect(() => {
@@ -158,6 +171,7 @@ function App() {
             toggleSidebar={toggleSidebar}
             showWelcome={showWelcome}
             onWelcomeComplete={handleWelcomeComplete}
+            isMobile={isMobile}
           />
           <Toast />
 

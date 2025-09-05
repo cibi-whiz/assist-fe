@@ -4,9 +4,9 @@ import {
   FaChartBar, FaChevronDown, FaChevronRight,
   FaRegFileAlt
 } from "react-icons/fa";
-import { useAuth } from "../Hooks/useAuth";
 import { useLocalStorage } from "../Hooks/useLocalStorage";
 import { useTranslation } from "react-i18next";
+import whizlabsLogo from "../Assets/Images/assist-white.svg";
 
 interface NavItem {
   title: string;
@@ -27,12 +27,13 @@ interface TooltipState {
 
 interface SidebarProps {
   isOpen: boolean;
+  isMobile: boolean;
+  onClose?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
   const { t } = useTranslation('common');
-  const [openPath, setOpenPath] = useLocalStorage<string[]>('sidebar-openPath', []);
-  const { user } = useAuth();
+  const [openPath, setOpenPath] = useLocalStorage<string[]>('sidebar-openPath', ['Digital Marketing']);
 
   // Create navItems with translations
   const navItems: NavItem[] = [
@@ -59,6 +60,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, [tooltip]);
+
+  // Prevent body scroll when mobile sidebar is open
+  useEffect(() => {
+    if (isMobile && isOpen) {
+      document.body.classList.add('mobile-sidebar-open');
+    } else {
+      document.body.classList.remove('mobile-sidebar-open');
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('mobile-sidebar-open');
+    };
+  }, [isMobile, isOpen]);
 
   const handleToggle = (title: string, depth: number): void => {
     if (openPath[depth] === title) {
@@ -112,7 +127,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
   const handleMouseLeave = (): void => setTooltip(null);
 
   const renderNav = (items: NavItem[], depth: number = 0): React.ReactNode => (
-    <ul className={depth === 0 ? "w-full" : "pl-4 border-l border-gray-200 dark:border-slate-600 ml-2"}>
+    <ul className={depth === 0 ? "w-full" : "pl-4 border-l border-slate-600 dark:border-slate-600 ml-2"}>
       {items.map((item) => {
         const hasChildren = item.subNav && item.subNav.length > 0;
         const isOpenMenu = openPath[depth] === item.title;
@@ -129,24 +144,22 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <button
               type="button"
               onClick={() => handleToggle(item.title, depth)}
-              className={`group flex items-center w-full rounded-xl transition-colors duration-300 hover:bg-gray-100 dark:hover:bg-slate-800 py-2 ${
-                isOpen ? "justify-start px-4" : "justify-center px-2"
-              } text-gray-600 dark:text-slate-300 focus:outline-none`}
+              className={`group flex items-center w-full rounded-xl transition-all duration-300 hover:bg-slate-700 dark:hover:bg-slate-700 hover:shadow-md py-3 px-4 text-slate-300 dark:text-slate-300  hover:scale-[1.02] active:scale-[0.98]`}
               aria-expanded={isOpenMenu}
               {...tooltipProps}
             >
-              <span className="w-6 h-6 flex items-center justify-center transition-colors duration-300">
-                {item.icon || <FaChevronRight className="opacity-60 transition-colors duration-300" />}
+              <span className="w-6 h-6 flex items-center justify-center transition-all duration-300 group-hover:text-blue-400 group-hover:scale-110">
+                {item.icon || <FaChevronRight className="opacity-60 transition-all duration-300" />}
               </span>
               <span
-                className={`ml-3 text-sm font-medium transition-opacity duration-300 ${
+                className={`ml-3 text-sm font-medium transition-all duration-300 ${
                   isOpen ? "opacity-100" : "opacity-0 hidden"
-                } ${item.title.length > 20 ? "truncate max-w-[140px]" : "whitespace-nowrap"}`}
+                } ${item.title.length > 20 ? "truncate max-w-[140px]" : "whitespace-nowrap"} group-hover:text-slate-100`}
                 title={item.title.length > 20 ? item.title : ""}
               >
                 {item.title}
               </span>
-              <span className={`ml-auto transition-transform duration-300 ${isOpenMenu ? "rotate-90" : ""} ${!isOpen ? "hidden" : ""}`}>
+              <span className={`ml-auto transition-all duration-300 ${isOpenMenu ? "rotate-90" : ""} ${!isOpen ? "hidden" : ""} group-hover:text-blue-400`}>
                 <FaChevronDown />
               </span>
             </button>
@@ -154,27 +167,39 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             <NavLink
               to={item.url || ""}
               className={({ isActive }) =>
-                `group flex items-center w-full rounded-xl transition-colors duration-300 hover:bg-gray-100 dark:hover:bg-slate-800 py-2 ${
-                  isOpen ? "justify-start px-4" : "justify-center px-2"
-                } ${
+                `group flex items-center w-full rounded-xl transition-all duration-300 ease-in-out hover:bg-slate-700 dark:hover:bg-slate-700 hover:shadow-md py-3 px-4 hover:scale-[1.02] active:scale-[0.98] transform ${
                   isActive
-                    ? "bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300"
-                    : "text-gray-600 dark:text-slate-300"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-600 dark:to-indigo-600 text-white dark:text-white shadow-lg"
+                    : "text-slate-300 dark:text-slate-300"
                 }`
               }
+              onClick={() => {
+                // Close sidebar on mobile when navigating
+                if (isMobile && onClose) {
+                  onClose();
+                }
+              }}
               {...tooltipProps}
             >
-              <span className="w-6 h-6 flex items-center justify-center transition-colors duration-300">
-                {item.icon || <FaChevronRight className="opacity-60 transition-colors duration-300" />}
-              </span>
-              <span
-                className={`ml-3 text-sm font-medium transition-opacity duration-300 ${
-                  isOpen ? "opacity-100" : "opacity-0 hidden"
-                } ${item.title.length > 20 ? "truncate max-w-[140px]" : "whitespace-nowrap"}`}
-                title={item.title.length > 20 ? item.title : ""}
-              >
-                {item.title}
-              </span>
+              {({ isActive }) => (
+                <>
+                  <span className={`w-6 h-6 flex items-center justify-center transition-all duration-300 ${
+                    isActive ? "text-white" : "group-hover:text-blue-400 group-hover:scale-110"
+                  }`}>
+                    {item.icon || <FaChevronRight className="opacity-60 transition-all duration-300" />}
+                  </span>
+                  <span
+                    className={`ml-3 text-sm font-medium transition-all duration-300 ${
+                      isOpen ? "opacity-100" : "opacity-0 hidden"
+                    } ${item.title.length > 20 ? "truncate max-w-[140px]" : "whitespace-nowrap"} ${
+                      isActive ? "text-white" : "group-hover:text-slate-100"
+                    }`}
+                    title={item.title.length > 20 ? item.title : ""}
+                  >
+                    {item.title}
+                  </span>
+                </>
+              )}
             </NavLink>
           )}
           {hasChildren && isOpenMenu && renderNav(item.subNav!, depth + 1)}
@@ -187,26 +212,47 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 
   return (
     <>
+      {/* Mobile Overlay */}
+      {isMobile && isOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ease-in-out"
+          onClick={onClose}
+        />
+      )}
+      
       <aside
-        className={`fixed top-16 left-0 h-[calc(100%-4rem)] z-50 flex flex-col justify-between border-r shadow-md transition-colors duration-300
-          ${isOpen ? "w-64 sm:w-64" : "w-16"}
-          bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-700
+        className={`fixed top-0 left-0 h-[calc(100vh)] z-50 flex flex-col border-r shadow-xl gpu-accelerated
+          ${isMobile 
+            ? (isOpen ? "w-64 translate-x-0" : "-translate-x-full w-64") 
+            : (isOpen ? "w-64 sidebar-transition" : "w-0 overflow-hidden sidebar-transition")
+          }
+          bg-slate-800 dark:bg-slate-800 border-slate-600 dark:border-slate-600
+          transition-all duration-300 ease-in-out
         `}
-        style={{ transitionProperty: "width" }}
       >
+        {/* Sidebar Header */}
+        <div className="px-4 py-4 dark:border-slate-600 transition-all duration-300 ease-in-out">
+          <div className="flex items-center space-x-2">
+            <img 
+              src={whizlabsLogo} 
+              alt="Assist" 
+              className={`w-96 h-8 object-contain transition-all duration-300 ease-in-out ${
+                isOpen ? "opacity-100" : "opacity-0"
+              }`} 
+            />
+          </div>
+        </div>
+
         {/* Navigation Items */}
-        {/* NOTE: Add the .scrollbar-hide CSS to your global styles if not using the Tailwind plugin */}
-        <nav className="flex flex-col p-2 pb-4 gap-2 items-center w-full overflow-y-auto scrollbar-hide transition-colors duration-300" style={{msOverflowStyle:'none', scrollbarWidth:'none'}}>
+        <nav className={`flex flex-col p-1 gap-2 w-full overflow-y-auto scrollbar-hide transition-colors duration-300 flex-1 ${isMobile ? 'mobile-sidebar' : ''}`} style={{msOverflowStyle:'none', scrollbarWidth:'none'}}>
           {renderNav(navItems)}
         </nav>
-        {/* Bottom User Info */}
-
-
       </aside>
-      {/* Custom Tooltip */}
+      
+      {/* Enhanced Tooltip */}
       {tooltip && (
         <div
-          className="pointer-events-none fixed z-[9999] px-3 py-1.5 text-xs font-medium rounded shadow-lg bg-gray-900 text-white dark:bg-slate-800 dark:text-slate-100 opacity-90 animate-fade-in"
+          className="pointer-events-none fixed z-[9999] px-3 py-2 text-xs font-medium rounded-lg shadow-2xl bg-slate-900 text-slate-100 dark:bg-slate-900 dark:text-slate-100 opacity-95 animate-fade-in backdrop-blur-sm border border-slate-700"
           style={{
             top: Math.max(0, tooltip.position.top),
             left: Math.max(0, tooltip.position.left),
@@ -217,7 +263,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
             textOverflow: "ellipsis",
           }}
         >
-          {tooltip.title}
+          <div className="flex items-center space-x-2">
+            <div className="w-1 h-1 bg-blue-400 rounded-full"></div>
+            <span>{tooltip.title}</span>
+          </div>
         </div>
       )}
     </>
@@ -225,7 +274,3 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen }) => {
 };
 
 export default Sidebar;
-
-// Add this to your global CSS for fade-in animation:
-// .animate-fade-in { animation: fadeIn 0.15s ease; }
-// @keyframes fadeIn { from { opacity: 0; } to { opacity: 0.9; } } 

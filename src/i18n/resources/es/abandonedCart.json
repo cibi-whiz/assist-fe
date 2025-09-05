@@ -3,12 +3,21 @@
   "description": "Gestionar y recuperar carritos de compras abandonados",
   "filters": {
     "title": "Filtros",
+    "subtitle": "Aplicar filtros para refinar tu búsqueda",
     "abandonedCartDateRange": "Rango de Fechas del Carrito Abandonado",
     "email": "Email",
+    "emailPlaceholder": "Ingresa dirección de email...",
     "country": "País",
+    "countryPlaceholder": "Selecciona país...",
     "customer": "Cliente",
     "sent": "Enviado",
-    "sentBy": "Enviado Por"
+    "sentPlaceholder": "Selecciona estado de envío...",
+    "sentBy": "Enviado Por",
+    "sentByPlaceholder": "Selecciona remitente...",
+    "yes": "Sí",
+    "no": "No",
+    "search": "Buscar",
+    "clear": "Limpiar"
   },
   "buttons": {
     "search": "Buscar",

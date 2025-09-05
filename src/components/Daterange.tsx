@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import moment from 'moment'
-import { FaCalendarAlt } from 'react-icons/fa'
 
 const predefinedRanges: any = {
   today: () => {
@@ -191,9 +190,8 @@ const Daterange = (props: any) => {
   }
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      <label className="flex items-center block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-100 mb-1">
-        <FaCalendarAlt className="w-4 h-4 text-500 dark:text-gray-100 mr-2" />
+    <div className="relative w-full" ref={dropdownRef}>
+      <label className="flex items-center block text-sm font-medium text-gray-700 dark:text-gray-100 mb-2">
         {props.label}
       </label>
       
@@ -211,7 +209,7 @@ const Daterange = (props: any) => {
               toggleDropdown()
             }
           }}
-          className="w-full px-2 py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+          className="w-full px-3 py-2.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
           placeholder="Select Date Range"
           aria-haspopup="listbox"
           aria-expanded={showDropdown}

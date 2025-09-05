@@ -12,8 +12,8 @@ import {
   ShoppingOutlined,
 } from '@ant-design/icons';
 import { TinyEditor } from '../../../../components/TextEditor';
-const { Title, Text } = Typography;
 
+const { Title, Text } = Typography;
 
 interface Product {
   name?: string;
@@ -39,10 +39,16 @@ interface MailModalProps {
   darkMode?: boolean;
   userId?: number;
   userEmail?: string;
-
 }
 
-const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], darkMode = false, userId, userEmail }) => {
+const MailDrawer: React.FC<MailModalProps> = ({
+  isOpen,
+  onClose,
+  products = [],
+  darkMode = false,
+  userId,
+  userEmail
+}) => {
   const [fromEmail, setFromEmail] = useState('support@whizlabs.com');
   const [toEmail, setToEmail] = useState(userEmail);
   const [subject, setSubject] = useState('');
@@ -59,17 +65,15 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
         setCartDetails(cartDetails);
         const items = cartDetails?.cart_details || [];
         if (items.length === 0) return;
-        
+
         let filteredItems: any[] = [];
-        
-        // Process each item separately for clarity
+
         items.forEach((item: any) => {
           const selectedTypes = item.selectedCourseType || [];
           const courses = item.course_details || [];
           const courseName = item.courseName;
           const courseId = item.course_id;
-          
-          // Find matching courses for this item
+
           courses.forEach((course: any) => {
             if (selectedTypes.includes(course.course_type)) {
               filteredItems.push({
@@ -80,35 +84,34 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
             }
           });
         });
+
         let orderBy = ['pt', 'oc', 'lab', 'sandbox', 'sandbox-1', 'sandbox-3', 'sandbox-6'];
 
         filteredItems = filteredItems?.sort((a: any, b: any) => {
           let courseId = a.courseId - b.courseId;
           let courseType = orderBy.indexOf(a.course_type) - orderBy.indexOf(b.course_type);
-          if (courseId !== 0) {
-            return courseId; // primary sort by course_id
-          }
-          return courseType; // secondary sort by course_type
+          if (courseId !== 0) return courseId;
+          return courseType;
         });
+
         setCartItems(filteredItems);
-        const currency = cartDetails?.cart?.currency_type || 'USD';
-        setCurrencyType(currency);
-        
+        setCurrencyType(cartDetails?.cart?.currency_type || 'USD');
       } catch (error) {
         console.error('Error fetching cart details:', error);
       }
     };
-    
+
     if (isOpen && userId) {
       fetchCartDetails();
     }
+
     const fetchMailSubject = async () => {
       const res = await mailSubject();
       setSubject(res.data[0].value);
-    }
+    };
     fetchMailSubject();
   }, [userId, isOpen]);
-  
+
   const handleSendMail = async () => {
     setIsSending(true);
     try {
@@ -157,49 +160,51 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
   return (
     <Drawer
       title={
-        <div className="flex items-center gap-3 dark:text-gray-100">
-          <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
-            <ShoppingCartOutlined className="text-white text-lg" />
+        <div className="flex items-center gap-2 sm:gap-3 dark:text-gray-100">
+          <div className="p-1.5 sm:p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
+            <ShoppingCartOutlined className="text-white text-sm sm:text-lg" />
           </div>
-          <div>
-            <Title level={4} className="!mb-0 text-gray-500 dark:text-white text-sm">
+          <div className="min-w-0 flex-1">
+            <Title level={4} className="!mb-0 text-gray-800 dark:text-white text-sm sm:text-base truncate">
               Send Abandoned Cart Email
             </Title>
-            <Text className="text-gray-500 dark:text-white text-sm">
+            <Text className="text-gray-500 dark:text-gray-300 text-xs sm:text-sm hidden sm:block">
               Recover lost sales with personalized emails
             </Text>
           </div>
         </div>
       }
       placement="right"
-      width={900}
+      width={typeof window !== 'undefined' && window.innerWidth < 640 ? '100%' : 900}
       onClose={onClose}
       open={isOpen}
-      className="dark:bg-gray-900"
+      className={`${darkMode ? "dark" : ""}`}
       styles={{
         header: {
           background: darkMode ? '#1f2937' : '#ffffff',
-          borderBottom: `1px solid ${darkMode ? '#374151' : '#e5e7eb'}`
+          borderBottom: `1px solid ${darkMode ? '#374151' : '#e5e7eb'}`,
+          padding: '12px 16px'
         },
         body: {
           background: darkMode ? '#111827' : '#f9fafb',
-          padding: '24px'
+          padding: '12px 16px'
         }
       }}
       extra={
         <Button
           type="primary"
-          size="large"
+          size="middle"
           icon={isSending ? <LoadingOutlined spin /> : <SendOutlined />}
           disabled={isSending || !fromEmail || !toEmail || !subject}
           onClick={handleSendMail}
-          className="bg-gradient-to-r from-blue-500 to-purple-600 border-0 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300"
+          className="bg-gradient-to-r from-blue-500 to-purple-600 border-0 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 text-xs sm:text-sm"
         >
-          {isSending ? "Sending..." : "Send Email"}
+          <span className="hidden sm:inline">{isSending ? "Sending..." : "Send Email"}</span>
+          <span className="sm:hidden">{isSending ? "..." : "Send"}</span>
         </Button>
       }
     >
-      <div className="space-y-8">
+      <div className="space-y-6 sm:space-y-8">
         {/* Email Fields */}
         <Card 
           title={
@@ -208,10 +213,10 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
               <span className="font-semibold text-gray-800 dark:text-gray-100">Email Details</span>
             </div>
           }
-          className="shadow-sm border-gray-200 dark:border-gray-700 dark:bg-gray-800"
-          bodyStyle={{ padding: '24px' }}
+          className="shadow-sm border border-gray-200 dark:border-gray-700 dark:bg-gray-800"
+          bodyStyle={{ padding: '12px 16px' }}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div className="space-y-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                 <UserOutlined className="mr-2 text-blue-500" /> From Email
@@ -222,7 +227,6 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
                 onChange={(e) => setFromEmail(e.target.value)}
                 placeholder="sender@company.com"
                 size="large"
-                className="hover:border-blue-400 focus:border-blue-500 focus:ring-blue-500"
               />
             </div>
             <div className="space-y-2">
@@ -235,7 +239,6 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
                 onChange={(e) => setToEmail(e.target.value)}
                 placeholder="customer@email.com"
                 size="large"
-                className="hover:border-green-400 focus:border-green-500 focus:ring-green-500"
               />
             </div>
           </div>
@@ -249,7 +252,6 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
               onChange={(e) => setSubject(e.target.value)}
               placeholder="🛒 Don't miss out! Complete your purchase"
               size="large"
-              className="hover:border-purple-400 focus:border-purple-500 focus:ring-purple-500"
             />
           </div>
         </Card>
@@ -263,49 +265,52 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
               <Badge count={cartItems?.length || 0} className="ml-2" />
             </div>
           }
-          className="shadow-sm border-gray-200 dark:border-gray-700 dark:bg-gray-800"
-          bodyStyle={{ padding: '24px' }}
+          className="shadow-sm border border-gray-200 dark:border-gray-700 dark:bg-gray-800"
+          bodyStyle={{ padding: '12px 16px' }}
         >
           {cartItems?.length ? (
             <div className="space-y-4">
-                                {cartItems?.map((itm: any, i: number) => {
-                    const courseTypeDisplay = getCourseTypeDisplay(itm.course_type);
-                    const courseTypeColor = getCourseTypeColor(itm.course_type);
+              {cartItems?.map((itm: any, i: number) => {
+                const courseTypeDisplay = getCourseTypeDisplay(itm.course_type);
+                const courseTypeColor = getCourseTypeColor(itm.course_type);
 
-                    const priceDisplay =
-                      currencyType === "INR" && itm.sale_price?.inr
-                        ? `₹ ${itm.sale_price.inr}`
-                        : currencyType === "USD" && itm.sale_price?.usd
-                          ? `$ ${itm.sale_price.usd}`
-                          : currencyType === "EUR" && itm.sale_price?.eur
-                            ? `€ ${itm.sale_price.eur}`
-                            : currencyType === "GBP" && itm.sale_price?.gbp
-                              ? `£ ${itm.sale_price.gbp}`
-                              : "Free";
+                const priceDisplay =
+                  currencyType === "INR" && itm.sale_price?.inr
+                    ? `₹ ${itm.sale_price.inr}`
+                    : currencyType === "USD" && itm.sale_price?.usd
+                      ? `$ ${itm.sale_price.usd}`
+                      : currencyType === "EUR" && itm.sale_price?.eur
+                        ? `€ ${itm.sale_price.eur}`
+                        : currencyType === "GBP" && itm.sale_price?.gbp
+                          ? `£ ${itm.sale_price.gbp}`
+                          : "Free";
 
-                    return (
-                      <div key={i} className="flex justify-between items-center py-3 px-4 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
-                        <div className="flex-1">
-                          <Text className="font-medium text-gray-900 dark:text-gray-100">
-                            {itm.courseName || 'Course Name'}
-                          </Text>
-                          {courseTypeDisplay && (
-                            <Tag color={courseTypeColor} className="ml-2">
-                              {courseTypeDisplay}
-                            </Tag>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <Text className="font-semibold text-lg text-green-600 dark:text-green-400">
-                            {priceDisplay}
-                          </Text>
-                        </div>
-                      </div>
-                    );
-                  })}
+                return (
+                  <div
+                    key={i}
+                    className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-3 px-4 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600 space-y-2 sm:space-y-0"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <Text className="font-medium text-gray-900 dark:text-gray-100 text-sm sm:text-base truncate">
+                        {itm.courseName || 'Course Name'}
+                      </Text>
+                      {courseTypeDisplay && (
+                        <Tag color={courseTypeColor} className="ml-0 sm:ml-2 mt-1 sm:mt-0">
+                          {courseTypeDisplay}
+                        </Tag>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <Text className="font-semibold text-base sm:text-lg text-green-600 dark:text-green-400">
+                        {priceDisplay}
+                      </Text>
+                    </div>
+                  </div>
+                );
+              })}
 
               <Divider className="my-6" />
-              
+
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 p-4 rounded-xl border border-blue-200 dark:border-blue-700">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
@@ -313,7 +318,16 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
                     <Text className="text-lg font-bold text-gray-800 dark:text-gray-100">Total Amount</Text>
                   </div>
                   <Text className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  {currencyType == "INR" ? "₹" : currencyType == "USD" ? "$" : currencyType == "EUR" ? "€" : currencyType == "GBP" ? "£" : ""}  {cartDetails?.cart?.total_price}
+                    {currencyType == "INR"
+                      ? "₹"
+                      : currencyType == "USD"
+                        ? "$"
+                        : currencyType == "EUR"
+                          ? "€"
+                          : currencyType == "GBP"
+                            ? "£"
+                            : ""}{" "}
+                    {cartDetails?.cart?.total_price}
                   </Text>
                 </div>
               </div>
@@ -323,8 +337,10 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
               <div className="p-4 bg-gray-100 dark:bg-gray-700 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                 <ShoppingCartOutlined className="text-3xl text-gray-400 dark:text-gray-500" />
               </div>
-              <Text className="text-gray-500 dark:text-gray-400 text-lg">No abandoned cart items found</Text>
-              <Text className="text-gray-400 dark:text-gray-500 text-sm block mt-2">
+              <Text className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+                No abandoned cart items found
+              </Text>
+              <Text className="text-gray-400 dark:text-gray-500 text-xs sm:text-sm block mt-2">
                 The cart appears to be empty or has been cleared
               </Text>
             </div>
@@ -339,11 +355,10 @@ const MailDrawer: React.FC<MailModalProps> = ({ isOpen, onClose, products = [], 
               <span className="font-semibold text-gray-800 dark:text-gray-100">Email Content</span>
             </div>
           }
-          className="shadow-sm border-gray-200 dark:border-gray-700 dark:bg-gray-800"
-          bodyStyle={{ padding: '24px' }}
+          className="shadow-sm border border-gray-200 dark:border-gray-700 dark:bg-gray-800"
+          bodyStyle={{ padding: '12px 16px' }}
         >
           <TinyEditor data={mailContent} handleEditorChange={setMailContent} darkMode={darkMode} />
-
         </Card>
       </div>
     </Drawer>

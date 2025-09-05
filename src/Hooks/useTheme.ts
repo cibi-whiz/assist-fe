@@ -2,89 +2,60 @@ import { useState, useEffect } from 'react';
 
 interface UseThemeReturn {
   isDark: boolean;
-  theme: 'light' | 'dark' | 'system';
-  setTheme: (theme: 'light' | 'dark' | 'system') => void;
+  theme: 'light' | 'dark';
+  setTheme: (theme: 'light' | 'dark') => void;
   toggleTheme: () => void;
 }
 
 export const useTheme = (): UseThemeReturn => {
-  const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>(() => {
+  const [theme, setThemeState] = useState<'light' | 'dark'>(() => {
     const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || stored === 'light' || stored === 'system') {
+    if (stored === 'dark' || stored === 'light') {
       return stored;
     }
     // Default to system preference
-    return 'system';
-  });
-
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    if (theme === 'system') {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    return theme === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
 
   useEffect(() => {
-    const updateTheme = () => {
-      let shouldBeDark = false;
-      
-      if (theme === 'system') {
-        shouldBeDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      } else {
-        shouldBeDark = theme === 'dark';
-      }
-      
-      setIsDark(shouldBeDark);
-      
-      // Apply theme to document
-      const root = document.documentElement;
-      const body = document.body;
-      
-      if (shouldBeDark) {
-        root.classList.add('dark');
-        body.classList.add('bg-slate-950');
-        body.classList.remove('bg-gray-50');
-      } else {
-        root.classList.remove('dark');
-        body.classList.add('bg-gray-50');
-        body.classList.remove('bg-slate-950');
-      }
-    };
+    const root = document.documentElement;
+    const body = document.body;
 
-    updateTheme();
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      body.classList.add('bg-slate-950');
+      body.classList.remove('bg-gray-50');
+    } else {
+      root.classList.remove('dark');
+      body.classList.add('bg-gray-50');
+      body.classList.remove('bg-slate-950');
+    }
 
-    // Listen for system theme changes
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleSystemThemeChange = () => {
-      if (theme === 'system') {
-        updateTheme();
+    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
+      if (!localStorage.getItem('theme')) {
+        setThemeState(e.matches ? 'dark' : 'light');
       }
     };
 
     mediaQuery.addEventListener('change', handleSystemThemeChange);
+    return () => mediaQuery.removeEventListener('change', handleSystemThemeChange);
+  }, []);
 
-    return () => {
-      mediaQuery.removeEventListener('change', handleSystemThemeChange);
-    };
-  }, [theme]);
-
-  const setTheme = (newTheme: 'light' | 'dark' | 'system') => {
+  const setTheme = (newTheme: 'light' | 'dark') => {
     setThemeState(newTheme);
-    localStorage.setItem('theme', newTheme);
   };
 
   const toggleTheme = () => {
-    if (theme === 'light') {
-      setTheme('dark');
-    } else if (theme === 'dark') {
-      setTheme('system');
-    } else {
-      setTheme('light');
-    }
+    setThemeState(prev => (prev === 'light' ? 'dark' : 'light'));
   };
 
   return {
-    isDark,
+    isDark: theme === 'dark',
     theme,
     setTheme,
     toggleTheme,

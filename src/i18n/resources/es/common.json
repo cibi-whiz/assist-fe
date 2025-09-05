@@ -6,7 +6,11 @@
   "navigation": {
     "dashboard": "Panel de Control",
     "abandonedCart": "Carrito Abandonado",
+    "abandonedcart": "Carrito Abandonado",
     "rolesAndPermissions": "Roles y Permisos",
+    "roles-and-permission": "Roles y Permisos",
+    "assist-users": "Usuarios de Assist",
+    "dm": "Mercadotecnia Digital",
     "settings": "Configuración",
     "logout": "Cerrar Sesión"
   },
@@ -143,8 +147,22 @@
     }
   },
   "sidebar": {
+    "home": "Inicio",
+    "reports": "Reportes",
+    "projects": "Proyectos",
+    "collaboration": "Colaboración",
+    "overview": "Resumen",
+    "tasks": "Tareas",
+    "issues": "Problemas",
+    "phases": "Fases",
+    "timeLogs": "Registros de Tiempo",
     "digitalMarketing": "Mercadotecnia Digital",
-    "abandonedCart": "Carrito Abandonado"
+    "abandonedCart": "Carrito Abandonado",
+    "b2c": "B2C",
+    "b2b": "B2B",
+    "lms": "LMS",
+    "forums": "Foros",
+    "play": "Play"
   },
   "welcome": {
     "goodMorning": "Buenos Días",
@@ -185,6 +203,38 @@
       "goHome": "Ir al Panel de Control",
       "goBack": "Regresar",
       "contactSupport": "Contactar Soporte"
+    }
+  },
+  "filters": {
+    "title": "Filtrar",
+    "subtitle": "Aplica filtros para refinar tu búsqueda",
+    "search": "Buscar",
+    "clear": "Cancelar",
+    "reset": "Restablecer",
+    "filterSearch": "Búsqueda de Filtros",
+    "anyOfThese": "Cualquiera de estos",
+    "allOfThese": "Todos estos",
+    "sections": {
+      "basic": "Información Básica",
+      "dates": "Fecha y Hora",
+      "status": "Estado y Progreso",
+      "advanced": "Filtros Avanzados",
+      "customer_info": "Información del Cliente",
+      "cart_status": "Estado del Carrito",
+      "date_range": "Rango de Fechas"
+    },
+    "categories": {
+      "projectName": "Nombre del Proyecto",
+      "owner": "Propietario",
+      "createdTime": "Hora de Creación",
+      "createdBy": "Creado Por",
+      "startDate": "Fecha de Inicio",
+      "endDate": "Fecha de Fin",
+      "lastModifiedBy": "Última Modificación Por",
+      "lastModifiedTime": "Última Hora de Modificación",
+      "completionTime": "Hora de Finalización",
+      "projectGroup": "Grupo de Proyecto",
+      "status": "Estado"
     }
   }
 }
