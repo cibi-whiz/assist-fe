@@ -379,7 +379,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
   const [filters, setFilters] = useState<FilterValue>(initializeFilters(initialFilters));
 
   const handleDateRangeChange = (dateRange: any, field: string) => {
-    console.log('Date range changed:', { field, dateRange });
     setFilters((prev: any) => {
       let value;
       switch (field) {
@@ -402,7 +401,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
           value = { from: dateRange.startDate, to: dateRange.endDate };
       }
       
-      console.log('Setting filter value:', { field, value });
       return {
         ...prev,
         [field]: {
@@ -519,7 +517,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
 
   const hasFilterValue = (field: keyof FilterValue) => {
     const val = filters[field]?.value;
-    console.log('Checking filter value for', field, ':', val);
     if (typeof val === "string") {
       return val.trim() !== "";
     }
@@ -533,7 +530,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
       // Handle different date range structures
       if ('from' in val && 'to' in val) {
         const result = val.from !== "" || val.to !== "";
-        console.log('Date range check (from/to):', { from: val.from, to: val.to, result });
         return result;
       }
       // Handle specific field date ranges (e.g., last_login_from, last_login_to)
@@ -542,7 +538,6 @@ const FilterDrawer: React.FC<FilterDrawerProps> = ({
         const keyVal = val[key as keyof typeof val];
         return keyVal !== "" && keyVal !== null && keyVal !== undefined;
       });
-      console.log('Date range check (specific):', { keys, val, result });
       return result;
     }
     return false;

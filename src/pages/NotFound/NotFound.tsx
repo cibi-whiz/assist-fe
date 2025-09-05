@@ -21,7 +21,6 @@ const NotFound: React.FC = () => {
 
   const handleContactSupport = () => {
     // You can implement contact support functionality here
-    console.log('Contact support clicked');
   };
 
   return (

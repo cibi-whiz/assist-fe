@@ -115,13 +115,6 @@ const MailDrawer: React.FC<MailModalProps> = ({
   const handleSendMail = async () => {
     setIsSending(true);
     try {
-      console.log('Sending mail:', {
-        from: fromEmail,
-        to: toEmail,
-        subject,
-        content: mailContent,
-        products
-      });
       await new Promise(resolve => setTimeout(resolve, 1500));
       onClose();
     } catch (error) {

@@ -38,7 +38,6 @@ const FilterAccordion: React.FC<FilterAccordionProps> = () => {
       activeKey={[]}
       size="small"
       onChange={(keys) => {
-        console.log(keys)
       }}
       expandIconPosition="end"
       expandIcon={({ isActive }) => (
