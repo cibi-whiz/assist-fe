@@ -28,10 +28,11 @@ interface TooltipState {
 interface SidebarProps {
   isOpen: boolean;
   isMobile: boolean;
+  isTablet: boolean;
   onClose?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, isTablet, onClose }) => {
   const { t } = useTranslation('common');
   const [openPath, setOpenPath] = useLocalStorage<string[]>('sidebar-openPath', ['Digital Marketing']);
 
@@ -61,9 +62,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [tooltip]);
 
-  // Prevent body scroll when mobile sidebar is open
+  // Prevent body scroll when mobile/tablet sidebar is open
   useEffect(() => {
-    if (isMobile && isOpen) {
+    if ((isMobile || isTablet) && isOpen) {
       document.body.classList.add('mobile-sidebar-open');
     } else {
       document.body.classList.remove('mobile-sidebar-open');
@@ -73,7 +74,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
     return () => {
       document.body.classList.remove('mobile-sidebar-open');
     };
-  }, [isMobile, isOpen]);
+  }, [isMobile, isTablet, isOpen]);
+
+  // Close sidebar on escape key
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && (isMobile || isTablet) && isOpen && onClose) {
+        onClose();
+      }
+    };
+
+    if ((isMobile || isTablet) && isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+  }, [isMobile, isTablet, isOpen, onClose]);
 
   const handleToggle = (title: string, depth: number): void => {
     if (openPath[depth] === title) {
@@ -174,8 +189,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
                 }`
               }
               onClick={() => {
-                // Close sidebar on mobile when navigating
-                if (isMobile && onClose) {
+                // Close sidebar on mobile/tablet when navigating
+                if ((isMobile || isTablet) && onClose) {
                   onClose();
                 }
               }}
@@ -212,18 +227,21 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
 
   return (
     <>
-      {/* Mobile Overlay */}
-      {isMobile && isOpen && (
+      {/* Mobile/Tablet Overlay */}
+      {(isMobile || isTablet) && isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ease-in-out"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-300 ease-in-out mobile-overlay"
           onClick={onClose}
+          onTouchEnd={onClose}
         />
       )}
       
       <aside
         className={`fixed top-0 left-0 h-[calc(100vh)] z-50 flex flex-col border-r shadow-xl gpu-accelerated
           ${isMobile 
-            ? (isOpen ? "w-64 translate-x-0" : "-translate-x-full w-64") 
+            ? (isOpen ? "w-64 translate-x-0 mobile-sidebar-slide-in" : "-translate-x-full w-64 mobile-sidebar-slide-out") 
+            : isTablet
+            ? (isOpen ? "w-64 translate-x-0 tablet-sidebar tablet-sidebar-open" : "-translate-x-full w-64 tablet-sidebar tablet-sidebar-closed")
             : (isOpen ? "w-64 sidebar-transition" : "w-0 overflow-hidden sidebar-transition")
           }
           bg-slate-800 dark:bg-slate-800 border-slate-600 dark:border-slate-600
@@ -231,20 +249,43 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, isMobile, onClose }) => {
         `}
       >
         {/* Sidebar Header */}
-        <div className="px-4 py-4 dark:border-slate-600 transition-all duration-300 ease-in-out">
-          <div className="flex items-center space-x-2">
-            <img 
-              src={whizlabsLogo} 
-              alt="Assist" 
-              className={`w-96 h-8 object-contain transition-all duration-300 ease-in-out ${
-                isOpen ? "opacity-100" : "opacity-0"
-              }`} 
-            />
+        <div className={`px-4 py-4 dark:border-slate-600 transition-all duration-300 ease-in-out ${
+          isMobile ? 'mobile-sidebar-header' : 
+          isTablet ? 'tablet-sidebar-header' : ''
+        }`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              <img 
+                src={whizlabsLogo} 
+                alt="Assist" 
+                className={`w-96 h-8 object-contain transition-all duration-300 ease-in-out ${
+                  isOpen ? "opacity-100" : "opacity-0"
+                }`} 
+              />
+            </div>
+            {/* Mobile/Tablet close button */}
+            {(isMobile || isTablet) && isOpen && onClose && (
+              <button
+                onClick={onClose}
+                className={`w-8 h-8 rounded-lg flex items-center justify-center button-transition text-slate-400 hover:text-slate-200 hover:bg-slate-700 ${
+                  isMobile ? 'sm:hidden mobile-button mobile-touch-target' :
+                  isTablet ? 'tablet-button tablet-touch-target' : ''
+                }`}
+                aria-label="Close sidebar"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
         </div>
 
         {/* Navigation Items */}
-        <nav className={`flex flex-col p-1 gap-2 w-full overflow-y-auto scrollbar-hide transition-colors duration-300 flex-1 ${isMobile ? 'mobile-sidebar' : ''}`} style={{msOverflowStyle:'none', scrollbarWidth:'none'}}>
+        <nav className={`flex flex-col p-1 gap-2 w-full overflow-y-auto scrollbar-hide transition-colors duration-300 flex-1 ${
+          isMobile ? 'mobile-sidebar' : 
+          isTablet ? 'tablet-sidebar' : ''
+        }`} style={{msOverflowStyle:'none', scrollbarWidth:'none'}}>
           {renderNav(navItems)}
         </nav>
       </aside>

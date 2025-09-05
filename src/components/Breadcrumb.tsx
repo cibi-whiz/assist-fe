@@ -6,9 +6,10 @@ import { useBreadcrumb, BreadcrumbItem } from '../Hooks/useBreadcrumb';
 
 interface BreadcrumbProps {
   className?: string;
+  isTablet?: boolean;
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ className = '' }) => {
+const Breadcrumb: React.FC<BreadcrumbProps> = ({ className = '', isTablet = false }) => {
   const { t } = useTranslation('common');
   const location = useLocation();
   const breadcrumbItems = useBreadcrumb(location.pathname);
@@ -20,13 +21,15 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ className = '' }) => {
 
   return (
     <nav
-      className={`flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400 ${className}`}
+      className={`flex items-center space-x-1 text-sm text-gray-600 dark:text-gray-400 overflow-x-auto scrollbar-hide ${
+        isTablet ? 'tablet-touch-target' : ''
+      } ${className}`}
       aria-label="Breadcrumb"
     >
       {/* Home icon */}
       <Link
         to="/dashboard"
-        className="flex items-center hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+        className="flex items-center hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 mobile-touch-target p-1"
         title={t('navigation.dashboard')}
       >
         <FaHome className="w-4 h-4" />
@@ -43,7 +46,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ className = '' }) => {
           ) : (
             <Link
               to={item.path}
-              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 truncate max-w-[200px]"
+              className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 truncate max-w-[200px] mobile-touch-target p-1"
               title={item.label}
             >
               {item.label}

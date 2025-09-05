@@ -396,6 +396,157 @@ code {
   .space-y-3 > * + * {
     margin-top: 0.75rem;
   }
+  
+  /* Mobile breadcrumb improvements */
+  .mobile-breadcrumb {
+    padding: 0.5rem 0;
+  }
+  
+  /* Mobile sidebar improvements */
+  .mobile-sidebar-header {
+    padding: 1rem;
+  }
+  
+  /* Tablet sidebar improvements */
+  .tablet-sidebar-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid #374151;
+  }
+  
+  /* Mobile app bar improvements */
+  .mobile-appbar {
+    padding: 0 1rem;
+  }
+}
+
+/* Tablet-specific improvements */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Tablet touch targets */
+  .tablet-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    /* padding: 12px; */
+  }
+  
+  /* Tablet sidebar improvements */
+  .tablet-sidebar {
+    width: 16rem; /* 256px */
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .tablet-sidebar-closed {
+    transform: translateX(-100%);
+  }
+  
+  .tablet-sidebar-open {
+    transform: translateX(0);
+  }
+  
+  /* Tablet app bar improvements */
+  .tablet-appbar {
+    padding: 0 1.5rem;
+  }
+  
+  /* Tablet breadcrumb improvements */
+  .tablet-breadcrumb {
+    /* padding: 0.75rem 0; */
+  }
+  
+  /* Tablet content spacing */
+  .tablet-content {
+    padding: 1.5rem;
+  }
+  
+  /* Tablet button improvements */
+  .tablet-button {
+    min-height: 44px;
+    min-width: 44px;
+    /* padding: 12px 16px; */
+    font-size: 0.875rem;
+  }
+  
+  /* Tablet form improvements */
+  .tablet-form {
+    gap: 1rem;
+  }
+  
+  /* Tablet navigation improvements */
+  .tablet-nav-item {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+  
+  /* Tablet modal improvements */
+  .tablet-modal {
+    max-width: 90vw;
+    max-height: 90vh;
+  }
+  
+  /* Tablet table improvements */
+  .tablet-table {
+    font-size: 0.875rem;
+  }
+  
+  /* Tablet card improvements */
+  .tablet-card {
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* Tablet sidebar specific styles */
+  .tablet-sidebar {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Tablet navigation improvements */
+  .tablet-nav-item {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Tablet button improvements */
+  .tablet-button {
+    min-height: 44px;
+    min-width: 44px;
+    /* padding: 12px 16px; */
+    font-size: 0.875rem;
+    border-radius: 8px;
+  }
+  
+  /* Tablet form improvements */
+  .tablet-form input,
+  .tablet-form select,
+  .tablet-form textarea {
+    min-height: 44px;
+    font-size: 0.875rem;
+  }
+  
+  /* Tablet table improvements */
+  .tablet-table th,
+  .tablet-table td {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  /* Tablet modal improvements */
+  .tablet-modal {
+    max-width: 90vw;
+    max-height: 90vh;
+    margin: 1rem;
+  }
+  
+  /* Tablet spacing improvements */
+  .tablet-space-y > * + * {
+    margin-top: 1rem;
+  }
+  
+  .tablet-space-x > * + * {
+    margin-left: 1rem;
+  }
 }
 
 .ProseMirror img {

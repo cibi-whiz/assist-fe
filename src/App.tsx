@@ -5,6 +5,7 @@ import { useTheme } from './Hooks/useTheme';
 import 'react-toastify/dist/ReactToastify.css';
 import AppBar from './components/AppBar';
 import Sidebar from './components/Sidebar';
+import Breadcrumb from './components/Breadcrumb';
 import WelcomeScreen from './components/WelcomeScreen';
 import { ToastProvider } from './components/ToastContext';
 import Toast from './components/Toast';
@@ -25,9 +26,10 @@ interface AppRoutesProps {
   showWelcome: boolean;
   onWelcomeComplete: () => void;
   isMobile: boolean;
+  isTablet: boolean;
 }
 
-function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete, isMobile }: AppRoutesProps) {
+function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete, isMobile, isTablet }: AppRoutesProps) {
   const location = useLocation();
   const { user, loading } = useAuth();
   const { isDark } = useTheme();
@@ -67,15 +69,35 @@ function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete,
   return (
     <div className=" w-full min-h-full transition-colors duration-300">
       {/* AppBar */}
-      <AppBar onMenuClick={toggleSidebar} isMobile={isMobile} isOpen={sidebarOpen} />
+      <AppBar onMenuClick={toggleSidebar} isMobile={isMobile} isTablet={isTablet} isOpen={sidebarOpen} />
       <div className="flex w-full">
         {/* Sidebar */}
-        <Sidebar isOpen={sidebarOpen} isMobile={isMobile} />
+        <Sidebar isOpen={sidebarOpen} isMobile={isMobile} isTablet={isTablet} onClose={toggleSidebar} />
         {/* Main Content */}
         <main className={`flex-1 w-full transition-all duration-300 ease-in-out pt-12 ${
-          sidebarOpen ? 'lg:ml-64 md:ml-16' : ''
-        } ml-0`}>
-          <div className="p-2 sm:p-4 lg:p-6 w-full max-w-full transition-colors duration-300">
+          isMobile ? 'ml-0' : 
+          isTablet ? (sidebarOpen ? 'ml-64' : 'ml-0') :
+          (sidebarOpen ? 'lg:ml-64 md:ml-16' : 'ml-0')
+        }`}>
+          <div className={`w-full max-w-full transition-colors duration-300 ${
+            isMobile ? 'p-2' : 
+            isTablet ? 'tablet-content' : 
+            'p-2 sm:p-4 lg:p-6'
+          }`}>
+            {/* Breadcrumbs - show on desktop and tablet */}
+            {!isMobile && (
+              <div className={isTablet ? 'tablet-breadcrumb' : 'mb-2'}>
+                <Breadcrumb isTablet={isTablet} />
+              </div>
+            )}
+            
+            {/* Mobile Breadcrumbs - show below AppBar */}
+            {isMobile && (
+              <div className="mobile-breadcrumb">
+                <Breadcrumb />
+              </div>
+            )}
+            
             {loading ? (
               <div className="flex justify-center items-center h-96">
                 <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
@@ -109,16 +131,19 @@ function App() {
   });
   const [showWelcome, setShowWelcome] = useState<boolean>(false);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isTablet, setIsTablet] = useState<boolean>(false);
 
-  // Check for mobile screen size
+  // Check for mobile and tablet screen sizes
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+    const checkScreenSize = () => {
+      const width = window.innerWidth;
+      setIsMobile(width < 768);
+      setIsTablet(width >= 768 && width <= 1024);
     };
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   // Check for welcome screen flag when component mounts and on storage changes
@@ -172,6 +197,7 @@ function App() {
             showWelcome={showWelcome}
             onWelcomeComplete={handleWelcomeComplete}
             isMobile={isMobile}
+            isTablet={isTablet}
           />
           <Toast />
 

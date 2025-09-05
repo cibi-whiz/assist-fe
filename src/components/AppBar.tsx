@@ -41,12 +41,13 @@ interface Portal {
 interface AppBarProps {
   onMenuClick: () => void;
   isMobile: boolean;
+  isTablet: boolean;
   isOpen: boolean;
 }
 
 // Portal configuration will be created inside the component to access translations
 
-const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile ,isOpen}) => {
+const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile, isTablet, isOpen}) => {
   const { t } = useTranslation("common");
   const { isDark, toggleTheme, theme } = useTheme();
   const location = useLocation();
@@ -270,14 +271,16 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile ,isOpen}) => {
   return (
     <header className={`fixed top-0 h-16 bg-slate-800 dark:bg-slate-800 border-b border-slate-600 shadow-lg z-50 flex items-center justify-between px-2
       appbar-transition gpu-accelerated
-      ${isMobile ? "left-0 w-full" : (isOpen ? "left-[16rem] w-[calc(100%-16rem)]" : "left-0 w-full")}
+      ${isMobile ? "left-0 w-full mobile-appbar" : 
+        isTablet ? (isOpen ? "left-64 w-[calc(100%-16rem)] tablet-appbar" : "left-0 w-full tablet-appbar") :
+        (isOpen ? "left-[16rem] w-[calc(100%-16rem)]" : "left-0 w-full")}
       transition-colors`}>
       {/* Left Section - Mobile Menu Button */}
-      <div className="flex items-center space-x-3 sm:space-x-6">
+      <div className="flex items-center space-x-3 sm:space-x-3">
         {/* Mobile menu button - only visible on mobile */}
         <button
           onClick={onMenuClick}
-          className="sm:hidden w-9 h-9 rounded-lg flex items-center button-transition"
+          className="sm:hidden w-12 h-12 rounded-lg flex items-center button-transition mobile-button mobile-touch-target"
           aria-label={t("appBar.toggleSidebar")}
         >
           {isOpen ? (
@@ -286,13 +289,28 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile ,isOpen}) => {
             <PanelRightOpen className="text-slate-200 text-lg transition-transform duration-300 ease-in-out" />
           )}
         </button>
+        
+        {/* Tablet menu button - visible on tablet */}
+        {isTablet && (
+          <button
+            onClick={onMenuClick}
+            className="w-12 h-12 rounded-lg flex items-center button-transition tablet-button tablet-touch-target"
+            aria-label={t("appBar.toggleSidebar")}
+          >
+            {isOpen ? (
+              <PanelRightClose className="text-slate-200 text-lg transition-transform duration-300 ease-in-out" />
+            ) : (
+              <PanelRightOpen className="text-slate-200 text-lg transition-transform duration-300 ease-in-out" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Center Section - Desktop Menu Button and Title */}
-      <div className="hidden sm:flex flex-1 items-center justify-start">
+      <div className={`flex-1 items-center justify-start ${isTablet ? 'hidden' : 'hidden sm:flex'}`}>
         <button
           onClick={onMenuClick}
-          className="w-9 h-9 rounded-lg flex items-center button-transition "
+          className="w-9 h-9 rounded-lg flex items-center button-transition"
           aria-label={t("appBar.toggleSidebar")}
         >
           {isOpen ? (
@@ -306,9 +324,9 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile ,isOpen}) => {
         </h1>
       </div>
 
-      {/* Mobile Title Section */}
-      <div className="flex-1 sm:hidden flex items-center">
-        <h1 className="text-base font-semibold text-slate-200 truncate transition-all duration-300 ease-in-out">
+      {/* Mobile/Tablet Title Section */}
+      <div className={`flex-1 flex items-center ${isTablet ? 'block' : 'sm:hidden'}`}>
+        <h1 className="text-base md:text-base font-semibold text-slate-200 truncate transition-all duration-300 ease-in-out">
           {getCurrentPageTitle()}
         </h1>
       </div>
@@ -316,6 +334,7 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile ,isOpen}) => {
       {/* Right Section */}
       <div className="flex items-center space-x-1 sm:space-x-2">
         {/* Portal Selector */}
+        {!isMobile && !isTablet && (
         <div className="relative">
           <button
             ref={portalButtonRef}
@@ -449,9 +468,11 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile ,isOpen}) => {
             </div>
           )}
         </div>
-
+        )}
         {/* Language Switcher */}
+        {!isMobile && !isTablet && (
         <LanguageSwitcher darkMode={isDark} />
+        )}
 
         {/* Avatar */}
         <div className="relative">
