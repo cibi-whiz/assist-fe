@@ -277,7 +277,7 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile ,isOpen}) => {
         {/* Mobile menu button - only visible on mobile */}
         <button
           onClick={onMenuClick}
-          className="sm:hidden w-9 h-9 rounded-lg flex items-center button-transition hover:bg-slate-700"
+          className="sm:hidden w-9 h-9 rounded-lg flex items-center button-transition"
           aria-label={t("appBar.toggleSidebar")}
         >
           {isOpen ? (
@@ -292,7 +292,7 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile ,isOpen}) => {
       <div className="hidden sm:flex flex-1 items-center justify-start">
         <button
           onClick={onMenuClick}
-          className="w-9 h-9 rounded-lg flex items-center button-transition hover:bg-slate-700"
+          className="w-9 h-9 rounded-lg flex items-center button-transition "
           aria-label={t("appBar.toggleSidebar")}
         >
           {isOpen ? (

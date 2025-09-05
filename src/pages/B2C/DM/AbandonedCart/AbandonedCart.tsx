@@ -12,7 +12,7 @@ import FilterDrawerTrigger from "../../../../components/FilterDrawerTrigger";
 import { useFilterDrawer } from "../../../../Hooks/useFilterDrawer";
 import { useTheme } from "../../../../Hooks/useTheme";
 import Pagination from "../../../../components/Pagination";
-import FilterAccordion from "../../../../components/FilterAccordion";
+
 import moment from "moment";
 
 interface Filters {
@@ -49,13 +49,6 @@ interface FilterCategory {
   isActive?: boolean;
   section?: string;
   component?: React.ReactNode;
-}
-
-interface FilterSection {
-  key: string;
-  label: string;
-  isExpanded?: boolean;
-  categories: FilterCategory[];
 }
 
 
@@ -102,76 +95,11 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
   });
   const [filterLogic, setFilterLogic] = useState<"any" | "all">("all");
 
-  // Accordion filter states
-  const [expandedSections, setExpandedSections] = useState<string[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<
-    FilterCategory[]
-  >([]);
-
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCartItem, setSelectedCartItem] = useState<CartItem | null>(
     null
   );
-
-
-  // Filter sections for accordion
-  const filterSections: FilterSection[] = [
-    {
-      key: 'customer_info',
-      label: 'Customer Information',
-      categories: [
-        { 
-          key: 'email', 
-          label: 'Email Address', 
-          section: 'customer_info',
-          isActive: selectedCategories.some(cat => cat.key === 'email')
-        },
-        { 
-          key: 'country', 
-          label: 'Country', 
-          section: 'customer_info',
-          isActive: selectedCategories.some(cat => cat.key === 'country')
-        },
-        { 
-          key: 'existing_customer', 
-          label: 'Existing Customer', 
-          section: 'customer_info',
-          isActive: selectedCategories.some(cat => cat.key === 'existing_customer')
-        },
-      ]
-    },
-    {
-      key: 'cart_status',
-      label: 'Cart Status',
-      categories: [
-        { 
-          key: 'sent', 
-          label: 'Email Sent', 
-          section: 'cart_status',
-          isActive: selectedCategories.some(cat => cat.key === 'sent')
-        },
-        { 
-          key: 'sent_by', 
-          label: 'Sent By', 
-          section: 'cart_status',
-          isActive: selectedCategories.some(cat => cat.key === 'sent_by')
-        },
-      ]
-    },
-    {
-      key: 'date_range',
-      label: 'Date Range',
-      categories: [
-        { 
-          key: 'abandoned_date', 
-          label: 'Abandoned Date', 
-          section: 'date_range',
-          isActive: selectedCategories.some(cat => cat.key === 'abandoned_date')
-        },
-      ]
-    }
-  ];
 
   const actions = [
     {
@@ -262,32 +190,11 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
       sent_by: null,
     };
     setFilters(clearedFilters);
-    setSelectedCategories([]);
     showToast(t("messages.filtersCleared", { ns: "abandonedCart" }), "info");
   };
 
   const handleFilterLogicChange = (logic: "any" | "all") => {
     setFilterLogic(logic);
-  };
-
-  // Accordion handlers
-  const handleSectionToggle = (sectionKey: string) => {
-    setExpandedSections((prev) =>
-      prev.includes(sectionKey)
-        ? prev.filter((key) => key !== sectionKey)
-        : [...prev, sectionKey]
-    );
-  };
-
-  const handleCategorySelect = (category: FilterCategory) => {
-    setSelectedCategories((prev) => {
-      const isAlreadySelected = prev.some((cat) => cat.key === category.key);
-      if (isAlreadySelected) {
-        return prev.filter((cat) => cat.key !== category.key);
-      } else {
-        return [...prev, { ...category, isActive: true }];
-      }
-    });
   };
 
   // Modal handlers
@@ -421,14 +328,6 @@ const AbandonedCart: React.FC<AbandonedCartProps> = ({ darkMode = false }) => {
             filterLogic={filterLogic}
             onFilterLogicChange={handleFilterLogicChange}
           >
-                         <FilterAccordion
-               sections={filterSections}
-               expandedSections={expandedSections}
-               onSectionToggle={handleSectionToggle}
-               onCategorySelect={handleCategorySelect}
-               ns="abandonedCart"
-               searchTerm={filters.email}
-             />
           </FilterDrawer>
 
           {/* Table */}

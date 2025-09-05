@@ -209,7 +209,7 @@ const Daterange = (props: any) => {
               toggleDropdown()
             }
           }}
-          className="w-full px-3 py-2.5 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+          className="w-full px-2 py-1 text-[13px] border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
           placeholder="Select Date Range"
           aria-haspopup="listbox"
           aria-expanded={showDropdown}

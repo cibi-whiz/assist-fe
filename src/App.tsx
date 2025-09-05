@@ -72,8 +72,8 @@ function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete,
         {/* Sidebar */}
         <Sidebar isOpen={sidebarOpen} isMobile={isMobile} />
         {/* Main Content */}
-        <main className={`flex-1 w-full transition-all duration-300 ease-in-out pt-16 ${
-          sidebarOpen ? 'lg:ml-64 md:ml-16' : 'lg:ml-16'
+        <main className={`flex-1 w-full transition-all duration-300 ease-in-out pt-12 ${
+          sidebarOpen ? 'lg:ml-64 md:ml-16' : ''
         } ml-0`}>
           <div className="p-2 sm:p-4 lg:p-6 w-full max-w-full transition-colors duration-300">
             {loading ? (
