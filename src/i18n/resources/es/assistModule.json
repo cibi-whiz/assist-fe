@@ -1,0 +1,40 @@
+{
+    "navigation": {
+      "assistModule": "Módulo de Asistencia"
+    },
+    "title": "Módulo de Asistencia",
+    "filters": {
+      "title": "Filtros",
+      "moduleItems": "Elementos del Módulo",
+      "status": "Estado",
+      "createdBy": "Creado Por"
+    },
+    "buttons": {
+      "search": "Buscar",
+      "clear": "Limpiar",
+      "refresh": "Actualizar",
+      "export": "Exportar",
+      "viewDetails": "Ver Detalles",
+      "create": "Crear"
+    },
+    "drawer": {
+        "ModuleNamePlaceholder": "Ingrese el nombre del módulo...",
+        "ModuleCodePlaceholder": "Ingrese el código del módulo...",
+        "ModuleNameLabel": "Nombre del Módulo",
+        "ModuleCodeLabel": "Código del Módulo",
+        "ModuleSlugLabel": "Slug del Módulo",
+        "ModuleSlugPlaceholder": "Ingrese el slug del módulo...",
+        "ModuleParentLabel": "Seleccionar Padre",
+        "ModuleParentPlaceholder": "Seleccionar padre...",
+        "ModuleIconLabel": "Seleccionar Icono",
+        "ModuleIconPlaceholder": "Elegir un icono...",
+        "IconSearchPlaceholder": "Buscar iconos...",
+        "IconCategoryLabel": "Categoría"
+    },
+    "description": "Gestiona tus módulos de asistencia",
+    "empty": {
+      "title": "Aún no hay elementos del módulo",
+      "description": "Comience creando su primer elemento del módulo"
+    }
+  }
+  

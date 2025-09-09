@@ -10,6 +10,8 @@
     "rolesAndPermissions": "Roles and Permissions",
     "roles-and-permission": "Roles and Permissions",
     "assist-users": "Assist Users",
+    "assistModule": "Assist Module",
+    "assist-module": "Assist Module",
     "dm": "Digital Marketing",
     "settings": "Settings",
     "logout": "Logout"
@@ -55,7 +57,19 @@
     "copy": "Copy",
     "high": "High",
     "medium": "Medium",
-    "low": "Low"
+    "low": "Low",
+    "active": "Active",
+    "inactive": "Inactive",
+    "name": "Name",
+    "code": "Code",
+    "createdAt": "Created At",
+    "sortBy": "Sort By"
+  },
+  "placement": {
+    "top": "Top",
+    "right": "Right",
+    "bottom": "Bottom",
+    "left": "Left"
   },
   "pagination": {
     "showing": "Showing",
@@ -122,7 +136,11 @@
     "active": "ACTIVE",
     "beta": "BETA",
     "maintenance": "MAINTENANCE",
-    "keyboardNavigation": "Use ↑↓ to navigate • Enter to select • Esc to close"
+    "keyboardNavigation": "Use ↑↓ to navigate • Enter to select • Esc to close",
+    "assistUsers": "Assist Users",
+    "assistModule": "Assist Module",
+    "rolesAndPermissions": "Roles and Permissions",
+    "settings": "Settings"
   },
   "portals": {
     "b2c": {

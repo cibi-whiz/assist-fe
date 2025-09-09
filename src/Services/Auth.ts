@@ -13,13 +13,13 @@ interface LoginCredentials {
 
 interface User {
   token: string;
-  user_name: string;
-  user_email: string;
+  name: string;
+  email: string;
   [key: string]: any;
 }
 
 interface ApiResponse {
-  status: 'success' | 'error';
+  success: boolean;
   message?: string;
   data?: any;
 }
@@ -31,28 +31,28 @@ interface ApiResponse {
  */
 export const userLogin = async (credentials: LoginCredentials): Promise<ApiResponse> => {
   try {
-    const response = await axios.post('/auth/assistLogin', credentials);
+    const response = await axios.post('/auth/login', credentials);
     return response.data;
   } catch (error: any) {
     // Handle different error scenarios
     if (error.response) {
       // Server responded with error status
       return {
-        status: 'error',
+        success: false,
         message: error.response.data?.message || 'Login failed',
         data: error.response.data
       };
     } else if (error.request) {
       // Network error
       return {
-        status: 'error',
+        success: false,
         message: 'Network error. Please check your connection.',
         data: null
       };
     } else {
       // Other error
       return {
-        status: 'error',
+        success: false,
         message: 'An unexpected error occurred.',
         data: null
       };

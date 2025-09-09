@@ -14,6 +14,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ className = '', isTablet = fals
   const location = useLocation();
   const breadcrumbItems = useBreadcrumb(location.pathname);
 
+
   // Don't render breadcrumbs on login page or if no items
   if (location.pathname === '/login' || breadcrumbItems.length === 0) {
     return null;

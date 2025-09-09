@@ -1,0 +1,41 @@
+{
+    "navigation": {
+        "assistModule": "Assist Module"
+    },
+    "title": "Assist Module",
+    "filters": {
+        "title": "Filters",
+        "moduleItems": "Module Items",
+        "status": "Status",
+        "createdBy": "Created By"
+    },
+    "buttons": {
+        "search": "Search",
+        "clear": "Clear",
+        "refresh": "Refresh",
+        "export": "Export",
+        "viewDetails": "View Details",
+        "create": "Create"
+        
+    },
+    "drawer": {
+        "ModuleNamePlaceholder": "Enter module name...",
+        "ModuleCodePlaceholder": "Enter module code...",
+        "ModuleNameLabel": "Module Name",
+        "ModuleCodeLabel": "Module Code",
+        "ModuleSlugLabel": "Module Slug",
+        "ModuleSlugPlaceholder": "Enter module slug...",
+        "ModuleParentLabel": "Select Parent",
+        "ModuleParentPlaceholder": "Select parent...",
+        "ModuleIconLabel": "Select Icon",
+        "ModuleIconPlaceholder": "Choose an icon...",
+        "IconSearchPlaceholder": "Search icons...",
+        "IconCategoryLabel": "Category"
+    },
+    "description": "Manage your assist modules",
+    "empty": {
+        "title": "No module items yet",
+        "description": "Get started by creating your first module item"
+    }
+
+}

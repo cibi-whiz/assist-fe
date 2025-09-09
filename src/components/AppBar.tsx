@@ -18,6 +18,10 @@ import {
   FaSun,
   FaMoon,
 } from "react-icons/fa";
+import { TfiMenuAlt } from "react-icons/tfi";
+import { SiAuth0 } from "react-icons/si";
+import { FaUsersLine } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../Hooks/useAuth";
 import { useLocalStorage } from "../Hooks/useLocalStorage";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -49,6 +53,7 @@ interface AppBarProps {
 
 const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile, isTablet, isOpen}) => {
   const { t } = useTranslation("common");
+  const navigate = useNavigate();
   const { isDark, toggleTheme, theme } = useTheme();
   const location = useLocation();
   const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
@@ -268,6 +273,7 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile, isTablet, isOpen
     return getPageTitle(location.pathname, t, selectedPortal.name);
   };
 
+
   return (
     <header className={`fixed top-0 h-16 bg-slate-800 dark:bg-slate-800 border-b border-slate-600 shadow-lg z-50 flex items-center justify-between px-2
       appbar-transition gpu-accelerated
@@ -482,7 +488,7 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile, isTablet, isOpen
             className="w-9 h-9 rounded-full bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-200 focus:ring-2 focus:ring-blue-500"
             aria-label="User menu"
           >
-            {user?.user_name?.charAt(0).toUpperCase() || "U"}
+            {user?.name?.charAt(0).toUpperCase()}
           </button>
 
           {popoverOpen && (
@@ -495,15 +501,15 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile, isTablet, isOpen
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
                     <span className="text-sm font-bold text-white">
-                      {user?.user_name?.charAt(0).toUpperCase() || "U"}
+                      {user?.name?.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-black dark:text-slate-100 truncate">
-                      {user?.user_name || "User"}
+                      {user?.name}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
-                      {user?.user_email || "user@example.com"}
+                      {user?.email}
                     </p>
                   </div>
                 </div>
@@ -539,6 +545,27 @@ const AppBar: React.FC<AppBarProps> = ({ onMenuClick, isMobile, isTablet, isOpen
                 >
                   <FaUser className="w-4 h-4 mr-3 text-gray-500 dark:text-slate-400" />
                   {t("appBar.profile")}
+                </button>
+                <button
+                  className="flex items-center w-full text-left px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg"
+                  onClick={() => setPopoverOpen(false)}
+                >
+                  <FaUsersLine className="w-4 h-4 mr-3 text-gray-500 dark:text-slate-400" />
+                  {t("appBar.assistUsers")}
+                </button>
+                <button
+                  className="flex items-center w-full text-left px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg"
+                  onClick={() => setPopoverOpen(false)}
+                >
+                  <SiAuth0 className="w-4 h-4 mr-3 text-gray-500 dark:text-slate-400" />
+                  {t("appBar.rolesAndPermissions")}
+                </button>
+                <button
+                  className="flex items-center w-full text-left px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg"
+                  onClick={() => {setPopoverOpen(false); navigate("/assist-module")}}
+                >
+                  <TfiMenuAlt className="w-4 h-4 mr-3 text-gray-500 dark:text-slate-400" />
+                  {t("appBar.assistModule")}
                 </button>
                 <button
                   className="flex items-center w-full text-left px-4 py-2 text-sm font-medium text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg"

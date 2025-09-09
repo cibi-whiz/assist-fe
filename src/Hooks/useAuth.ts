@@ -8,8 +8,8 @@ import axios from "axios";
 // Type definitions
 interface User {
   token: string;
-  user_name: string;
-  user_email: string;
+  name: string;
+  email: string;
   [key: string]: any;
 }
 
@@ -73,6 +73,8 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
     setAxiosAuthToken(user?.token || null);
   }, [user]);
 
+  console.log("user", user);
+
   // Fetch privileges only on initial load if user exists and privileges haven't been fetched
   useEffect(() => {
     let isMounted = true;
@@ -81,7 +83,7 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
       privileges(user)
         .then((response: any) => {
           if (!isMounted) return;
-          if (response?.status === "success") {
+          if (response?.success) {
             let roleValue = response?.data?.role;
             if (roleValue.includes("1")) {
               setRole("Super Admin");
@@ -134,7 +136,7 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
     setLoading(true);
     try {
       const response = await privileges(userData);
-      if (response?.status === "success") {
+      if (response?.success) {
         let roleValue = response?.data?.role;
         if (roleValue.includes("1")) {
           setRole("Super Admin");
@@ -178,12 +180,13 @@ export const AuthProvider = ({ children, userData }: AuthProviderProps) => {
     setLoading(true);
     try {
       const response = await userLogin(data);
-      if (response?.status === "success") {
+      if (response?.success) {
+        console.log("response", response);
         setUser(response.data);
         setAxiosAuthToken(response?.data?.token);
         
         // Fetch privileges immediately after successful login
-        await fetchPrivileges(response.data);
+        // await fetchPrivileges(response.data);
         
         showToast("Login Success", "success");
         // Navigation will be handled by App component based on welcome screen logic

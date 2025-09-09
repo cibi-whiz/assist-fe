@@ -6,7 +6,6 @@ import MailDrawer from "./MailDrawer";
 import { useTranslation } from "react-i18next";
 import Table from "../../../../components/Table";
 import tableProps from "../../../../Props/TableProps/B2C/DM/AbandonedCart.json";
-
 import FilterDrawer from "../../../../components/FilterDrawer";
 import FilterDrawerTrigger from "../../../../components/FilterDrawerTrigger";
 import { useFilterDrawer } from "../../../../Hooks/useFilterDrawer";

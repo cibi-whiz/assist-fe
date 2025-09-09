@@ -19,6 +19,7 @@ const Dashboard = lazy(() => import('./pages/B2C/Dashboard/Dashboard'));
 const RolesandPermission = lazy(() => import('./pages/Auth/RolesandPermission/RolesandPermission'));
 const AssistUsers = lazy(() => import('./pages/Auth/AssistUsers/AssistUsers'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'));
+const AssistModule = lazy(() => import('./pages/Auth/AssistModule/AssistModule'));
 
 interface AppRoutesProps {
   sidebarOpen: boolean;
@@ -39,11 +40,12 @@ function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete,
       <WelcomeScreen 
         isVisible={showWelcome}
         onComplete={onWelcomeComplete}
-        userName={user?.user_name || "User"}
+        userName={user?.name || "User"}
         darkMode={isDark}
       />
     );
   }
+  console.log("user", user);
 
   if (!user) {
     // Not authenticated: Only allow /login, redirect all else to /login
@@ -110,6 +112,7 @@ function AppRoutes({ sidebarOpen, toggleSidebar, showWelcome, onWelcomeComplete,
                   <Route path="/roles-and-permission" element={<RolesandPermission />} />
                   <Route path="/assist-users" element={<AssistUsers />} />
                   <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/assist-module" element={<AssistModule />} />
                   <Route path="*" element={<NotFound />} />
 
                 </Routes>

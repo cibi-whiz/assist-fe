@@ -1,7 +1,4 @@
-/**
- * Route configuration for page titles
- * This centralizes all route-to-title mappings for easy maintenance
- */
+
 
 export interface RouteConfig {
   path: string;
@@ -30,6 +27,11 @@ export const ROUTE_CONFIG: Record<string, RouteConfig> = {
     translationKey: 'navigation.assist-users',
     fallbackTitle: 'Assist Users'
   },
+  '/assist-module': {
+    path: '/assist-module',
+    translationKey: 'navigation.assistModule',
+    fallbackTitle: 'Assist Module'
+  },
   // Add new routes here as the app grows
   // Example:
   // '/new-feature': {
@@ -53,6 +55,7 @@ export const getPageTitle = (
 ): string => {
   // Check if we have a specific configuration for this route
   const routeConfig = ROUTE_CONFIG[pathname];
+
   
   if (routeConfig) {
     const translatedTitle = t(routeConfig.translationKey);
